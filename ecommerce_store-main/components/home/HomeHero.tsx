@@ -1,19 +1,21 @@
-import { STORE_NAME } from "@/lib/store/site";
 import { HomeBrandMarquee } from "./HomeBrandMarquee";
 import { HomeHeroCarousel } from "./HomeHeroCarousel";
 import { HomeRotatingWord } from "./HomeRotatingWord";
+import { StusportLogo } from "@/components/brand/StusportLogo";
 
 export function HomeHero() {
   return (
-    <section className="home-hero">
+    <section className="home-hero" aria-label="Trang chủ Stusport">
+      <HomeHeroCarousel />
+
       <div className="home-hero-intro">
         <HomeRotatingWord />
-        <h1 className="home-hero-title">
-          Inspired From <span>{STORE_NAME}</span>
-        </h1>
+        <div className="home-hero-tagline">
+          <p className="home-hero-tagline-prefix">Inspired From</p>
+          <StusportLogo variant="hero" />
+        </div>
       </div>
 
-      <HomeHeroCarousel />
       <HomeBrandMarquee />
     </section>
   );

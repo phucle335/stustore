@@ -21,11 +21,22 @@ export function FeaturedSection({
   pageSize,
 }: FeaturedSectionProps) {
   const [activeBrand, setActiveBrand] = useState<string | null>(null);
+  const [fulfillmentFilter, setFulfillmentFilter] = useState<
+    "all" | "in_stock" | "pre_order"
+  >("all");
   const brands = useMemo(() => getUniqueBrands(products), [products]);
-  const filteredProducts = useMemo(
+  const filteredByBrand = useMemo(
     () => filterProductsByBrand(products, activeBrand),
     [products, activeBrand],
   );
+  const filteredProducts = useMemo(() => {
+    if (fulfillmentFilter === "all") {
+      return filteredByBrand;
+    }
+    return filteredByBrand.filter(
+      (product) => product.fulfillmentType === fulfillmentFilter,
+    );
+  }, [filteredByBrand, fulfillmentFilter]);
 
   return (
     <section className="featured">
@@ -35,7 +46,29 @@ export function FeaturedSection({
         activeBrand={activeBrand}
         onBrandChange={setActiveBrand}
       />
-      <ProductGrid products={filteredProducts} pageSize={pageSize} />
+      <label className="featured-fulfillment-filter">
+        <span>Lọc trạng thái</span>
+        <select
+          value={fulfillmentFilter}
+          onChange={(event) =>
+            setFulfillmentFilter(
+              event.target.value as "all" | "in_stock" | "pre_order",
+            )
+          }
+        >
+          <option value="all">Tất cả</option>
+          <option value="in_stock">Hàng có sẵn</option>
+          <option value="pre_order">Pre-order</option>
+        </select>
+      </label>
+      {filteredProducts.length === 0 ? (
+        <p className="search-empty">
+          Chưa có sản phẩm trong danh mục này. Thêm sản phẩm trong Admin và chọn
+          đúng danh mục.
+        </p>
+      ) : (
+        <ProductGrid products={filteredProducts} pageSize={pageSize} />
+      )}
     </section>
   );
 }

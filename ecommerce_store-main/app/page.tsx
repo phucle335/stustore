@@ -1,20 +1,12 @@
-import { HomeBlog } from "@/components/home/HomeBlog";
-import { HomeBrandShowcase } from "@/components/home/HomeBrandShowcase";
-import { HomeBrandStrip } from "@/components/home/HomeBrandStrip";
-import { HomeCategoryGallery } from "@/components/home/HomeCategoryGallery";
-import { HomeFeatured } from "@/components/home/HomeFeatured";
-import { HomeHero } from "@/components/home/HomeHero";
-import { StoreShell } from "@/components/store/StoreShell";
+import type { Metadata } from "next";
+import { MottoHomePage } from "@/components/motto/MottoHomePage";
+
+export const metadata: Metadata = {
+  title: "Stusport | Ideas Worth Rallying Around",
+  description:
+    "Stusport — Giày sneaker, quần áo, nước hoa, đồng hồ và phụ kiện thể thao.",
+};
 
 export default function HomePage() {
-  return (
-    <StoreShell activeNav="home">
-      <HomeHero />
-      <HomeBrandStrip />
-      <HomeFeatured />
-      <HomeCategoryGallery />
-      <HomeBlog />
-      <HomeBrandShowcase />
-    </StoreShell>
-  );
+  return <MottoHomePage />;
 }

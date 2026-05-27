@@ -8,7 +8,11 @@ import {
   useMemo,
   useState,
 } from "react";
-import { getProductStock } from "@/lib/store/catalog";
+import {
+  fetchProductStockMap,
+  getStockFromMap,
+} from "@/lib/store/product-stock-client";
+import type { ProductStockSnapshot } from "@/lib/store/products-data";
 import {
   type AddToCartInput,
   type CartItem,
@@ -26,6 +30,7 @@ type CartContextValue = {
   items: CartItem[];
   itemCount: number;
   totalLabel: string;
+  getStock: (productId: string, size?: string) => number;
   addItem: (item: AddToCartInput) => boolean;
   removeItem: (lineId: string) => void;
   updateQuantity: (lineId: string, quantity: number) => boolean;
@@ -42,11 +47,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [stockMap, setStockMap] = useState<Record<string, ProductStockSnapshot>>(
+    {},
+  );
 
   useEffect(() => {
     setItems(loadCartFromStorage());
     setHydrated(true);
+    void fetchProductStockMap()
+      .then(setStockMap)
+      .catch(() => setStockMap({}));
   }, []);
+
+  const resolveStock = useCallback(
+    (productId: string, size?: string) =>
+      getStockFromMap(stockMap, productId, size),
+    [stockMap],
+  );
 
   useEffect(() => {
     if (hydrated) {
@@ -64,7 +81,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = useCallback(
     (input: AddToCartInput): boolean => {
-      const stock = getProductStock(input.productId, input.size);
+      const stock = resolveStock(input.productId, input.size);
       const lineId =
         input.lineId ?? buildCartLineId(input.productId, undefined, input.size);
 
@@ -108,7 +125,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       showToast("Đã thêm vào giỏ hàng thành công", "success");
       return true;
     },
-    [items, showToast],
+    [items, showToast, resolveStock],
   );
 
   const removeItem = useCallback((lineId: string): void => {
@@ -128,7 +145,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return false;
       }
 
-      const stock = getProductStock(cartLine.productId, cartLine.size);
+      const stock = resolveStock(cartLine.productId, cartLine.size);
 
       if (stock <= 0) {
         showToast(
@@ -159,7 +176,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       return true;
     },
-    [items, removeItem, showToast],
+    [items, removeItem, showToast, resolveStock],
   );
 
   const clearCart = useCallback((): void => {
@@ -179,6 +196,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       items,
       itemCount: getCartItemCount(items),
       totalLabel: formatPriceVnd(getCartTotalVnd(items)),
+      getStock: resolveStock,
       addItem,
       removeItem,
       updateQuantity,
@@ -189,6 +207,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }),
     [
       items,
+      resolveStock,
       addItem,
       removeItem,
       updateQuantity,

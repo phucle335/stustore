@@ -11,27 +11,22 @@ export type ProductSpecRow = {
 const CATEGORY_OCCASION: Record<ProductCategory, string> = {
   sneakers: "Đi chơi, tập luyện",
   sunglasses: "Đi chơi, du lịch",
-  sandals: "Đi chơi, mùa hè",
   clothing: "Đi chơi, tập luyện",
   bags: "Đi học, đi làm, du lịch",
-  perfume: "Hàng ngày, sự kiện",
   watches: "Công sở, thời trang",
 };
 
 const CATEGORY_SPORT: Record<ProductCategory, string> = {
   sneakers: "Chạy bộ, lifestyle",
   sunglasses: "Lifestyle",
-  sandals: "Lifestyle",
   clothing: "Tập luyện, lifestyle",
   bags: "Lifestyle",
-  perfume: "—",
   watches: "—",
 };
 
 function materialForCategory(category: ProductCategory): string {
   switch (category) {
     case "sneakers":
-    case "sandals":
       return "Da tổng hợp / vải mesh";
     case "clothing":
       return "Cotton / Polyester";
@@ -39,8 +34,6 @@ function materialForCategory(category: ProductCategory): string {
       return "Acetate / Kim loại";
     case "bags":
       return "Polyester / Da PU";
-    case "perfume":
-      return "Eau de Parfum";
     case "watches":
       return "Thép không gỉ / Silicone";
     default:
@@ -71,7 +64,7 @@ export function getProductSpecs(product: ProductDetail): ProductSpecRow[] {
     ];
   }
 
-  if (product.category === "sneakers" || product.category === "sandals") {
+  if (product.category === "sneakers") {
     return [
       ...base,
       { label: "Môn thể thao", value: CATEGORY_SPORT[product.category] },
@@ -84,21 +77,12 @@ export function getProductSpecs(product: ProductDetail): ProductSpecRow[] {
     ];
   }
 
-  if (product.category === "perfume") {
-    return [
-      ...base,
-      { label: "Nồng độ", value: "Eau de Parfum" },
-      { label: "Hương", value: "Hương hiện đại, lưu hương lâu" },
-      { label: "Dung tích", value: product.sizes?.join(", ") ?? "50ml, 100ml" },
-    ];
-  }
-
   if (product.category === "watches") {
     return [
       ...base,
       { label: "Máy", value: "Quartz / Automatic" },
       { label: "Mặt kính", value: "Kính cứng chống trầy" },
-      { label: "Chống nước", value: "3ATM – 10ATM" },
+      { label: "Chống nước", value: "3ATM - 10ATM" },
     ];
   }
 
@@ -125,11 +109,11 @@ export function getProductDetailBullets(product: ProductDetail): string[] {
   ];
 }
 
-export const PRODUCT_RETURN_POLICY = `Quý khách có thể đổi size hoặc đổi mẫu trong vòng 14 ngày kể từ ngày nhận hàng (sản phẩm còn nguyên tem, chưa qua sử dụng). ${STORE_NAME} hỗ trợ đổi trả miễn phí tại cửa hàng hoặc qua đơn vị vận chuyển đối tác. Không áp dụng đổi trả với hàng giảm giá sâu hoặc phụ kiện đã mở seal (nước hoa).`;
+export const PRODUCT_RETURN_POLICY = `Quý khách có thể đổi size hoặc đổi mẫu trong vòng 14 ngày kể từ ngày nhận hàng (sản phẩm còn nguyên tem, chưa qua sử dụng). ${STORE_NAME} hỗ trợ đổi trả miễn phí tại cửa hàng hoặc qua đơn vị vận chuyển đối tác. Không áp dụng đổi trả với hàng giảm giá sâu hoặc sản phẩm đã qua sử dụng.`;
 
-export const PRODUCT_CARE_GUIDE = `Giặt tay hoặc giặt máy chế độ nhẹ với nước lạnh; tránh tẩy chất mạnh. Phơi trong mát, tránh ánh nắng trực tiếp. Với giày/dép: vệ sinh bằng khăn ẩm, không ngâm nước lâu. Kính mắt: lau bằng vải microfiber. Đồng hồ: tránh va đập mạnh và hóa chất.`;
+export const PRODUCT_CARE_GUIDE = `Giặt tay hoặc giặt máy chế độ nhẹ với nước lạnh; tránh tẩy chất mạnh. Phơi trong mát, tránh ánh nắng trực tiếp. Với giày: vệ sinh bằng khăn ẩm, không ngâm nước lâu. Kính mắt: lau bằng vải microfiber. Đồng hồ: tránh va đập mạnh và hóa chất.`;
 
-export const PRODUCT_STORAGE_GUIDE = `Bảo quản nơi khô ráo, thoáng mát. Giày và túi nên nhồi giấy báo giữ form. Nước hoa để xa nguồn nhiệt và ánh sáng. Đồng hồ nên cất hộp riêng, tránh ẩm mốc.`;
+export const PRODUCT_STORAGE_GUIDE = `Bảo quản nơi khô ráo, thoáng mát. Giày và túi nên nhồi giấy báo giữ form. Đồng hồ nên cất hộp riêng, tránh ẩm mốc.`;
 
 export function getAboutStoreContent(): string {
   return `${STORE_NAME} là cửa hàng sneaker, streetwear và phụ kiện chính hãng tại Việt Nam. Chúng tôi cam kết 100% hàng authentic, tư vấn size chuẩn và hỗ trợ đổi trả minh bạch. Mua sắm tại ${STORE_NAME} để trải nghiệm dịch vụ tận tâm và bộ sưu tập cập nhật theo xu hướng.`;

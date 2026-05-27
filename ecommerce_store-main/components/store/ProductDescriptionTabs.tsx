@@ -8,8 +8,6 @@ import {
   PRODUCT_RETURN_POLICY,
   PRODUCT_STORAGE_GUIDE,
   getAboutStoreContent,
-  getProductDetailBullets,
-  getProductSpecs,
 } from "@/lib/store/product-content";
 import { STORE_NAME } from "@/lib/store/site";
 
@@ -29,9 +27,15 @@ type ProductDescriptionTabsProps = {
 
 export function ProductDescriptionTabs({ product }: ProductDescriptionTabsProps) {
   const [activeTab, setActiveTab] = useState<TabId>("description");
-  const specs = getProductSpecs(product);
-  const bullets = getProductDetailBullets(product);
   const brandLabel = formatBrandDisplay(product.brand);
+
+  // Tách description thành các đoạn (hỗ trợ \n hoặc \n\n từ DB)
+  const descriptionParagraphs = product.description
+    ? product.description
+        .split(/\n\n|\n/)
+        .map((p) => p.trim())
+        .filter(Boolean)
+    : [];
 
   return (
     <section
@@ -62,35 +66,24 @@ export function ProductDescriptionTabs({ product }: ProductDescriptionTabsProps)
             id="panel-description"
             role="tabpanel"
             aria-labelledby="tab-description"
-            className="product-detail-tab-panel product-detail-tab-panel--description"
+            className="product-detail-tab-panel product-detail-prose"
           >
-            <table className="product-spec-table">
-              <tbody>
-                {specs.map((row) => (
-                  <tr key={row.label}>
-                    <th scope="row">{row.label}</th>
-                    <td>{row.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <h3 className="product-detail-prose-title">
+              {product.name.toUpperCase()}
+            </h3>
 
-            <div className="product-detail-prose">
-              <h3 className="product-detail-prose-title">
-                {product.name.toUpperCase()}
-              </h3>
-              <p>{product.description}</p>
-              <h4 className="product-detail-prose-subtitle">Thông số</h4>
-              <ul>
-                {bullets.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              <p className="product-detail-sku">
-                Thương hiệu: <strong>{brandLabel}</strong> · Mã:{" "}
-                <strong>{product.id.toUpperCase()}</strong>
-              </p>
-            </div>
+            {descriptionParagraphs.length > 0 ? (
+              descriptionParagraphs.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))
+            ) : (
+              <p className="product-detail-sku">Chưa có mô tả sản phẩm.</p>
+            )}
+
+            <p className="product-detail-sku">
+              Thương hiệu: <strong>{brandLabel}</strong> · Mã:{" "}
+              <strong>{product.id}</strong>
+            </p>
           </div>
         ) : null}
 

@@ -1,0 +1,4 @@
+email,total_price,subtotal,discount_amount,coupon_code,status
+workspaceplace22@gmail.com,1500000,1500000,0,,pending
+,890000,890000,0,,confirmed
+,2500000,2600000,100000,STU10,delivered

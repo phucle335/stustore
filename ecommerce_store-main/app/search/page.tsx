@@ -4,6 +4,8 @@ import { getAllProducts } from "@/lib/store/catalog";
 import { searchProducts } from "@/lib/store/search";
 import { STORE_NAME } from "@/lib/store/site";
 
+export const dynamic = "force-dynamic";
+
 type SearchPageProps = {
   searchParams: Promise<{ q?: string }>;
 };
@@ -21,7 +23,8 @@ export async function generateMetadata({ searchParams }: SearchPageProps) {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { q } = await searchParams;
   const query = q?.trim() ?? "";
-  const results = searchProducts(getAllProducts(), query);
+  const allProducts = await getAllProducts();
+  const results = searchProducts(allProducts, query);
 
   return (
     <StoreShell activeNav="home">

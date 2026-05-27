@@ -1,15 +1,19 @@
 import Link from "next/link";
+import { StusportLogo } from "@/components/brand/StusportLogo";
+import { LivePresenceBar } from "@/components/store/LivePresenceBar";
 import { NAV_LINKS } from "@/lib/store/navigation";
-import { PAGE_ROUTES, SITE_LOGO, STORE_NAME } from "@/lib/store/site";
+import { PAGE_ROUTES, STORE_NAME } from "@/lib/store/site";
 
 export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="site-footer-grid">
         <div className="site-footer-col">
-          <p className="site-footer-logo">{SITE_LOGO}</p>
+          <p className="site-footer-logo">
+            <StusportLogo variant="footer" />
+          </p>
           <p className="site-footer-text">
-            {STORE_NAME} — Cửa hàng sneaker, streetwear, nước hoa và đồng hồ
+            {STORE_NAME} — Cửa hàng sneaker, streetwear, kính mát và đồng hồ
             chính hãng.
           </p>
           <p className="site-footer-text">
@@ -69,6 +73,8 @@ export function SiteFooter() {
           </ul>
         </div>
       </div>
+
+      <LivePresenceBar />
 
       <div className="site-footer-bottom">
         <div className="site-footer-social">

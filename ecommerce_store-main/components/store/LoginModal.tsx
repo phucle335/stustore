@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { SITE_MEMBERSHIP_TITLE } from "@/lib/store/site";
 
 type LoginModalProps = {
@@ -35,21 +36,44 @@ export function LoginModal({
           type="button"
           className="close"
           onClick={onClose}
-          aria-label="Close login modal"
+          aria-label="Đóng"
         >
           &times;
         </button>
+        <p className="customer-page-eyebrow">Stusport</p>
         <h2>{membershipTitle}</h2>
-        <button type="button" className="social-btn google">
-          <i className="fab fa-google" /> Continue with Google
-        </button>
-        <button type="button" className="social-btn facebook">
-          <i className="fab fa-facebook-f" /> Continue with Facebook
-        </button>
-        <button type="button" className="social-btn apple">
-          <i className="fab fa-apple" /> Continue with Apple
-        </button>
-        <p className="no-password">No password needed</p>
+        <p className="no-password" style={{ marginBottom: "1rem", color: "#555" }}>
+          Đăng ký hoặc đăng nhập để thanh toán đơn hàng.
+        </p>
+        <Link
+          href="/dang-ky?redirect=%2Fcheckout"
+          className="product-detail-add-btn"
+          style={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "center",
+            textDecoration: "none",
+            boxSizing: "border-box",
+          }}
+          onClick={onClose}
+        >
+          Đăng ký tài khoản
+        </Link>
+        <Link
+          href="/dang-nhap?redirect=%2Fcheckout"
+          className="store-btn-secondary"
+          style={{
+            display: "inline-flex",
+            width: "100%",
+            justifyContent: "center",
+            textDecoration: "none",
+            marginTop: "12px",
+            boxSizing: "border-box",
+          }}
+          onClick={onClose}
+        >
+          Đăng nhập
+        </Link>
       </div>
     </div>
   );

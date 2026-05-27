@@ -1,0 +1,6 @@
+﻿code,description,discount_type,discount_value,min_order_amount,max_uses,used_count,is_active,expires_at
+P50,Giảm 100k cho đơn từ 1 triệu,fixed,100000,1000000,5,0,TRUE,2026-05-29 13:06:00+07
+TET2026,Giảm 15% cho mọi đơn hàng,percent,15,0,999999,0,TRUE,2026-12-31 23:59:59+07
+FREESHIP,Freeship đơn 500k (tối đa 30k),fixed,30000,500000,100,0,TRUE,2026-06-30 23:59:59+07
+VIP10,Giảm 10% đơn từ 2 triệu,percent,10,2000000,999999,0,TRUE,2099-12-31 23:59:59+07
+OFF50K,Giảm ngay 50k không điều kiện,fixed,50000,0,10,0,FALSE,2026-05-01 00:00:00+07

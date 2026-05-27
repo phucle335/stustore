@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { ProductDetail } from "@/lib/store/catalog";
+import { isCategoryWithoutSizes } from "@/lib/store/product-category-rules";
 import { buildCartLineId } from "@/lib/store/cart";
 import { formatStockLabel, getStockForProduct } from "@/lib/store/stock";
 import { AddToCartButton } from "./AddToCartButton";
@@ -24,7 +25,10 @@ function firstAvailableSize(
 }
 
 export function ProductPurchaseBlock({ product }: ProductPurchaseBlockProps) {
-  const hasSizes = product.sizes !== undefined && product.sizes.length > 0;
+  const hasSizes =
+    !isCategoryWithoutSizes(product.category) &&
+    product.sizes !== undefined &&
+    product.sizes.length > 0;
 
   const [selectedSize, setSelectedSize] = useState<string | undefined>(() =>
     hasSizes

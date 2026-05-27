@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "@/components/store/ProductImage";
 import { useEffect, useRef } from "react";
 import { getPrimaryImage } from "@/lib/store/product-images";
 import type { Product } from "@/lib/store/types";
@@ -54,7 +54,7 @@ export function ProductCard({
         {showSaleBadge && product.oldPrice ? (
           <span className="product-sale-badge">Sale</span>
         ) : null}
-        <Image
+        <ProductImage
           src={getPrimaryImage(product.images)}
           alt={product.imageAlt}
           width={500}
@@ -64,6 +64,9 @@ export function ProductCard({
         />
       </div>
       <p className="brand">{product.brand}</p>
+      <p className="product-card-fulfillment">
+        {product.fulfillmentType === "pre_order" ? "Đơn pre-order" : "Hàng có sẵn"}
+      </p>
       <h4 className="product-name">{product.name}</h4>
       {showRating ? (
         <div className="product-rating" aria-label="5 sao">

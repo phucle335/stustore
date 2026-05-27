@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import { ProductImage } from "@/components/store/ProductImage";
 
 type ProductImageGalleryProps = {
   images: string[];
@@ -23,7 +23,7 @@ export function ProductImageGallery({
   return (
     <div className="product-detail-gallery">
       <div className="product-detail-main-image">
-        <Image
+        <ProductImage
           src={activeSrc}
           alt={`${imageAlt} — ảnh ${safeIndex + 1}`}
           width={800}
@@ -44,7 +44,7 @@ export function ProductImageGallery({
                 aria-current={safeIndex === index}
                 onClick={() => setActiveIndex(index)}
               >
-                <Image
+                <ProductImage
                   src={src}
                   alt=""
                   width={88}

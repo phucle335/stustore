@@ -27,36 +27,31 @@ export const HERO_ROTATING_WORDS = [
 export const HERO_SLIDES: HeroSlide[] = [
   {
     id: "slide-1",
-    image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=2112&q=85",
+    image: "/images/hero/slide-1.jpg",
     alt: "Sneaker thể thao đường phố",
     caption: "A VISION OF STYLE",
   },
   {
     id: "slide-2",
-    image:
-      "https://images.unsplash.com/photo-1460353589841-61cb21bbe436?w=2112&q=85",
+    image: "/images/hero/slide-2.jpg",
     alt: "Chạy bộ và training",
     caption: "PUSH YOUR LIMITS",
   },
   {
     id: "slide-3",
-    image:
-      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=2112&q=85",
+    image: "/images/hero/slide-3.jpg",
     alt: "Phòng gym và sức mạnh",
     caption: "BUILT FOR PERFORMANCE",
   },
   {
     id: "slide-4",
-    image:
-      "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=2112&q=85",
+    image: "/images/hero/slide-4.jpg",
     alt: "Lifestyle thể thao",
     caption: "MOVE WITH CONFIDENCE",
   },
   {
     id: "slide-5",
-    image:
-      "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=2112&q=85",
+    image: "/images/hero/slide-5.jpg",
     alt: "Đội nhóm và thể thao",
     caption: "GAME ON",
   },
@@ -77,7 +72,7 @@ export const BRAND_LOGOS = [
   "OMEGA",
 ] as const;
 
-/** Sneaker + Clothes (large), Sunglasses + Watches + Perfume (small) */
+/** Sneaker + Clothes (large), Sunglasses + Watches (small) */
 export const HOME_CATEGORY_TILES: HomeCategoryTile[] = [
   {
     id: "sneakers",
@@ -109,14 +104,6 @@ export const HOME_CATEGORY_TILES: HomeCategoryTile[] = [
     href: "/watches",
     image:
       "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&q=80",
-    size: "small",
-  },
-  {
-    id: "perfume",
-    label: "Perfume",
-    href: "/perfume",
-    image:
-      "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=80",
     size: "small",
   },
 ];

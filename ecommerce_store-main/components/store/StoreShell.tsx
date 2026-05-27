@@ -1,6 +1,8 @@
 "use client";
 
+import "@/app/stusport.css";
 import { useState } from "react";
+import { SiteFooter } from "@/components/home/SiteFooter";
 import type { NavId } from "@/lib/store/types";
 import { CommitmentBar } from "./CommitmentBar";
 import { Header } from "./Header";
@@ -32,6 +34,7 @@ export function StoreShell({
         membershipTitle={membershipTitle}
       />
       {children}
+      <SiteFooter />
     </>
   );
 }

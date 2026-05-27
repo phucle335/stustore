@@ -1,12 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StoreShell } from "@/components/store/StoreShell";
-import { BLOG_POSTS, getBlogPostById } from "@/lib/store/blog-content";
+import { BLOG_POSTS } from "@/lib/store/blog-content";
+import { ProductImage } from "@/components/store/ProductImage";
+import { getBlogPostByIdMerged } from "@/lib/blog/blog-cms";
 
 type BlogPostPageProps = {
   params: Promise<{ id: string }>;
 };
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams(): { id: string }[] {
   return BLOG_POSTS.map((post) => ({ id: post.id }));
@@ -14,7 +17,7 @@ export function generateStaticParams(): { id: string }[] {
 
 export async function generateMetadata({ params }: BlogPostPageProps) {
   const { id } = await params;
-  const post = getBlogPostById(id);
+  const post = await getBlogPostByIdMerged(id);
 
   if (!post) {
     return { title: "Không tìm thấy — Stusport" };
@@ -25,7 +28,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { id } = await params;
-  const post = getBlogPostById(id);
+  const post = await getBlogPostByIdMerged(id);
 
   if (!post) {
     notFound();
@@ -41,7 +44,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <time className="blog-post-date">{post.date}</time>
         <h1 className="blog-post-title">{post.title}</h1>
         <div className="blog-post-image-wrap">
-          <Image
+          <ProductImage
             src={post.image}
             alt={post.title}
             width={1200}
@@ -52,10 +55,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
         <p className="blog-post-lead">{post.excerpt}</p>
         <div className="blog-post-body">
-          <p>
-            Bài viết đang được cập nhật. Quay lại trang Blog để xem thêm nội
-            dung mới từ Stusport.
-          </p>
+          {post.body
+            .split(/\n\n/)
+            .map((p, idx) => p.trim())
+            .filter(Boolean)
+            .map((paragraph, paragraphIdx) => (
+              <p key={paragraphIdx}>{paragraph}</p>
+            ))}
         </div>
       </article>
     </StoreShell>
