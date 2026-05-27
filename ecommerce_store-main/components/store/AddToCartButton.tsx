@@ -34,6 +34,7 @@ export function AddToCartButton({
       imageAlt: product.imageAlt,
       price: product.price,
       oldPrice: product.oldPrice,
+      fulfillmentType: product.fulfillmentType,
     });
 
     if (added) {

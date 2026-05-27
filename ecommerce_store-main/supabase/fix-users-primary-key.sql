@@ -1,0 +1,4 @@
+-- Dùng file mới (đầy đủ hơn):
+--   supabase/repair-users-primary-key.sql
+--
+-- File cũ này chỉ thêm PK đơn giản; nếu vẫn lỗi 42830 → chạy repair-users-primary-key.sql

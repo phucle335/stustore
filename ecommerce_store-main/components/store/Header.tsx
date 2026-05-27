@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { StusportLogo } from "@/components/brand/StusportLogo";
 import { NAV_LINKS } from "@/lib/store/navigation";
-import { SITE_LOGO } from "@/lib/store/site";
 import type { NavId } from "@/lib/store/types";
+import { useCustomerAuth } from "./CustomerAuthProvider";
 import { useCart } from "./CartProvider";
 import { HeaderSearch } from "./HeaderSearch";
 
@@ -14,15 +15,14 @@ type HeaderProps = {
 
 export function Header({ activeNav, onLoginClick }: HeaderProps) {
   const { itemCount, openCart } = useCart();
+  const { user, loading, signOut } = useCustomerAuth();
 
   return (
     <header className="header">
       <div className="header-start">
         <div className="logo">
           <h1>
-            <Link href="/" className="logo-link">
-              {SITE_LOGO}
-            </Link>
+            <StusportLogo href="/" variant="mark" />
           </h1>
         </div>
         <nav className="main-nav">
@@ -41,9 +41,33 @@ export function Header({ activeNav, onLoginClick }: HeaderProps) {
       <div className="header-end">
         <HeaderSearch />
         <div className="header-icons">
-          <button type="button" onClick={onLoginClick} aria-label="Đăng nhập">
-            <i className="far fa-user" />
-          </button>
+          {loading ? (
+            <span className="header-user-greeting header-user-greeting--muted">
+              …
+            </span>
+          ) : user ? (
+            <div className="header-user-menu">
+              <Link href="/tai-khoan" className="header-user-greeting">
+                Hi {user.display_name}
+              </Link>
+              <button
+                type="button"
+                className="header-user-signout"
+                onClick={() => void signOut()}
+              >
+                Đăng xuất
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={onLoginClick}
+              aria-label="Đăng nhập"
+              className="header-login-btn"
+            >
+              <i className="far fa-user" />
+            </button>
+          )}
           <button
             type="button"
             className="cart-icon-btn"

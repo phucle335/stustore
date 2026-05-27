@@ -5,7 +5,6 @@ import { ProductGrid } from "@/components/store/ProductGrid";
 import type { ProductCategory } from "@/lib/store/catalog";
 import {
   CLOTHING_PRODUCTS,
-  PERFUME_PRODUCTS,
   SNEAKER_PRODUCTS,
   SUNGLASSES_PRODUCTS,
   WATCHES_PRODUCTS,
@@ -22,7 +21,6 @@ const FEATURED_TABS: FeaturedTab[] = [
   { id: "sneakers", label: "SNEAKER", products: SNEAKER_PRODUCTS },
   { id: "clothing", label: "CLOTHES", products: CLOTHING_PRODUCTS },
   { id: "sunglasses", label: "SUNGLASSES", products: SUNGLASSES_PRODUCTS },
-  { id: "perfume", label: "PERFUME", products: PERFUME_PRODUCTS },
   { id: "watches", label: "WATCHES", products: WATCHES_PRODUCTS },
 ];
 

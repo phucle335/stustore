@@ -1,11 +1,12 @@
 "use client";
 
-import Image from "next/image";
+import { ProductImage } from "@/components/store/ProductImage";
 import Link from "next/link";
-import { getProductStock } from "@/lib/store/catalog";
+import { useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
 
 export function CartModal() {
+  const router = useRouter();
   const {
     items,
     itemCount,
@@ -15,6 +16,7 @@ export function CartModal() {
     removeItem,
     updateQuantity,
     clearCart,
+    getStock,
   } = useCart();
 
   return (
@@ -69,7 +71,7 @@ export function CartModal() {
           ) : (
             <ul className="cart-items">
               {items.map((item) => {
-                const stock = getProductStock(item.productId, item.size);
+                const stock = getStock(item.productId, item.size);
                 const atMaxStock = item.quantity >= stock;
 
                 return (
@@ -79,7 +81,7 @@ export function CartModal() {
                     className="cart-item-image"
                     onClick={closeCart}
                   >
-                    <Image
+                    <ProductImage
                       src={item.image}
                       alt={item.imageAlt}
                       width={80}
@@ -144,7 +146,14 @@ export function CartModal() {
               <span>Tổng cộng</span>
               <strong>{totalLabel}</strong>
             </div>
-            <button type="button" className="cart-checkout-btn">
+            <button
+              type="button"
+              className="cart-checkout-btn"
+              onClick={() => {
+                closeCart();
+                router.push("/checkout");
+              }}
+            >
               Thanh toán
             </button>
             <button

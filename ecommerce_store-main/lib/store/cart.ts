@@ -9,6 +9,7 @@ export type CartItem = {
   imageAlt: string;
   price: string;
   oldPrice?: string;
+  fulfillmentType: "in_stock" | "pre_order";
   quantity: number;
 };
 
@@ -87,6 +88,8 @@ export function loadCartFromStorage(): CartItem[] {
           ...(color !== undefined ? { color } : {}),
           ...(size !== undefined ? { size } : {}),
           lineId: buildCartLineId(item.productId, color, size),
+          fulfillmentType:
+            item.fulfillmentType === "pre_order" ? "pre_order" : "in_stock",
         };
       });
   } catch {

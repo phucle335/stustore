@@ -1,8 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
-import { BLOG_POSTS, getBlogPostHref } from "@/lib/store/blog-content";
+import { ProductImage } from "@/components/store/ProductImage";
+import { getBlogPostHref } from "@/lib/store/blog-content";
+import { getBlogPostsMerged } from "@/lib/blog/blog-cms";
 
-export function BlogList() {
+export async function BlogList() {
+  const posts = await getBlogPostsMerged();
+
   return (
     <section className="blog-page">
       <header className="blog-page-header">
@@ -13,17 +16,18 @@ export function BlogList() {
       </header>
 
       <div className="home-blog-grid blog-page-grid">
-        {BLOG_POSTS.map((post) => (
+        {posts.map((post) => (
           <article key={post.id} className="home-blog-card">
             <Link
               href={getBlogPostHref(post.id)}
               className="home-blog-image-wrap"
             >
-              <Image
+              <ProductImage
                 src={post.image}
                 alt={post.title}
                 width={600}
                 height={360}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 className="home-blog-image"
               />
             </Link>

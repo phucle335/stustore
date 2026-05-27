@@ -1,14 +1,25 @@
 import type { Metadata } from "next";
-import { SiteFooter } from "@/components/home/SiteFooter";
+import { Inter } from "next/font/google";
 import { CartProvider } from "@/components/store/CartProvider";
+import { CustomerAuthProvider } from "@/components/store/CustomerAuthProvider";
 import { ScrollToTop } from "@/components/store/ScrollToTop";
 import { ToastProvider } from "@/components/store/ToastProvider";
 import "./globals.css";
-import "./stusport.css";
+import "./brand.css";
+import "./motto.css";
+import "./store-customer.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Stusport",
-  description: "Stusport — Giày sneaker, quần áo, nước hoa, đồng hồ và phụ kiện thể thao",
+  description:
+    "Stusport — Giày sneaker, quần áo, nước hoa, đồng hồ và phụ kiện thể thao",
 };
 
 export default function RootLayout({
@@ -17,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
+    <html lang="vi" className={inter.variable}>
       <head>
         <link
           rel="stylesheet"
@@ -26,11 +37,12 @@ export default function RootLayout({
       </head>
       <body>
         <ToastProvider>
-          <CartProvider>
-            <ScrollToTop />
-            {children}
-            <SiteFooter />
-          </CartProvider>
+          <CustomerAuthProvider>
+            <CartProvider>
+              <ScrollToTop />
+              {children}
+            </CartProvider>
+          </CustomerAuthProvider>
         </ToastProvider>
       </body>
     </html>

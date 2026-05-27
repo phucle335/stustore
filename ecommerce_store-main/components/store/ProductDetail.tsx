@@ -1,9 +1,7 @@
 import Link from "next/link";
-import {
-  getCategoryBackLink,
-  getRelatedProductsByBrand,
-} from "@/lib/store/catalog";
+import { getCategoryBackLink } from "@/lib/store/catalog";
 import type { ProductDetail as ProductDetailType } from "@/lib/store/catalog";
+import { FavoriteButton } from "./FavoriteButton";
 import { ProductDescriptionTabs } from "./ProductDescriptionTabs";
 import { ProductImageGallery } from "./ProductImageGallery";
 import { ProductPurchaseBlock } from "./ProductPurchaseBlock";
@@ -11,15 +9,14 @@ import { ProductRelatedByBrand } from "./ProductRelatedByBrand";
 
 type ProductDetailProps = {
   product: ProductDetailType;
+  relatedProducts?: ProductDetailType[];
 };
 
-export function ProductDetail({ product }: ProductDetailProps) {
+export function ProductDetail({
+  product,
+  relatedProducts = [],
+}: ProductDetailProps) {
   const backLink = getCategoryBackLink(product.category);
-  const relatedProducts = getRelatedProductsByBrand(
-    product.id,
-    product.brand,
-    8,
-  );
 
   return (
     <section className="product-detail">
@@ -36,7 +33,15 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
         <div className="product-detail-info">
           <p className="brand">{product.brand}</p>
-          <h1 className="product-detail-title">{product.name}</h1>
+          <p className="product-fulfillment-label">
+            {product.fulfillmentType === "pre_order"
+              ? "Đơn pre-order"
+              : "Hàng có sẵn"}
+          </p>
+          <div className="product-detail-title-row">
+            <h1 className="product-detail-title">{product.name}</h1>
+            <FavoriteButton productId={product.id} />
+          </div>
           <div className="price-box product-detail-price">
             <span className="price">{product.price}</span>
             {product.oldPrice ? (

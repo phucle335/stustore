@@ -2,14 +2,14 @@ export type NavId =
   | "home"
   | "sneakers"
   | "sunglasses"
-  | "sandals"
   | "clothing"
   | "bags"
-  | "perfume"
   | "watches"
   | "blog";
 
 export type ProductCategory = Exclude<NavId, "home" | "blog">;
+
+export type ProductFulfillmentType = "in_stock" | "pre_order";
 
 export type Product = {
   id: string;
@@ -21,7 +21,13 @@ export type Product = {
   oldPrice?: string;
   /** Total units in stock (sum of sizeStock when sizes exist). */
   stock: number;
+  fulfillmentType: ProductFulfillmentType;
   sizes?: string[];
   /** Available quantity per size label. */
   sizeStock?: Record<string, number>;
+};
+
+export type ProductDetail = Product & {
+  category: ProductCategory;
+  description: string;
 };

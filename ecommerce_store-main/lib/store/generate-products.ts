@@ -125,6 +125,7 @@ function buildProducts(config: CategoryConfig): Product[] {
       sizeStock !== undefined
         ? Object.values(sizeStock).reduce((sum, qty) => sum + qty, 0)
         : resolveProductStock(index);
+    const fulfillmentType = number % 5 === 0 ? "pre_order" : "in_stock";
 
     return {
       id: `${config.idPrefix}-${number}`,
@@ -138,6 +139,7 @@ function buildProducts(config: CategoryConfig): Product[] {
       name: fullName,
       price: formatVnd(price),
       stock,
+      fulfillmentType,
       ...(sizes !== undefined ? { sizes, sizeStock } : {}),
       ...(oldPrice !== undefined ? { oldPrice: formatVnd(oldPrice) } : {}),
     };
