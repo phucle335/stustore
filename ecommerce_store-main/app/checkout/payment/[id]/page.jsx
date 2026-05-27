@@ -79,7 +79,13 @@ export default function CheckoutPaymentPage() {
         const body = await res.json();
 
         if (!res.ok || !body?.checkoutUrl) {
-          throw new Error(body?.error || "Không tạo được link thanh toán.");
+          const detail =
+            typeof body?.detail === "string" && body.detail.trim()
+              ? ` (${body.detail})`
+              : "";
+          throw new Error(
+            `${body?.error || "Không tạo được link thanh toán."}${detail}`,
+          );
         }
 
         if (!isMounted) return;

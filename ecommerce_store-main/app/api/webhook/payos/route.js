@@ -43,12 +43,42 @@ export async function POST(request) {
 
     if (webhookCode === "00") {
       const supabase = getSupabaseAdmin();
-      const orderId = String(orderCode);
+      const orderCodeText = String(orderCode);
+
+      let updateQuery = supabase
+        .from("orders")
+        .update({
+          status: "deposit_paid",
+          payment_gateway: "payos",
+          payment_reference: orderCodeText,
+          payment_paid_at: new Date().toISOString(),
+        })
+        .eq("payment_reference", orderCodeText);
+
+      const { data: updatedByReference, error: referenceError } =
+        await updateQuery.select("id");
+
+      if (referenceError) {
+        console.error("[payos-webhook][supabase-update-error]", referenceError);
+        return NextResponse.json(
+          { error: "Webhook verified nhưng update đơn thất bại." },
+          { status: 500 },
+        );
+      }
+
+      if ((updatedByReference ?? []).length > 0) {
+        return NextResponse.json({ ok: true, message: "Webhook processed" });
+      }
 
       const { error } = await supabase
         .from("orders")
-        .update({ status: "deposit_paid" })
-        .eq("id", orderId);
+        .update({
+          status: "deposit_paid",
+          payment_gateway: "payos",
+          payment_reference: orderCodeText,
+          payment_paid_at: new Date().toISOString(),
+        })
+        .eq("id", orderCodeText);
 
       if (error) {
         console.error("[payos-webhook][supabase-update-error]", error);

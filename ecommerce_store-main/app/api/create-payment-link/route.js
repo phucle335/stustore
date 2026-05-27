@@ -33,6 +33,39 @@ function getSiteUrl() {
   );
 }
 
+function getErrorMessage(error) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Unknown PayOS error";
+}
+
+function isDuplicateOrderCodeError(error) {
+  const message = getErrorMessage(error).toLowerCase();
+  return (
+    message.includes("ordercode") ||
+    message.includes("order code") ||
+    message.includes("đã tồn tại") ||
+    message.includes("already exists")
+  );
+}
+
+async function createPayOSLink(payos, paymentData) {
+  try {
+    return await payos.paymentRequests.create(paymentData);
+  } catch (error) {
+    if (!isDuplicateOrderCodeError(error)) {
+      throw error;
+    }
+
+    await payos.paymentRequests.cancel(
+      paymentData.orderCode,
+      "Tao lai link thanh toan",
+    );
+    return payos.paymentRequests.create(paymentData);
+  }
+}
+
 export async function POST(request) {
   try {
     const auth = await requireAuthUser();
@@ -110,7 +143,15 @@ export async function POST(request) {
       cancelUrl: `${siteUrl}/checkout/cancel`,
     };
 
-    const result = await payos.paymentRequests.create(paymentData);
+    const result = await createPayOSLink(payos, paymentData);
+
+    await supabase
+      .from("orders")
+      .update({
+        payment_gateway: "payos",
+        payment_reference: String(orderCode),
+      })
+      .eq("id", rawOrderId);
 
     return NextResponse.json({
       checkoutUrl: result?.checkoutUrl || null,
@@ -118,12 +159,15 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error("[create-payment-link]", error);
-    const detail =
-      error instanceof Error ? error.message : "Unknown PayOS error";
+    const detail = getErrorMessage(error);
+    const missingEnv = detail.includes("Missing PayOS env vars");
+
     return NextResponse.json(
       {
-        error: "Không thể tạo link thanh toán PayOS.",
-        detail: process.env.NODE_ENV === "production" ? undefined : detail,
+        error: missingEnv
+          ? "Thiếu cấu hình PayOS trên server (PAYOS_CLIENT_ID/API_KEY/CHECKSUM_KEY)."
+          : "Không thể tạo link thanh toán PayOS.",
+        detail,
       },
       { status: 500 },
     );
