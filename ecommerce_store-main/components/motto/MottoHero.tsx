@@ -117,7 +117,7 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
               <img
                 src={slide.image}
                 alt={slide.alt}
-                className="motto-hero-slide-img"
+                className="motto-hero-slide-img w-full h-auto max-w-full object-cover"
                 decoding="async"
                 fetchPriority={slideIndex === 0 ? "high" : "low"}
               />
@@ -159,7 +159,7 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
                   alt=""
                   width={48}
                   height={48}
-                  className="motto-hero-thumb-img"
+                  className="motto-hero-thumb-img w-full h-auto max-w-full object-cover"
                   loading="lazy"
                   decoding="async"
                 />

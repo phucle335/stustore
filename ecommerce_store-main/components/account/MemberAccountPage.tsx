@@ -50,6 +50,7 @@ export function MemberAccountPage({
   const [section, setSection] = useState<SectionId>("orders");
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [ordersPage, setOrdersPage] = useState(1);
+  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [profile, setProfile] = useState<MemberProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
@@ -284,6 +285,7 @@ export function MemberAccountPage({
               className={section === item.id ? "is-active" : undefined}
               onClick={() => {
                 setSection(item.id);
+                setExpandedOrderId(null);
                 setMessage(null);
                 setError(null);
               }}
@@ -328,6 +330,7 @@ export function MemberAccountPage({
                     const orderItems = Array.isArray(rawItems)
                       ? rawItems
                       : [];
+                    const isExpanded = expandedOrderId === orderId;
 
                     return (
                     <li
@@ -358,8 +361,65 @@ export function MemberAccountPage({
                           ? ` · Còn lại: ${formatPriceVnd(Number(order.remaining_amount ?? 0))}`
                           : ""}
                       </p>
+                      <button
+                        type="button"
+                        className="member-link-btn"
+                        onClick={() =>
+                          setExpandedOrderId((current) =>
+                            current === orderId ? null : orderId,
+                          )
+                        }
+                      >
+                        {isExpanded ? "Ẩn chi tiết đơn" : "Chi tiết đơn"}
+                      </button>
 
-                      {orderItems.length > 0 ? (
+                      {isExpanded ? (
+                        <div className="member-order-detail">
+                          <p className="member-order-item-line">
+                            Trạng thái:{" "}
+                            <strong>{statusLabel[order.status] ?? order.status}</strong>
+                          </p>
+                          <p className="member-order-item-line">
+                            Tổng tiền: <strong>{formatPriceVnd(Number(order.total_price))}</strong>
+                          </p>
+                          <p className="member-order-item-line">
+                            Địa chỉ giao:{" "}
+                            {order.shipping_address
+                              ? String(order.shipping_address)
+                              : "Chưa có"}
+                          </p>
+                          <p className="member-order-item-line">
+                            Người nhận:{" "}
+                            {order.shipping_full_name
+                              ? String(order.shipping_full_name)
+                              : "Chưa có"}
+                            {order.shipping_phone
+                              ? ` · ${String(order.shipping_phone)}`
+                              : ""}
+                          </p>
+                          <ul className="member-order-items">
+                            {orderItems.map((it: any, idx) => {
+                              const name = typeof it?.name === "string" ? it.name : "";
+                              const size =
+                                typeof it?.size === "string" && it.size.trim()
+                                  ? ` — Size ${it.size}`
+                                  : "";
+                              const qty = Number(it?.quantity) || 0;
+                              const unitPrice = Number(it?.unit_price ?? 0);
+                              if (!name || qty <= 0) return null;
+                              return (
+                                <li key={`${orderId}-detail-${idx}`} className="member-order-item-line">
+                                  {name}
+                                  {size} × {qty}
+                                  {unitPrice > 0 ? ` · ${formatPriceVnd(unitPrice)}` : ""}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      ) : null}
+
+                      {!isExpanded && orderItems.length > 0 ? (
                         <ul className="member-order-items">
                           {orderItems.slice(0, 5).map((it: any, idx) => {
                             const name = typeof it?.name === "string" ? it.name : "";
@@ -383,11 +443,11 @@ export function MemberAccountPage({
                             </li>
                           ) : null}
                         </ul>
-                      ) : (
+                      ) : !isExpanded ? (
                         <p className="member-muted" style={{ marginTop: 10 }}>
                           Chưa có mô tả sản phẩm trong đơn.
                         </p>
-                      )}
+                      ) : null}
                     </li>
                     );
                   })}

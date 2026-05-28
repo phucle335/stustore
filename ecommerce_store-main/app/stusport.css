@@ -411,6 +411,13 @@ body {
   font-size: 13px;
 }
 
+.featured-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+
 /* Product Grid */
 .product-grid-wrapper {
   width: 100%;
@@ -499,7 +506,7 @@ body {
 .pagination-info {
   margin-top: 16px;
   text-align: center;
-  color: #888;
+  color: #b5b5b5;
   font-size: 13px;
 }
 
@@ -2669,7 +2676,7 @@ body {
 
 .search-empty {
   text-align: center;
-  color: #999;
+  color: #c8c8c8;
   font-size: 16px;
   padding: 0 40px 48px;
   max-width: 560px;

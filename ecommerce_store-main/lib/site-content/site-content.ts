@@ -22,6 +22,17 @@ export type SiteContent = {
       };
     };
   };
+  pages: {
+    support: {
+      backgroundImage: string;
+    };
+    terms: {
+      backgroundImage: string;
+    };
+    account: {
+      backgroundImage: string;
+    };
+  };
 };
 
 export function getDefaultSiteContent(): SiteContent {
@@ -36,6 +47,11 @@ export function getDefaultSiteContent(): SiteContent {
         cards: MOTTO_INSIGHTS.map((i) => ({ title: i.title, href: i.href })),
         banner: null,
       },
+    },
+    pages: {
+      support: { backgroundImage: "" },
+      terms: { backgroundImage: "" },
+      account: { backgroundImage: "" },
     },
   };
 }
@@ -59,25 +75,32 @@ export function mergeSiteContent(
   if (!partial || !isObject(partial)) return base;
 
   const mottoPartial = partial.motto;
-  if (!mottoPartial || !isObject(mottoPartial)) return base;
+  const pagesPartial = partial.pages;
 
   const motto: SiteContent["motto"] = {
-    mottoHeroSlides:
-      safeArray(mottoPartial.mottoHeroSlides).length > 0
-        ? (mottoPartial.mottoHeroSlides as MottoHeroSlide[])
-        : base.motto.mottoHeroSlides,
-    homeRotatingWords:
-      safeArray(mottoPartial.homeRotatingWords).length > 0
-        ? (mottoPartial.homeRotatingWords as string[])
-        : base.motto.homeRotatingWords,
-    mottoMarqueeItems:
-      safeArray(mottoPartial.mottoMarqueeItems).length > 0
-        ? (mottoPartial.mottoMarqueeItems as string[])
-        : base.motto.mottoMarqueeItems,
+    mottoHeroSlides: base.motto.mottoHeroSlides,
+    homeRotatingWords: base.motto.homeRotatingWords,
+    mottoMarqueeItems: base.motto.mottoMarqueeItems,
     mottoInsights: base.motto.mottoInsights,
   };
 
-  const insightsPartial = mottoPartial.mottoInsights;
+  if (mottoPartial && isObject(mottoPartial)) {
+    motto.mottoHeroSlides =
+      safeArray(mottoPartial.mottoHeroSlides).length > 0
+        ? (mottoPartial.mottoHeroSlides as MottoHeroSlide[])
+        : base.motto.mottoHeroSlides;
+    motto.homeRotatingWords =
+      safeArray(mottoPartial.homeRotatingWords).length > 0
+        ? (mottoPartial.homeRotatingWords as string[])
+        : base.motto.homeRotatingWords;
+    motto.mottoMarqueeItems =
+      safeArray(mottoPartial.mottoMarqueeItems).length > 0
+        ? (mottoPartial.mottoMarqueeItems as string[])
+        : base.motto.mottoMarqueeItems;
+  }
+
+  const insightsPartial =
+    mottoPartial && isObject(mottoPartial) ? mottoPartial.mottoInsights : null;
   if (insightsPartial && isObject(insightsPartial)) {
     motto.mottoInsights = {
       introText:
@@ -101,6 +124,36 @@ export function mergeSiteContent(
     };
   }
 
-  return { motto };
+  const pages: SiteContent["pages"] = {
+    support: {
+      backgroundImage:
+        pagesPartial &&
+        isObject(pagesPartial) &&
+        isObject(pagesPartial.support) &&
+        typeof pagesPartial.support.backgroundImage === "string"
+          ? pagesPartial.support.backgroundImage
+          : base.pages.support.backgroundImage,
+    },
+    terms: {
+      backgroundImage:
+        pagesPartial &&
+        isObject(pagesPartial) &&
+        isObject(pagesPartial.terms) &&
+        typeof pagesPartial.terms.backgroundImage === "string"
+          ? pagesPartial.terms.backgroundImage
+          : base.pages.terms.backgroundImage,
+    },
+    account: {
+      backgroundImage:
+        pagesPartial &&
+        isObject(pagesPartial) &&
+        isObject(pagesPartial.account) &&
+        typeof pagesPartial.account.backgroundImage === "string"
+          ? pagesPartial.account.backgroundImage
+          : base.pages.account.backgroundImage,
+    },
+  };
+
+  return { motto, pages };
 }
 

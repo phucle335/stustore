@@ -8,12 +8,25 @@ export const metadata = {
   title: "Giày Sneaker — Stusport",
 };
 
-export default async function SneakersPage() {
+type SneakersPageProps = {
+  searchParams: Promise<{ sort?: string }>;
+};
+
+export default async function SneakersPage({ searchParams }: SneakersPageProps) {
   const products = await getProductsByCategory("sneakers");
+  const { sort } = await searchParams;
 
   return (
     <StoreShell activeNav="sneakers">
-      <FeaturedSection title="GIÀY SNEAKER" products={products} />
+      <FeaturedSection
+        title="GIÀY SNEAKER"
+        products={products}
+        initialSort={
+          sort === "price_asc" || sort === "price_desc" || sort === "name_asc" || sort === "name_desc"
+            ? (sort as any)
+            : undefined
+        }
+      />
     </StoreShell>
   );
 }

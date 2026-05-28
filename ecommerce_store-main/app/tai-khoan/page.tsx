@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { MemberAccountPage } from "@/components/account/MemberAccountPage";
 import { CustomerPageWrap } from "@/components/store/CustomerPageWrap";
 import { StoreShell } from "@/components/store/StoreShell";
+import { getSiteContentServer } from "@/lib/site-content/get-site-content-server";
 import { getAllProducts } from "@/lib/store/catalog";
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
 
@@ -23,14 +24,31 @@ export default async function MemberAccountRoute() {
   }
 
   const products = await getAllProducts();
+  const siteContent = await getSiteContentServer();
+  const bg = siteContent.pages.account.backgroundImage?.trim();
   const productsById = Object.fromEntries(
     products.map((product) => [product.id, product]),
   );
 
   return (
     <StoreShell activeNav="home">
-      <CustomerPageWrap theme="dark">
-        <MemberAccountPage productsById={productsById} />
+      <CustomerPageWrap>
+        <div
+          className="static-page-wrap"
+          style={
+            bg
+              ? {
+                  backgroundImage: `linear-gradient(rgba(0,0,0,0.38), rgba(0,0,0,0.38)), url(${bg})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }
+              : undefined
+          }
+        >
+          <article className="static-page">
+            <MemberAccountPage productsById={productsById} />
+          </article>
+        </div>
       </CustomerPageWrap>
     </StoreShell>
   );

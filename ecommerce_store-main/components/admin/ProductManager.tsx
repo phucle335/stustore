@@ -990,7 +990,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
                       className="admin-input w-20 text-center text-sm font-semibold"
                     />
 
-                    <div className="flex items-center gap-1 rounded-lg border border-[var(--admin-border)] bg-white p-1">
+                    <div className="flex items-center gap-1 rounded-lg border border-[var(--admin-border)] bg-[var(--admin-surface)] p-1">
                       <button
                         type="button"
                         aria-label={`Giảm size ${row.size}`}
@@ -999,7 +999,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
                       >
                         <Minus className="h-4 w-4" />
                       </button>
-                      <span className="min-w-[3rem] text-center text-lg font-semibold tabular-nums admin-text">
+                      <span className="min-w-[3rem] rounded-md bg-[rgba(255,255,255,0.06)] px-2 py-1 text-center text-lg font-semibold tabular-nums text-white">
                         {row.quantity}
                       </span>
                       <button

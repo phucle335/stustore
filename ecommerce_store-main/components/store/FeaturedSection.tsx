@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   filterProductsByBrand,
   getUniqueBrands,
@@ -13,17 +14,32 @@ type FeaturedSectionProps = {
   title: string;
   products: Product[];
   pageSize?: number;
+  initialSort?: ProductSort;
 };
+
+export type ProductSort = "price_desc" | "price_asc" | "name_asc" | "name_desc";
+
+function parsePrice(value: string): number {
+  const raw = String(value ?? "");
+  const digits = raw.replace(/[^\d]/g, "");
+  const n = Number(digits);
+  return Number.isFinite(n) ? n : 0;
+}
 
 export function FeaturedSection({
   title,
   products,
   pageSize,
+  initialSort = "price_desc",
 }: FeaturedSectionProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [activeBrand, setActiveBrand] = useState<string | null>(null);
   const [fulfillmentFilter, setFulfillmentFilter] = useState<
     "all" | "in_stock" | "pre_order"
   >("all");
+  const [sort, setSort] = useState<ProductSort>(initialSort);
   const brands = useMemo(() => getUniqueBrands(products), [products]);
   const filteredByBrand = useMemo(
     () => filterProductsByBrand(products, activeBrand),
@@ -38,6 +54,25 @@ export function FeaturedSection({
     );
   }, [filteredByBrand, fulfillmentFilter]);
 
+  const sortedProducts = useMemo(() => {
+    const rows = [...filteredProducts];
+    rows.sort((a, b) => {
+      if (sort === "price_asc") return parsePrice(a.price) - parsePrice(b.price);
+      if (sort === "price_desc") return parsePrice(b.price) - parsePrice(a.price);
+      if (sort === "name_asc") return a.name.localeCompare(b.name, "vi");
+      if (sort === "name_desc") return b.name.localeCompare(a.name, "vi");
+      return 0;
+    });
+    return rows;
+  }, [filteredProducts, sort]);
+
+  function updateSort(next: ProductSort) {
+    setSort(next);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sort", next);
+    router.replace(`${pathname}?${params.toString()}`);
+  }
+
   return (
     <section className="featured">
       <h2 className="section-title">{title}</h2>
@@ -46,28 +81,40 @@ export function FeaturedSection({
         activeBrand={activeBrand}
         onBrandChange={setActiveBrand}
       />
-      <label className="featured-fulfillment-filter">
-        <span>Lọc trạng thái</span>
-        <select
-          value={fulfillmentFilter}
-          onChange={(event) =>
-            setFulfillmentFilter(
-              event.target.value as "all" | "in_stock" | "pre_order",
-            )
-          }
-        >
-          <option value="all">Tất cả</option>
-          <option value="in_stock">Hàng có sẵn</option>
-          <option value="pre_order">Pre-order</option>
-        </select>
-      </label>
+      <div className="featured-controls">
+        <label className="featured-fulfillment-filter">
+          <span>Lọc trạng thái</span>
+          <select
+            value={fulfillmentFilter}
+            onChange={(event) =>
+              setFulfillmentFilter(
+                event.target.value as "all" | "in_stock" | "pre_order",
+              )
+            }
+          >
+            <option value="all">Tất cả</option>
+            <option value="in_stock">Hàng có sẵn</option>
+            <option value="pre_order">Pre-order</option>
+          </select>
+        </label>
+
+        <label className="featured-fulfillment-filter">
+          <span>Sắp xếp</span>
+          <select value={sort} onChange={(e) => updateSort(e.target.value as ProductSort)}>
+            <option value="price_desc">Giá: cao → thấp</option>
+            <option value="price_asc">Giá: thấp → cao</option>
+            <option value="name_asc">Tên: A → Z</option>
+            <option value="name_desc">Tên: Z → A</option>
+          </select>
+        </label>
+      </div>
       {filteredProducts.length === 0 ? (
         <p className="search-empty">
           Chưa có sản phẩm trong danh mục này. Thêm sản phẩm trong Admin và chọn
           đúng danh mục.
         </p>
       ) : (
-        <ProductGrid products={filteredProducts} pageSize={pageSize} />
+        <ProductGrid products={sortedProducts} pageSize={pageSize} />
       )}
     </section>
   );

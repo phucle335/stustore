@@ -699,6 +699,14 @@
   margin-top: 6px;
 }
 
+.member-order-detail {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  background: #fff;
+}
+
 .member-order-status {
   margin-left: 8px;
   font-size: 12px;

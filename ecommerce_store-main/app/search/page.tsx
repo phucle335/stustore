@@ -7,7 +7,7 @@ import { STORE_NAME } from "@/lib/store/site";
 export const dynamic = "force-dynamic";
 
 type SearchPageProps = {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; sort?: string }>;
 };
 
 export async function generateMetadata({ searchParams }: SearchPageProps) {
@@ -21,7 +21,7 @@ export async function generateMetadata({ searchParams }: SearchPageProps) {
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-  const { q } = await searchParams;
+  const { q, sort } = await searchParams;
   const query = q?.trim() ?? "";
   const allProducts = await getAllProducts();
   const results = searchProducts(allProducts, query);
@@ -35,6 +35,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             : "TÌM KIẾM SẢN PHẨM"
         }
         products={results}
+        initialSort={
+          sort === "price_asc" || sort === "price_desc" || sort === "name_asc" || sort === "name_desc"
+            ? (sort as any)
+            : undefined
+        }
       />
       {query && results.length === 0 ? (
         <p className="search-empty">

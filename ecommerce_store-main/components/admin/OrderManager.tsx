@@ -969,6 +969,14 @@ export function OrderManager({
                 <h3 className="mb-3 text-sm font-semibold admin-text">
                   THÔNG TIN KHÁCH HÀNG
                 </h3>
+                <p className="admin-muted text-xs">
+                  Email:{" "}
+                  <span className="admin-text">
+                    {form.user_id
+                      ? (emailByUserId.get(form.user_id) ?? "—")
+                      : "—"}
+                  </span>
+                </p>
                 <p className="admin-text">{form.shipping_full_name || "—"}</p>
                 <p className="text-sm">
                   <a

@@ -8,12 +8,25 @@ export const metadata = {
   title: "Túi Xách — Stusport",
 };
 
-export default async function BagsPage() {
+type BagsPageProps = {
+  searchParams: Promise<{ sort?: string }>;
+};
+
+export default async function BagsPage({ searchParams }: BagsPageProps) {
   const products = await getProductsByCategory("bags");
+  const { sort } = await searchParams;
 
   return (
     <StoreShell activeNav="bags">
-      <FeaturedSection title="TÚI XÁCH" products={products} />
+      <FeaturedSection
+        title="TÚI XÁCH"
+        products={products}
+        initialSort={
+          sort === "price_asc" || sort === "price_desc" || sort === "name_asc" || sort === "name_desc"
+            ? (sort as any)
+            : undefined
+        }
+      />
     </StoreShell>
   );
 }
