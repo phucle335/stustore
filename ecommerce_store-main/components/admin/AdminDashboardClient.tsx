@@ -38,6 +38,7 @@ type AdminDashboardClientProps = {
   supportRequests: DbSupportRequest[];
   auditLogs: AdminAuditLog[];
   notifications: DbNotification[];
+  initialView?: AdminView;
 };
 
 export function AdminDashboardClient({
@@ -49,25 +50,36 @@ export function AdminDashboardClient({
   supportRequests,
   auditLogs,
   notifications,
+  initialView: initialViewProp,
 }: AdminDashboardClientProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const viewParam = searchParams.get("view");
-  const initialView: AdminView =
-    viewParam &&
-    [
-      "overview",
-      "analytics",
-      "products",
-      "orders",
-      "customers",
-      "coupons",
-      "site_content",
-      "blog_cms",
-    ].includes(viewParam)
+  const allowedViews: AdminView[] = [
+    "overview",
+    "analytics",
+    "products",
+    "orders",
+    "customers",
+    "coupons",
+    "site_content",
+    "blog_cms",
+  ];
+
+  const routeView = (() => {
+    const seg = pathname.split("/").filter(Boolean)[1] || "";
+    return allowedViews.includes(seg as AdminView) ? (seg as AdminView) : null;
+  })();
+
+  const urlView: AdminView | null =
+    viewParam && allowedViews.includes(viewParam as AdminView)
       ? (viewParam as AdminView)
-      : "overview";
+      : null;
+
+  const initialView: AdminView =
+    urlView ?? routeView ?? initialViewProp ?? "overview";
+
   const [view, setView] = useState<AdminView>(initialView);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -77,17 +89,13 @@ export function AdminDashboardClient({
   function handleViewChange(next: AdminView) {
     setView(next);
     setMobileSidebarOpen(false);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("view", next);
-    router.replace(`${pathname}?${params.toString()}`);
+    router.push(next === "overview" ? "/admin" : `/admin/${next}`);
   }
 
   useEffect(() => {
-    if (!viewParam) return;
-    if (viewParam !== view) {
-      setView(viewParam as AdminView);
-    }
-  }, [viewParam, view]);
+    const next = urlView ?? routeView ?? initialViewProp ?? "overview";
+    if (next !== view) setView(next);
+  }, [urlView, routeView, initialViewProp, view]);
 
   const subtitle =
     view === "overview"

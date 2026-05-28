@@ -63,6 +63,7 @@ export type ProductImageFields = {
 };
 
 export type ProductFulfillmentType = "in_stock" | "pre_order";
+export type ProductStatus = "selling" | "out_of_stock" | "paused";
 
 export type DbProduct = {
   id: string;
@@ -70,6 +71,7 @@ export type DbProduct = {
   brand_tag: string;
   category?: StoreProductCategory;
   fulfillment_type?: ProductFulfillmentType | null;
+  product_status?: ProductStatus | null;
   price: number;
   sale_percent?: number | null;
   description: string | null;
@@ -190,6 +192,7 @@ export type CreateProductInput = {
   brand_tag: string;
   category: StoreProductCategory;
   fulfillment_type?: ProductFulfillmentType | null;
+  product_status?: ProductStatus | null;
   price: number;
   sale_percent?: number | null;
   description?: string | null;

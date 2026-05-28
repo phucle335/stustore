@@ -7,6 +7,7 @@ import { createAdminSupabaseClient } from "@/lib/supabase/server";
 import type {
   CreateProductInput,
   DbProduct,
+  ProductStatus,
   StoreProductCategory,
   UpdateProductInput,
 } from "@/lib/supabase/types";
@@ -16,6 +17,18 @@ import {
   queryProductById,
 } from "@/lib/store/product-query";
 import { failure, success, type ActionResult } from "@/lib/admin/result";
+
+const LEGACY_PRODUCT_SELECT =
+  "id, name, brand_tag, category, fulfillment_type, price, sale_percent, description, sizes, image_url_1, image_url_2, image_url_3, image_url_4, image_url_5, created_at, updated_at";
+
+function isMissingProductStatusError(message: string): boolean {
+  return (
+    message.includes("product_status") &&
+    (message.includes("column") ||
+      message.includes("schema cache") ||
+      message.includes("does not exist"))
+  );
+}
 
 function normalizeSizes(raw: unknown): DbProduct["sizes"] {
   if (Array.isArray(raw)) {
@@ -58,6 +71,10 @@ function mapProduct(row: Record<string, unknown>): DbProduct | null {
     category: normalizeCategory(row.category),
     fulfillment_type:
       row.fulfillment_type === "pre_order" ? "pre_order" : "in_stock",
+    product_status:
+      row.product_status === "out_of_stock" || row.product_status === "paused"
+        ? (row.product_status as ProductStatus)
+        : "selling",
     price: Number(row.price),
     sale_percent:
       row.sale_percent == null ? 0 : Number(row.sale_percent),
@@ -84,6 +101,9 @@ function buildDbRow(input: CreateProductInput | UpdateProductInput) {
   }
   if ("fulfillment_type" in input && input.fulfillment_type !== undefined) {
     row.fulfillment_type = input.fulfillment_type;
+  }
+  if ("product_status" in input && input.product_status !== undefined) {
+    row.product_status = input.product_status;
   }
   if ("price" in input && input.price !== undefined) row.price = input.price;
   if ("sale_percent" in input && input.sale_percent !== undefined) {
@@ -140,22 +160,37 @@ export async function createProduct(
   input: CreateProductInput,
 ): Promise<ActionResult<DbProduct>> {
   const supabase = createAdminSupabaseClient();
-  const { data, error } = await supabase
+  const payload = {
+    ...(input.id ? { id: input.id } : {}),
+    name: input.name,
+    brand_tag: input.brand_tag,
+    category: input.category,
+    fulfillment_type: input.fulfillment_type ?? "in_stock",
+    product_status: input.product_status ?? "selling",
+    price: input.price,
+    sale_percent: input.sale_percent ?? 0,
+    description: input.description ?? null,
+    sizes: input.sizes ?? [],
+    ...imageFieldsToDbPayload(input),
+  };
+  const initialCreate = await supabase
     .from("products")
-    .insert({
-      ...(input.id ? { id: input.id } : {}),
-      name: input.name,
-      brand_tag: input.brand_tag,
-      category: input.category,
-      fulfillment_type: input.fulfillment_type ?? "in_stock",
-      price: input.price,
-      sale_percent: input.sale_percent ?? 0,
-      description: input.description ?? null,
-      sizes: input.sizes ?? [],
-      ...imageFieldsToDbPayload(input),
-    })
+    .insert(payload)
     .select(PRIMARY_PRODUCT_SELECT)
     .single();
+  let data = initialCreate.data as Record<string, unknown> | null;
+  let error = initialCreate.error;
+
+  if (error && isMissingProductStatusError(error.message)) {
+    const { product_status: _productStatus, ...legacyPayload } = payload;
+    const retry = await supabase
+      .from("products")
+      .insert(legacyPayload)
+      .select(LEGACY_PRODUCT_SELECT)
+      .single();
+    data = retry.data as Record<string, unknown> | null;
+    error = retry.error;
+  }
 
   if (error) {
     if (
@@ -176,12 +211,28 @@ export async function updateProduct(
   input: UpdateProductInput,
 ): Promise<ActionResult<DbProduct>> {
   const supabase = createAdminSupabaseClient();
-  const { data, error } = await supabase
+  const row = buildDbRow(input);
+  const initialUpdate = await supabase
     .from("products")
-    .update(buildDbRow(input))
+    .update(row)
     .eq("id", id)
     .select(PRIMARY_PRODUCT_SELECT)
     .single();
+  let data = initialUpdate.data as Record<string, unknown> | null;
+  let error = initialUpdate.error;
+
+  if (error && isMissingProductStatusError(error.message)) {
+    const legacyRow = { ...row };
+    delete legacyRow.product_status;
+    const retry = await supabase
+      .from("products")
+      .update(legacyRow)
+      .eq("id", id)
+      .select(LEGACY_PRODUCT_SELECT)
+      .single();
+    data = retry.data as Record<string, unknown> | null;
+    error = retry.error;
+  }
 
   if (error) return failure(error.message);
   const product = mapProduct(data as Record<string, unknown>);

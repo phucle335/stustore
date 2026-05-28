@@ -49,6 +49,7 @@ export function MemberAccountPage({
   const { user, refreshProfile } = useCustomerAuth();
   const [section, setSection] = useState<SectionId>("orders");
   const [orders, setOrders] = useState<DbOrder[]>([]);
+  const [ordersPage, setOrdersPage] = useState(1);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [profile, setProfile] = useState<MemberProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
@@ -120,6 +121,21 @@ export function MemberAccountPage({
     if (!user) return;
     void loadData();
   }, [loadData, user]);
+
+  const ORDERS_PAGE_SIZE = 5;
+  const ordersTotalPages = Math.max(1, Math.ceil(orders.length / ORDERS_PAGE_SIZE));
+  const pagedOrders = orders.slice(
+    (ordersPage - 1) * ORDERS_PAGE_SIZE,
+    ordersPage * ORDERS_PAGE_SIZE,
+  );
+
+  useEffect(() => {
+    setOrdersPage(1);
+  }, [section]);
+
+  useEffect(() => {
+    if (ordersPage > ordersTotalPages) setOrdersPage(ordersTotalPages);
+  }, [ordersPage, ordersTotalPages]);
 
   async function saveProfile(event: React.FormEvent) {
     event.preventDefault();
@@ -297,8 +313,9 @@ export function MemberAccountPage({
               {orders.length === 0 ? (
                 <p className="member-muted">Chưa có đơn hàng.</p>
               ) : (
-                <ul className="member-order-list">
-                  {orders.map((order, index) => {
+                <>
+                  <ul className="member-order-list">
+                    {pagedOrders.map((order, index) => {
                     const orderId =
                       typeof order.id === "string"
                         ? order.id
@@ -374,7 +391,36 @@ export function MemberAccountPage({
                     </li>
                     );
                   })}
-                </ul>
+                  </ul>
+
+                  {orders.length > ORDERS_PAGE_SIZE ? (
+                    <div className="member-orders-pager">
+                      <p className="member-muted">
+                        Trang {ordersPage}/{ordersTotalPages} · {orders.length} đơn
+                      </p>
+                      <div className="member-orders-pager-actions">
+                        <button
+                          type="button"
+                          className="checkout-secondary-btn"
+                          disabled={ordersPage <= 1}
+                          onClick={() => setOrdersPage((p) => Math.max(1, p - 1))}
+                        >
+                          Trang trước
+                        </button>
+                        <button
+                          type="button"
+                          className="checkout-secondary-btn"
+                          disabled={ordersPage >= ordersTotalPages}
+                          onClick={() =>
+                            setOrdersPage((p) => Math.min(ordersTotalPages, p + 1))
+                          }
+                        >
+                          Trang sau
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </>
               )}
             </div>
           ) : null}

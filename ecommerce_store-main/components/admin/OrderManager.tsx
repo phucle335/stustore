@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import {
   createOrderAction,
   deleteOrderAction,
@@ -31,6 +31,7 @@ type OrderFormState = {
   user_id: string;
   product_name: string;
   product_id: string;
+  product_image: string;
   product_quantity: string;
   product_unit_price: string;
   shipping_full_name: string;
@@ -62,6 +63,7 @@ const emptyOrderForm = (): OrderFormState => ({
   user_id: "",
   product_name: "",
   product_id: "",
+  product_image: "",
   product_quantity: "1",
   product_unit_price: "0",
   shipping_full_name: "",
@@ -105,6 +107,7 @@ function orderToForm(order: DbOrder): OrderFormState {
     user_id: order.user_id ?? "",
     product_name: String(firstItem?.name ?? ""),
     product_id: String(firstItem?.product_id ?? ""),
+    product_image: String(firstItem?.image ?? ""),
     product_quantity: String(Number(firstItem?.quantity ?? 1) || 1),
     product_unit_price: String(Number(firstItem?.unit_price ?? 0) || 0),
     shipping_full_name: String(order.shipping_full_name ?? ""),
@@ -150,11 +153,13 @@ export function OrderManager({
   products = [],
   auditLogs = [],
 }: OrderManagerProps) {
+  const ORDER_PAGE_SIZE = 10;
   const [orders, setOrders] = useState(initialOrders);
   const [form, setForm] = useState<OrderFormState>(emptyOrderForm);
   const [screen, setScreen] = useState<"list" | "detail">("list");
   const [keyword, setKeyword] = useState("");
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
+  const [page, setPage] = useState(1);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -199,12 +204,58 @@ export function OrderManager({
       .sort((a, b) => b.created_at.localeCompare(a.created_at));
   }, [orders, statusFilter, keyword, emailByUserId]);
 
+  const totalPages = Math.max(1, Math.ceil(filteredOrders.length / ORDER_PAGE_SIZE));
+  const pagedFilteredOrders = useMemo(
+    () =>
+      filteredOrders.slice(
+        (page - 1) * ORDER_PAGE_SIZE,
+        page * ORDER_PAGE_SIZE,
+      ),
+    [filteredOrders, page],
+  );
+
+  useEffect(() => {
+    setPage(1);
+  }, [keyword, statusFilter]);
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
+
   function statusChipClass(status: OrderStatus) {
-    if (status === "confirmed" || status === "processing")
-      return "bg-orange-500/20 text-orange-300";
-    if (status === "delivered" || status === "payment_verified")
+    if (status === "pending" || status === "pending_payment") {
+      return "bg-amber-500/20 text-amber-300";
+    }
+    if (status === "delivered") {
+      return "bg-emerald-500/20 text-emerald-300";
+    }
+    if (status === "cancelled") {
       return "bg-red-500/20 text-red-300";
+    }
+    if (status === "payment_verified") {
+      return "bg-emerald-500/20 text-emerald-300";
+    }
+    if (status === "deposit_paid") {
+      return "bg-sky-500/20 text-sky-300";
+    }
+    if (status === "confirmed" || status === "processing" || status === "shipped") {
+      return "bg-orange-500/20 text-orange-300";
+    }
     return "bg-teal-500/20 text-teal-300";
+  }
+
+  function paidDepositForStatus(status: OrderStatus, depositAmount: number) {
+    if (status === "deposit_paid") return depositAmount;
+    if (
+      status === "payment_verified" ||
+      status === "confirmed" ||
+      status === "processing" ||
+      status === "shipped" ||
+      status === "delivered"
+    ) {
+      return depositAmount;
+    }
+    return 0;
   }
 
   function paymentStatusText(order: DbOrder) {
@@ -225,6 +276,21 @@ export function OrderManager({
         return name ? `${qty} x ${name}${pid ? ` (#${pid})` : ""}` : "";
       })
       .filter(Boolean);
+  }
+
+  function productItems(order: DbOrder): { label: string; image: string | null }[] {
+    if (!Array.isArray(order.order_items)) return [];
+    return order.order_items
+      .map((it) => {
+        const row = it as Record<string, unknown>;
+        const qty = Number(row.quantity ?? 1) || 1;
+        const name = String(row.name ?? "").trim();
+        const pid = String(row.product_id ?? "").trim();
+        const image = String(row.image ?? "").trim();
+        const label = name ? `${qty} x ${name}${pid ? ` (#${pid})` : ""}` : "";
+        return { label, image: image || null };
+      })
+      .filter((x) => Boolean(x.label));
   }
 
   function applyProductById(id: string) {
@@ -446,7 +512,7 @@ export function OrderManager({
                 </tr>
               </thead>
               <tbody>
-                {filteredOrders.map((order) => {
+                {pagedFilteredOrders.map((order) => {
                   const meta = parseOrderMeta(order);
                   const page = String(meta.source_page ?? "My Love Story");
                   const note = String(meta.note ?? "");
@@ -491,9 +557,19 @@ export function OrderManager({
                         </div>
                       </td>
                       <td>
-                        {productLines(order).map((line, idx) => (
-                          <div key={idx} className="admin-muted text-xs">
-                            {line}
+                        {productItems(order).slice(0, 3).map((it, idx) => (
+                          <div
+                            key={idx}
+                            className="admin-muted text-xs"
+                            style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}
+                          >
+                            <span className="admin-order-thumb">
+                              {it.image ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={it.image} alt="" className="admin-order-thumb__img" />
+                              ) : null}
+                            </span>
+                            <span>{it.label}</span>
                           </div>
                         ))}
                       </td>
@@ -532,7 +608,7 @@ export function OrderManager({
           </div>
 
           <div className="space-y-3 md:hidden">
-            {filteredOrders.map((order) => {
+            {pagedFilteredOrders.map((order) => {
               const meta = parseOrderMeta(order);
               const page = String(meta.source_page ?? "My Love Story");
               const note = String(meta.note ?? "");
@@ -574,6 +650,29 @@ export function OrderManager({
               );
             })}
           </div>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+            <p className="text-xs admin-muted">
+              Trang {page}/{totalPages} - {filteredOrders.length} đơn
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="admin-btn"
+                disabled={page <= 1}
+                onClick={() => setPage((current) => Math.max(1, current - 1))}
+              >
+                Trang trước
+              </button>
+              <button
+                type="button"
+                className="admin-btn"
+                disabled={page >= totalPages}
+                onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+              >
+                Trang sau
+              </button>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
@@ -584,7 +683,9 @@ export function OrderManager({
                   <h3 className="admin-text font-semibold">
                     Đơn hàng: #{form.id || "Mới"}
                   </h3>
-                  <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-xs text-red-300">
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs font-semibold ${statusChipClass(form.status)}`}
+                  >
                     {ORDER_STATUS_LABELS[form.status]}
                   </span>
                   <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs text-emerald-300">
@@ -645,7 +746,16 @@ export function OrderManager({
                     <tbody>
                       <tr>
                         <td>
-                          <div className="h-10 w-10 rounded bg-white/10" />
+                          <span className="admin-order-thumb">
+                            {form.product_image ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={form.product_image}
+                                alt={form.product_name || ""}
+                                className="admin-order-thumb__img"
+                              />
+                            ) : null}
+                          </span>
                         </td>
                         <td>
                           <input
@@ -768,7 +878,12 @@ export function OrderManager({
                     <div className="flex justify-between">
                       <span className="admin-muted">Đã cọc</span>
                       <span className="admin-text">
-                        {formatCurrency(Number(form.deposit_amount || 0))}
+                        {formatCurrency(
+                          paidDepositForStatus(
+                            form.status,
+                            Number(form.deposit_amount || 0),
+                          ),
+                        )}
                       </span>
                     </div>
                     <div className="flex justify-between">

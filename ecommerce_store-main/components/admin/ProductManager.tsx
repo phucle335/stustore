@@ -9,6 +9,7 @@ import {
 } from "@/lib/admin/actions/products";
 import type {
   DbProduct,
+  ProductStatus,
   ProductSizeStock,
   StoreProductCategory,
 } from "@/lib/supabase/types";
@@ -47,6 +48,7 @@ type ProductFormState = {
   brand_tag: string;
   category: StoreProductCategory;
   fulfillment_type: "in_stock" | "pre_order";
+  product_status: ProductStatus;
   price: string;
   sale_percent: string;
   description: string;
@@ -61,6 +63,7 @@ const emptyForm = (): ProductFormState => ({
   brand_tag: "",
   category: "sneakers",
   fulfillment_type: "in_stock",
+  product_status: "selling",
   price: "",
   sale_percent: "0",
   description: "",
@@ -77,12 +80,52 @@ function productToForm(product: DbProduct): ProductFormState {
     brand_tag: product.brand_tag ?? "",
     category,
     fulfillment_type: product.fulfillment_type ?? "in_stock",
+    product_status:
+      product.product_status === "out_of_stock" ||
+      product.product_status === "paused"
+        ? product.product_status
+        : "selling",
     price: String(product.price ?? ""),
     sale_percent: String(product.sale_percent ?? 0),
     description: product.description ?? "",
     images: productToImageFields(product),
     sizes: sizesToFormState(category, product.sizes),
   };
+}
+
+const PRODUCT_PAGE_SIZE = 12;
+const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
+  selling: "Đang bán",
+  out_of_stock: "Hết hàng",
+  paused: "Tạm ngưng",
+};
+
+function getProductStock(product: DbProduct): { stock: number; variants: number } {
+  const sizes = Array.isArray(product.sizes) ? product.sizes : [];
+  const stock = sizes.reduce((sum, row) => sum + (Number(row?.quantity) || 0), 0);
+  return { stock, variants: Math.max(1, sizes.length) };
+}
+
+function resolveDisplayStatus(product: DbProduct): ProductStatus {
+  const { stock } = getProductStock(product);
+  if (stock <= 0) return "out_of_stock";
+  if (
+    product.product_status === "paused" ||
+    product.product_status === "out_of_stock"
+  ) {
+    return product.product_status;
+  }
+  return "selling";
+}
+
+function statusBadgeClass(status: ProductStatus): string {
+  if (status === "out_of_stock") {
+    return "bg-red-500/15 text-red-300 ring-1 ring-red-500/35";
+  }
+  if (status === "paused") {
+    return "bg-amber-500/15 text-amber-300 ring-1 ring-amber-500/35";
+  }
+  return "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30";
 }
 
 export function ProductManager({ initialProducts }: ProductManagerProps) {
@@ -101,6 +144,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
   const [stockFilter, setStockFilter] = useState<
     "all" | "in_stock" | "out_stock" | "low_stock"
   >("all");
+  const [page, setPage] = useState(1);
   const [form, setForm] = useState<ProductFormState>(() =>
     initialProducts.length > 0 ? productToForm(initialProducts[0]) : emptyForm(),
   );
@@ -211,6 +255,26 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
       );
   }, [products, query, tab, categoryFilter, brandFilter, stockFilter, dateSort, sortBy]);
 
+  const totalPages = Math.max(1, Math.ceil(productRows.length / PRODUCT_PAGE_SIZE));
+  const pagedProductRows = useMemo(
+    () =>
+      productRows.slice(
+        (page - 1) * PRODUCT_PAGE_SIZE,
+        page * PRODUCT_PAGE_SIZE,
+      ),
+    [productRows, page],
+  );
+
+  useEffect(() => {
+    setPage(1);
+  }, [tab, query, categoryFilter, brandFilter, stockFilter, sortBy, dateSort]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
   function handleCategoryChange(category: StoreProductCategory) {
     setForm((current) => {
       const qty = totalQuantityFromSizeRows(current.sizes);
@@ -284,6 +348,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
           brand_tag: string;
           category: StoreProductCategory;
           fulfillment_type: "in_stock" | "pre_order";
+          product_status: ProductStatus;
           price: number;
           sale_percent: number;
           description: string | null;
@@ -317,6 +382,9 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
     }
 
     const sizes = sizesToDbPayload(form.category, form.sizes);
+    const stock = totalQuantityFromSizeRows(sizes);
+    const productStatus: ProductStatus =
+      stock <= 0 ? "out_of_stock" : form.product_status;
 
     if (!isCategoryWithoutSizes(form.category) && sizes.length === 0) {
       return { error: "Vui lòng nhập ít nhất một size và số lượng." };
@@ -329,6 +397,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
         brand_tag: form.brand_tag.trim().toLowerCase(),
         category: form.category,
         fulfillment_type: form.fulfillment_type,
+        product_status: productStatus,
         price,
         sale_percent,
         description: form.description.trim() || null,
@@ -584,13 +653,10 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
             </tr>
           </thead>
           <tbody>
-            {productRows.map((product) => {
-              const sizes = Array.isArray(product.sizes) ? product.sizes : [];
-              const stock = sizes.reduce(
-                (sum, row) => sum + (Number(row?.quantity) || 0),
-                0,
-              );
-              const variants = Math.max(1, sizes.length);
+            {pagedProductRows.map((product) => {
+              const { stock, variants } = getProductStock(product);
+              const displayStatus = resolveDisplayStatus(product);
+              const thumb = imageFieldsToArray(productToImageFields(product))[0] ?? null;
               return (
                 <tr
                   key={product.id}
@@ -601,7 +667,12 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
                     <input type="checkbox" onClick={(e) => e.stopPropagation()} />
                   </td>
                   <td>
-                    <div className="h-10 w-10 rounded bg-white/10" />
+                    <div className="admin-product-thumb">
+                      {thumb ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={thumb} alt={product.name} className="admin-product-thumb__img" />
+                      ) : null}
+                    </div>
                   </td>
                   <td>
                     <div className="flex flex-col">
@@ -625,8 +696,10 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
                   <td>{product.category}</td>
                   <td>{product.brand_tag}</td>
                   <td>
-                    <span className="rounded-full px-2 py-0.5 text-xs font-semibold bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30">
-                      Đang bán
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-semibold ${statusBadgeClass(displayStatus)}`}
+                    >
+                      {PRODUCT_STATUS_LABELS[displayStatus]}
                     </span>
                   </td>
                 </tr>
@@ -637,10 +710,9 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
       </div>
 
       <div className="mb-6 space-y-3 md:hidden">
-        {productRows.map((product) => {
-          const sizes = Array.isArray(product.sizes) ? product.sizes : [];
-          const stock = sizes.reduce((sum, row) => sum + (Number(row?.quantity) || 0), 0);
-          const variants = Math.max(1, sizes.length);
+        {pagedProductRows.map((product) => {
+          const { stock, variants } = getProductStock(product);
+          const displayStatus = resolveDisplayStatus(product);
           const active = form.id === product.id;
           return (
             <button
@@ -656,8 +728,10 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
                   <p className="admin-text text-sm font-semibold">{product.name}</p>
                   <p className="admin-muted text-xs">ID: {product.id}</p>
                 </div>
-                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-400">
-                  Đang bán
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs ${statusBadgeClass(displayStatus)}`}
+                >
+                  {PRODUCT_STATUS_LABELS[displayStatus]}
                 </span>
               </div>
               <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
@@ -676,6 +750,30 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
             </button>
           );
         })}
+      </div>
+
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs admin-muted">
+          Trang {page}/{totalPages} - {productRows.length} sản phẩm
+        </p>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="admin-btn"
+            onClick={() => setPage((current) => Math.max(1, current - 1))}
+            disabled={page <= 1}
+          >
+            Trang trước
+          </button>
+          <button
+            type="button"
+            className="admin-btn"
+            onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+            disabled={page >= totalPages}
+          >
+            Trang sau
+          </button>
+        </div>
       </div>
 
       <div className="mb-5">
@@ -758,6 +856,24 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
               >
                 <option value="in_stock">Hàng có sẵn</option>
                 <option value="pre_order">Pre-order</option>
+              </select>
+            </label>
+            <label className="block text-sm admin-text">
+              Trạng thái sản phẩm
+              <select
+                value={totalStock <= 0 ? "out_of_stock" : form.product_status}
+                onChange={(e) =>
+                  setForm((current) => ({
+                    ...current,
+                    product_status: e.target.value as ProductStatus,
+                  }))
+                }
+                className="admin-input mt-1.5"
+                disabled={totalStock <= 0}
+              >
+                <option value="selling">Đang bán</option>
+                <option value="out_of_stock">Hết hàng</option>
+                <option value="paused">Tạm ngưng</option>
               </select>
             </label>
             <label className="block text-sm admin-text">

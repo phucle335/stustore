@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { Shield, ShieldOff, Trash2 } from "lucide-react";
 import {
   assignRoleAction,
@@ -41,7 +41,40 @@ export function CustomerManager({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [supportPage, setSupportPage] = useState(1);
+  const [userPage, setUserPage] = useState(1);
   const [isPending, startTransition] = useTransition();
+  const SUPPORT_PAGE_SIZE = 8;
+  const USER_PAGE_SIZE = 10;
+  const supportTotalPages = Math.max(
+    1,
+    Math.ceil(recentSupportRequests.length / SUPPORT_PAGE_SIZE),
+  );
+  const userTotalPages = Math.max(1, Math.ceil(users.length / USER_PAGE_SIZE));
+  const pagedSupportRequests = useMemo(
+    () =>
+      recentSupportRequests.slice(
+        (supportPage - 1) * SUPPORT_PAGE_SIZE,
+        supportPage * SUPPORT_PAGE_SIZE,
+      ),
+    [recentSupportRequests, supportPage],
+  );
+  const pagedUsers = useMemo(
+    () => users.slice((userPage - 1) * USER_PAGE_SIZE, userPage * USER_PAGE_SIZE),
+    [users, userPage],
+  );
+
+  useEffect(() => {
+    if (supportPage > supportTotalPages) {
+      setSupportPage(supportTotalPages);
+    }
+  }, [supportPage, supportTotalPages]);
+
+  useEffect(() => {
+    if (userPage > userTotalPages) {
+      setUserPage(userTotalPages);
+    }
+  }, [userPage, userTotalPages]);
 
   function setRole(userId: string, role: UserRole) {
     startTransition(async () => {
@@ -163,7 +196,7 @@ export function CustomerManager({
                   </td>
                 </tr>
               ) : (
-                recentSupportRequests.slice(0, 8).map((req) => {
+                pagedSupportRequests.map((req) => {
                   const digits = req.phone.replace(/\D/g, "");
                   const zaloUrl =
                     digits.length > 0 ? `https://zalo.me/${digits}` : null;
@@ -236,6 +269,31 @@ export function CustomerManager({
             </tbody>
           </table>
         </div>
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <p className="text-xs admin-muted">
+            Trang {supportPage}/{supportTotalPages}
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className="admin-btn"
+              disabled={supportPage <= 1}
+              onClick={() => setSupportPage((current) => Math.max(1, current - 1))}
+            >
+              Trang trước
+            </button>
+            <button
+              type="button"
+              className="admin-btn"
+              disabled={supportPage >= supportTotalPages}
+              onClick={() =>
+                setSupportPage((current) => Math.min(supportTotalPages, current + 1))
+              }
+            >
+              Trang sau
+            </button>
+          </div>
+        </div>
       </div>
 
       {error ? (
@@ -267,7 +325,7 @@ export function CustomerManager({
                 </td>
               </tr>
             ) : (
-              users.map((user) => {
+              pagedUsers.map((user) => {
                 const busy = isPending && pendingId === user.id;
                 return (
                   <tr key={user.id}>
@@ -328,6 +386,29 @@ export function CustomerManager({
             )}
           </tbody>
         </table>
+      </div>
+      <div className="mt-3 flex items-center justify-between gap-2">
+        <p className="text-xs admin-muted">
+          Trang {userPage}/{userTotalPages}
+        </p>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            className="admin-btn"
+            disabled={userPage <= 1}
+            onClick={() => setUserPage((current) => Math.max(1, current - 1))}
+          >
+            Trang trước
+          </button>
+          <button
+            type="button"
+            className="admin-btn"
+            disabled={userPage >= userTotalPages}
+            onClick={() => setUserPage((current) => Math.min(userTotalPages, current + 1))}
+          >
+            Trang sau
+          </button>
+        </div>
       </div>
     </section>
   );

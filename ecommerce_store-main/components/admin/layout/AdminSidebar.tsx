@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   BarChart3,
   LayoutDashboard,
@@ -30,20 +31,45 @@ const navItems: {
   label: string;
   icon: typeof LayoutDashboard;
   countKey?: keyof AdminSidebarProps["counts"];
+  href: string;
 }[] = [
-  { id: "overview", label: "Dashboard", icon: LayoutDashboard },
-  { id: "analytics", label: "Tổng quan nổi bật", icon: BarChart3 },
-  { id: "products", label: "Sản phẩm", icon: Package, countKey: "products" },
-  { id: "orders", label: "Đơn hàng", icon: ShoppingBag, countKey: "orders" },
+  { id: "overview", label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
+  {
+    id: "analytics",
+    label: "Tổng quan nổi bật",
+    icon: BarChart3,
+    href: "/admin/analytics",
+  },
+  {
+    id: "products",
+    label: "Sản phẩm",
+    icon: Package,
+    countKey: "products",
+    href: "/admin/products",
+  },
+  {
+    id: "orders",
+    label: "Đơn hàng",
+    icon: ShoppingBag,
+    countKey: "orders",
+    href: "/admin/orders",
+  },
   {
     id: "customers",
     label: "Khách hàng",
     icon: Users,
     countKey: "customers",
+    href: "/admin/customers",
   },
-  { id: "coupons", label: "Phiếu giảm giá", icon: Tag, countKey: "coupons" },
-  { id: "site_content", label: "Nội dung site", icon: Globe },
-  { id: "blog_cms", label: "CMS Blog", icon: FileText },
+  {
+    id: "coupons",
+    label: "Phiếu giảm giá",
+    icon: Tag,
+    countKey: "coupons",
+    href: "/admin/coupons",
+  },
+  { id: "site_content", label: "Nội dung site", icon: Globe, href: "/admin/site_content" },
+  { id: "blog_cms", label: "CMS Blog", icon: FileText, href: "/admin/blog_cms" },
 ];
 
 export function AdminSidebar({
@@ -75,9 +101,9 @@ export function AdminSidebar({
           const Icon = item.icon;
           const count = item.countKey ? counts[item.countKey] : null;
           return (
-            <button
+            <Link
               key={item.id}
-              type="button"
+              href={item.href}
               className={`admin-nav-item${activeView === item.id ? " is-active" : ""}`}
               onClick={() => onViewChange(item.id)}
               title={item.label}
@@ -87,7 +113,7 @@ export function AdminSidebar({
               {!collapsed && count != null ? (
                 <span className="admin-nav-badge">{count}</span>
               ) : null}
-            </button>
+            </Link>
           );
         })}
       </nav>

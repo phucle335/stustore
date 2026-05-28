@@ -36,6 +36,14 @@ function extractProductLabel(order: DbOrder): string {
   return names.length > 0 ? names.slice(0, 2).join(", ") : "—";
 }
 
+function extractProductThumbs(order: DbOrder): string[] {
+  const items = safeParseOrderItems(order.order_items);
+  return items
+    .map((it: any) => String(it?.image ?? "").trim())
+    .filter(Boolean)
+    .slice(0, 3);
+}
+
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString("vi-VN", {
     day: "2-digit",
@@ -131,14 +139,43 @@ export function OrdersTablePreview({
               </tr>
             ) : (
               filtered.map((order) => {
-                const email = order.user_id
-                  ? emailByUserId.get(order.user_id) ?? order.user_id.slice(0, 8)
-                  : "Khách lẻ";
+                const email = order.user_id ? emailByUserId.get(order.user_id) : null;
+                const fallbackUserId = order.user_id ? order.user_id.slice(0, 8) : null;
+                const customerName =
+                  String(order.shipping_full_name ?? "").trim() || "Khách lẻ";
+                const customerPhone =
+                  String(order.shipping_phone ?? "").trim() || "";
                 return (
                   <tr key={order.id}>
                     <td className="font-medium admin-text">{order.id}</td>
-                    <td className="admin-text">{email}</td>
-                    <td className="admin-text">{extractProductLabel(order)}</td>
+                    <td className="admin-text">
+                      <div className="flex flex-col">
+                        <span className="font-medium">{customerName}</span>
+                        <span className="admin-muted text-xs">
+                          {email
+                            ? email
+                            : fallbackUserId
+                              ? `User: ${fallbackUserId}`
+                              : customerPhone
+                                ? customerPhone
+                                : "—"}
+                          {email && customerPhone ? ` · ${customerPhone}` : ""}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="admin-text">
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
+                          {extractProductThumbs(order).map((src, idx) => (
+                            <span key={idx} className="admin-order-thumb">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={src} alt="" className="admin-order-thumb__img" />
+                            </span>
+                          ))}
+                        </div>
+                        <span>{extractProductLabel(order)}</span>
+                      </div>
+                    </td>
                     <td>
                       <span
                         className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ${ORDER_STATUS_STYLES[order.status]}`}

@@ -117,6 +117,48 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+/* Member account (tai-khoan) readability overrides */
+.customer-page-wrap--dark .member-header {
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+
+.customer-page-wrap--dark .member-header p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.customer-page-wrap--dark .member-nav button {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.customer-page-wrap--dark .member-nav button:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(242, 78, 53, 0.65);
+  color: #fff;
+}
+
+.customer-page-wrap--dark .member-nav button.is-active {
+  background: rgba(242, 78, 53, 0.95);
+  border-color: rgba(242, 78, 53, 0.95);
+  color: #0b0b0b;
+}
+
+.customer-page-wrap--dark .member-orders-pager {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.customer-page-wrap--dark .member-orders-pager-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .customer-page--narrow {
   max-width: 520px;
 }

@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 /** Thử lần lượt — bảng cũ có thể thiếu sizes / category */
 const PRODUCT_SELECT_VARIANTS = [
+  "id, name, brand_tag, category, fulfillment_type, product_status, price, sale_percent, description, sizes, image_url_1, image_url_2, image_url_3, image_url_4, image_url_5, created_at, updated_at",
   "id, name, brand_tag, category, fulfillment_type, price, sale_percent, description, sizes, image_url_1, image_url_2, image_url_3, image_url_4, image_url_5, created_at, updated_at",
   "id, name, brand_tag, category, price, sale_percent, description, image_url_1, image_url_2, image_url_3, image_url_4, image_url_5, created_at, updated_at",
   "id, name, brand_tag, price, sale_percent, description, image_url_1, image_url_2, image_url_3, image_url_4, image_url_5",
