@@ -1669,6 +1669,7 @@ body {
 /* ========== Homepage ========== */
 .home-hero {
   background: #111;
+  overflow-x: hidden;
 }
 
 .home-hero-carousel {
@@ -1676,6 +1677,7 @@ body {
   justify-content: center;
   padding: 20px 24px 0;
   background: #111;
+  overflow: hidden;
 }
 
 .home-hero-intro {
@@ -1742,12 +1744,13 @@ body {
 
 .home-hero-carousel-frame {
   position: relative;
-  width: 100%;
+  width: min(100%, 1056px);
   max-width: 1056px;
   aspect-ratio: 1056 / 594;
   overflow: hidden;
   border-radius: 4px;
   background: #1a1a1a;
+  box-sizing: border-box;
 }
 
 .home-hero-slide {
@@ -2746,8 +2749,18 @@ body {
   }
 
   .home-hero-carousel-frame {
+    width: min(100%, calc(100vw - 24px));
     aspect-ratio: 16 / 10;
     border-radius: 10px;
+    background: #0e0e0e;
+  }
+
+  .home-hero-slide {
+    background: #0e0e0e;
+  }
+
+  .home-hero-banner-img {
+    object-fit: contain;
   }
 
   .home-hero-nav {
@@ -2891,7 +2904,17 @@ body {
 @media (max-width: 480px) {
   .home-hero-carousel-frame {
     min-height: 0;
+    width: min(100%, calc(100vw - 16px));
     aspect-ratio: 4 / 3;
+    background: #0e0e0e;
+  }
+
+  .home-hero-slide {
+    background: #0e0e0e;
+  }
+
+  .home-hero-banner-img {
+    object-fit: contain;
   }
 
   .home-hero-banner-text {

@@ -44,7 +44,7 @@ export function HomeHeroCarousel() {
               fill
               priority={slideIndex === 0}
               sizes="(max-width: 1056px) 100vw, 1056px"
-              className="home-hero-banner-img w-full h-auto max-w-full object-cover"
+              className="home-hero-banner-img w-full h-full max-w-full object-cover"
             />
             <div className="home-hero-banner-overlay" />
             <p className="home-hero-banner-text">{item.caption}</p>
