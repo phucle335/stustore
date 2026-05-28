@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+import Confetti from "react-confetti";
 import { ProductImage } from "@/components/store/ProductImage";
 import {
   formatPriceVnd,
@@ -27,6 +29,13 @@ type CheckoutSuccess = {
   id: string;
 };
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseClient =
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey)
+    : null;
+
 export function CheckoutView() {
   const router = useRouter();
   const { items, totalLabel, clearCart } = useCart();
@@ -43,6 +52,18 @@ export function CheckoutView() {
   const [profile, setProfile] = useState<MemberProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const [showPayment, setShowPayment] = useState(false);
+  const [payingOrderId, setPayingOrderId] = useState<string | null>(null);
+  const [payingTotal, setPayingTotal] = useState(0);
+  const [payingAmount, setPayingAmount] = useState(0);
+  const [checkoutUrl, setCheckoutUrl] = useState("");
+  const [qrCode, setQrCode] = useState("");
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [expiresAt, setExpiresAt] = useState(0);
+  const [nowTs, setNowTs] = useState(() => Math.floor(Date.now() / 1000));
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [viewport, setViewport] = useState({ width: 1280, height: 720 });
+  const [cancelling, setCancelling] = useState(false);
 
   const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
@@ -65,6 +86,16 @@ export function CheckoutView() {
 
   const needsName = !profile?.full_name?.trim();
   const needsAddress = !profile?.address?.trim();
+  const remainingSeconds = useMemo(() => {
+    if (!expiresAt) return 0;
+    return Math.max(0, expiresAt - nowTs);
+  }, [expiresAt, nowTs]);
+
+  const countdownLabel = useMemo(() => {
+    const minutes = String(Math.floor(remainingSeconds / 60)).padStart(2, "0");
+    const seconds = String(remainingSeconds % 60).padStart(2, "0");
+    return `${minutes}:${seconds}`;
+  }, [remainingSeconds]);
 
   useEffect(() => {
     let cancelled = false;
@@ -82,6 +113,59 @@ export function CheckoutView() {
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  useEffect(() => {
+    if (!qrModalOpen || !expiresAt || paymentSuccess) return;
+    const timer = window.setInterval(() => {
+      const current = Math.floor(Date.now() / 1000);
+      setNowTs(current);
+      if (current >= expiresAt) {
+        window.clearInterval(timer);
+        void cancelExpiredOrder();
+      }
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [qrModalOpen, expiresAt, paymentSuccess, cancelExpiredOrder]);
+
+  useEffect(() => {
+    if (!supabaseClient || !payingOrderId) return;
+    const channel = supabaseClient
+      .channel(`checkout-order-${payingOrderId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "orders",
+          filter: `id=eq.${payingOrderId}`,
+        },
+        (payload) => {
+          const next = payload.new as { status?: string };
+          if (next.status === "deposit_paid" || next.status === "payment_verified") {
+            setPaymentSuccess(true);
+            setQrModalOpen(false);
+            setShowConfetti(true);
+            setError(null);
+            setTimeout(() => setShowConfetti(false), 8000);
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabaseClient.removeChannel(channel);
+    };
+  }, [payingOrderId]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const updateViewport = () => {
+      setViewport({ width: window.innerWidth, height: window.innerHeight });
+    };
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+    return () => window.removeEventListener("resize", updateViewport);
   }, []);
 
   const selectedPaymentMethod = useMemo<CheckoutPaymentMethod>(() => {
@@ -109,6 +193,31 @@ export function CheckoutView() {
     }
     return "Chuyển khoản toàn bộ đơn hàng. Hệ thống xác nhận sau khi nhận tiền.";
   }, [depositVnd, isMixedFulfillment, isPreorderOrder, selectedPaymentMethod]);
+
+  async function cancelExpiredOrder() {
+    if (!payingOrderId || cancelling || paymentSuccess) return;
+    setCancelling(true);
+    try {
+      const res = await fetch("/api/cancel-order", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: payingOrderId }),
+      });
+      const body = (await res.json()) as { error?: string };
+      if (!res.ok) {
+        throw new Error(body.error ?? "Không thể hủy đơn quá hạn.");
+      }
+      setQrModalOpen(false);
+      setError("Mã QR đã hết hạn sau 5 phút. Đơn hàng đã được hủy.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Không thể hủy đơn quá hạn.",
+      );
+    } finally {
+      setCancelling(false);
+    }
+  }
 
   async function applyCoupon() {
     if (!couponCode.trim()) return;
@@ -204,10 +313,42 @@ export function CheckoutView() {
       return;
     }
 
-    clearCart();
     if (body.data?.id) {
-      router.push(`/checkout/payment/${body.data.id}`);
-      return;
+      setPayingOrderId(body.data.id);
+      setPayingTotal(finalVnd);
+      const paymentRes = await fetch("/api/create-payment-link", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: String(body.data.id),
+          description: `COC DON HANG ${body.data.id}`,
+        }),
+      });
+      const paymentBody = (await paymentRes.json()) as {
+        checkoutUrl?: string | null;
+        qrCode?: string | null;
+        expiredAt?: number;
+        data?: { amount?: number };
+        error?: string;
+        detail?: string;
+      };
+
+      if (!paymentRes.ok || !paymentBody.checkoutUrl) {
+        const detail = paymentBody.detail ? ` (${paymentBody.detail})` : "";
+        setError(
+          `${paymentBody.error ?? "Không thể tạo link thanh toán PayOS."}${detail}`,
+        );
+        return;
+      }
+
+      setCheckoutUrl(paymentBody.checkoutUrl);
+      setQrCode(paymentBody.qrCode ?? "");
+      setExpiresAt(Number(paymentBody.expiredAt) || Math.floor(Date.now() / 1000) + 300);
+      setPayingAmount(Number(paymentBody.data?.amount) || 0);
+      setNowTs(Math.floor(Date.now() / 1000));
+      setQrModalOpen(true);
+      clearCart();
     }
   }
 
@@ -226,12 +367,26 @@ export function CheckoutView() {
 
   return (
     <div className="checkout-card">
+      {showConfetti ? (
+        <Confetti
+          width={viewport.width}
+          height={viewport.height}
+          numberOfPieces={500}
+          recycle={false}
+        />
+      ) : null}
       <p className="customer-page-eyebrow">Stusport</p>
       <h1>Thanh toán</h1>
       <p className="checkout-muted">
         Kiểm tra giỏ hàng, bấm <strong>Thanh toán</strong> để nhập thông tin
         giao hàng và chọn phương thức thanh toán.
       </p>
+      {paymentSuccess ? (
+        <p className="checkout-payment-note">
+          Thanh toán thành công! Đơn hàng đã được ghi nhận. Vui lòng kiểm tra
+          Zalo/Email để nhận hướng dẫn tiếp theo.
+        </p>
+      ) : null}
 
       <ul className="checkout-items">
         {items.map((item) => (
@@ -443,6 +598,73 @@ export function CheckoutView() {
 
       {error && !showPayment ? (
         <p className="checkout-error">{error}</p>
+      ) : null}
+
+      {qrModalOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+          <div className="w-full max-w-xl rounded-2xl border border-white/20 bg-slate-950 p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-white">
+                Quét mã QR để thanh toán
+              </h3>
+              <span className="rounded-full border border-orange-400/40 bg-orange-500/10 px-3 py-1 text-sm font-semibold text-orange-200">
+                {countdownLabel}
+              </span>
+            </div>
+
+            <p className="mb-1 text-sm text-slate-300">
+              Mã đơn: <strong>#{payingOrderId}</strong>
+            </p>
+            <p className="mb-3 text-sm text-slate-300">
+              Số tiền cần thanh toán:{" "}
+              <strong>{formatPriceVnd(payingAmount || payingTotal)}</strong>
+            </p>
+
+            {qrCode && qrCode.startsWith("data:image") ? (
+              <img
+                src={qrCode}
+                alt="PayOS QR"
+                className="mx-auto mb-3 h-64 w-64 rounded-xl border border-white/20 bg-white p-2"
+              />
+            ) : qrCode ? (
+              <div className="mb-3 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-slate-100 break-all">
+                {qrCode}
+              </div>
+            ) : null}
+
+            {checkoutUrl ? (
+              <a
+                href={checkoutUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mb-3 inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-semibold text-slate-900"
+              >
+                Mở cổng thanh toán PayOS
+              </a>
+            ) : null}
+
+            <p className="text-xs text-slate-400">
+              Nếu quá 05:00 mà chưa thanh toán, hệ thống sẽ tự đóng mã và hủy đơn.
+            </p>
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                type="button"
+                className="checkout-secondary-btn"
+                onClick={() => setQrModalOpen(false)}
+              >
+                Đóng
+              </button>
+              <button
+                type="button"
+                className="checkout-primary-btn"
+                disabled={cancelling}
+                onClick={() => void cancelExpiredOrder()}
+              >
+                {cancelling ? "Đang hủy..." : "Hủy đơn"}
+              </button>
+            </div>
+          </div>
+        </div>
       ) : null}
     </div>
   );
