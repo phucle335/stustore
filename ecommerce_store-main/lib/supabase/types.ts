@@ -185,6 +185,7 @@ export type DbFavorite = {
 };
 
 export type CreateProductInput = {
+  id?: string;
   name: string;
   brand_tag: string;
   category: StoreProductCategory;

@@ -41,6 +41,7 @@ type ProductManagerProps = {
 };
 
 type ProductFormState = {
+  product_id: string;
   id: string | null;
   name: string;
   brand_tag: string;
@@ -54,6 +55,7 @@ type ProductFormState = {
 };
 
 const emptyForm = (): ProductFormState => ({
+  product_id: "",
   id: null,
   name: "",
   brand_tag: "",
@@ -69,6 +71,7 @@ const emptyForm = (): ProductFormState => ({
 function productToForm(product: DbProduct): ProductFormState {
   const category = product.category ?? "sneakers";
   return {
+    product_id: product.id,
     id: product.id,
     name: product.name ?? "",
     brand_tag: product.brand_tag ?? "",
@@ -276,6 +279,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
     | { error: string }
     | {
         payload: {
+          id?: string;
           name: string;
           brand_tag: string;
           category: StoreProductCategory;
@@ -297,6 +301,16 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
       return { error: "Vui lòng nhập tên, thương hiệu, giá hợp lệ và % sale." };
     }
     const sale_percent = Math.max(0, Math.min(50, salePercentRaw));
+    const customId = form.product_id.trim();
+
+    if (!form.id && customId) {
+      const duplicated = products.some(
+        (p) => p.id.trim().toLowerCase() === customId.toLowerCase(),
+      );
+      if (duplicated) {
+        return { error: "Product ID đã tồn tại. Vui lòng nhập ID khác." };
+      }
+    }
 
     if (imageFieldsToArray(form.images).length === 0) {
       return { error: "Cần ít nhất một ảnh (ảnh 1)." };
@@ -310,6 +324,7 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
 
     return {
       payload: {
+        id: form.id ? undefined : customId || undefined,
         name: form.name.trim(),
         brand_tag: form.brand_tag.trim().toLowerCase(),
         category: form.category,
@@ -674,44 +689,20 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
           </p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,280px)_1fr]">
-        <aside className="admin-list-aside space-y-2">
-          {products.length === 0 ? (
-            <p className="px-3 py-6 text-center text-sm admin-muted">
-              Chưa có sản phẩm
-            </p>
-          ) : (
-            products.map((product) => {
-              const sizes = Array.isArray(product.sizes) ? product.sizes : [];
-              const stock = sizes.reduce(
-                (sum, row) => sum + (Number(row?.quantity) || 0),
-                0,
-              );
-              const active = form.id === product.id;
-              return (
-                <button
-                  key={product.id}
-                  type="button"
-                  onClick={() => selectProduct(product)}
-                  aria-pressed={active}
-                  className={`admin-list-item${active ? " is-active" : ""}`}
-                >
-                  <p className="truncate text-sm font-medium">
-                    {product.name}
-                  </p>
-                  <p className="mt-0.5 text-xs admin-muted">
-                    {product.category} · {product.brand_tag} ·{" "}
-                    {formatCurrency(product.price)} · {stock}{" "}
-                    {isCategoryWithoutSizes(product.category) ? "sp" : "đôi"}
-                  </p>
-                </button>
-              );
-            })
-          )}
-        </aside>
-
-        <div className="space-y-4">
+      <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block text-sm admin-text">
+              Product ID (tracking)
+              <input
+                value={form.product_id}
+                onChange={(e) =>
+                  setForm((current) => ({ ...current, product_id: e.target.value }))
+                }
+                disabled={Boolean(form.id)}
+                className="admin-input mt-1.5"
+                placeholder="ví dụ: f2b2b4b2-...."
+              />
+            </label>
             <label className="block text-sm admin-text">
               Tên sản phẩm
               <input
@@ -950,7 +941,6 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
               </button>
             ) : null}
           </div>
-        </div>
       </div>
     </section>
   );

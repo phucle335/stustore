@@ -143,6 +143,7 @@ export async function createProduct(
   const { data, error } = await supabase
     .from("products")
     .insert({
+      ...(input.id ? { id: input.id } : {}),
       name: input.name,
       brand_tag: input.brand_tag,
       category: input.category,
@@ -156,7 +157,15 @@ export async function createProduct(
     .select(PRIMARY_PRODUCT_SELECT)
     .single();
 
-  if (error) return failure(error.message);
+  if (error) {
+    if (
+      error.code === "23505" ||
+      /duplicate key|already exists|products_pkey/i.test(error.message)
+    ) {
+      return failure("Product ID đã tồn tại. Vui lòng nhập ID khác.");
+    }
+    return failure(error.message);
+  }
   const product = mapProduct(data as Record<string, unknown>);
   if (!product) return failure("Không đọc được sản phẩm vừa tạo.");
   return success(product);
