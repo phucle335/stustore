@@ -96,6 +96,16 @@ export function CheckoutView() {
     const seconds = String(remainingSeconds % 60).padStart(2, "0");
     return `${minutes}:${seconds}`;
   }, [remainingSeconds]);
+  const qrImageSrc = useMemo(() => {
+    if (!qrCode) return "";
+    if (qrCode.startsWith("data:image") || qrCode.startsWith("http")) {
+      return qrCode;
+    }
+    // PayOS can return raw VietQR payload text; convert it to a scannable image.
+    return `https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=${encodeURIComponent(
+      qrCode,
+    )}`;
+  }, [qrCode]);
 
   useEffect(() => {
     let cancelled = false;
@@ -607,7 +617,7 @@ export function CheckoutView() {
 
       {qrModalOpen ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-          <div className="w-full max-w-xl rounded-2xl border border-white/20 bg-slate-950 p-5">
+          <div className="w-full max-w-5xl rounded-2xl border border-white/20 bg-slate-950 p-5">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-white">
                 Quét mã QR để thanh toán
@@ -617,40 +627,62 @@ export function CheckoutView() {
               </span>
             </div>
 
-            <p className="mb-1 text-sm text-slate-300">
-              Mã đơn: <strong>#{payingOrderId}</strong>
-            </p>
-            <p className="mb-3 text-sm text-slate-300">
-              Số tiền cần thanh toán:{" "}
-              <strong>{formatPriceVnd(payingAmount || payingTotal)}</strong>
-            </p>
+            <div className="grid gap-4 md:grid-cols-[1.25fr_1fr]">
+              <section className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <p className="mb-2 text-sm text-slate-200">
+                  Quét mã bằng app ngân hàng hoặc ví điện tử
+                </p>
+                {qrImageSrc ? (
+                  <img
+                    src={qrImageSrc}
+                    alt="PayOS QR"
+                    className="mx-auto mb-3 h-[320px] w-[320px] rounded-xl border border-white/20 bg-white p-2"
+                  />
+                ) : (
+                  <p className="rounded-lg border border-white/10 bg-black/20 p-4 text-sm text-slate-300">
+                    Chưa tạo được ảnh QR. Bạn có thể mở cổng PayOS để thanh toán.
+                  </p>
+                )}
+                {checkoutUrl ? (
+                  <a
+                    href={checkoutUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-semibold text-slate-900"
+                  >
+                    Mở cổng thanh toán PayOS
+                  </a>
+                ) : null}
+              </section>
 
-            {qrCode && qrCode.startsWith("data:image") ? (
-              <img
-                src={qrCode}
-                alt="PayOS QR"
-                className="mx-auto mb-3 h-64 w-64 rounded-xl border border-white/20 bg-white p-2"
-              />
-            ) : qrCode ? (
-              <div className="mb-3 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-slate-100 break-all">
-                {qrCode}
-              </div>
-            ) : null}
+              <section className="space-y-3">
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <p className="mb-1 text-sm text-slate-300">
+                    Mã đơn hàng: <strong>#{payingOrderId}</strong>
+                  </p>
+                  <p className="mb-1 text-sm text-slate-300">
+                    Trạng thái: <strong>Chờ thanh toán</strong>
+                  </p>
+                  <p className="text-sm text-slate-300">
+                    Cần thanh toán:{" "}
+                    <strong>{formatPriceVnd(payingAmount || payingTotal)}</strong>
+                  </p>
+                </div>
 
-            {checkoutUrl ? (
-              <a
-                href={checkoutUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mb-3 inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-semibold text-slate-900"
-              >
-                Mở cổng thanh toán PayOS
-              </a>
-            ) : null}
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <p className="text-xs text-slate-400">
+                    Nếu quá 05:00 mà chưa thanh toán, hệ thống sẽ tự đóng mã và hủy
+                    đơn.
+                  </p>
+                  {qrCode && !qrImageSrc ? (
+                    <p className="mt-2 break-all text-[11px] text-slate-300">
+                      {qrCode}
+                    </p>
+                  ) : null}
+                </div>
+              </section>
+            </div>
 
-            <p className="text-xs text-slate-400">
-              Nếu quá 05:00 mà chưa thanh toán, hệ thống sẽ tự đóng mã và hủy đơn.
-            </p>
             <div className="mt-4 flex justify-end gap-2">
               <button
                 type="button"
