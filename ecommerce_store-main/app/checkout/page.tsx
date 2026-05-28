@@ -23,7 +23,7 @@ export default async function CheckoutPage() {
 
   return (
     <StoreShell activeNav="home">
-      <CustomerPageWrap narrow>
+      <CustomerPageWrap narrow theme="dark">
         <CheckoutView />
       </CustomerPageWrap>
     </StoreShell>

@@ -159,6 +159,16 @@ export async function POST(request) {
       checkoutUrl: result?.checkoutUrl || null,
       qrCode: result?.qrCode || null,
       expiredAt: result?.expiredAt ?? expiredAt,
+      bankTransfer: result
+        ? {
+            bankName: result?.bin ? `BIN ${result.bin}` : null,
+            accountNumber: result?.accountNumber ?? null,
+            accountName: result?.accountName ?? null,
+            amount: result?.amount ?? null,
+            description: result?.description ?? null,
+            orderCode: result?.orderCode ?? null,
+          }
+        : null,
       data: result,
     });
   } catch (error) {

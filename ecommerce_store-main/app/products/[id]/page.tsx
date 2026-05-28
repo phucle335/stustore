@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { ProductDetail } from "@/components/store/ProductDetail";
 import { StoreShell } from "@/components/store/StoreShell";
+import { ProductOrderNotice } from "@/components/store/ProductOrderNotice";
 import { getProductById, getRelatedProductsByBrand } from "@/lib/store/catalog";
 
 type ProductPageProps = {
@@ -37,6 +38,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <StoreShell activeNav={product.category}>
+      <ProductOrderNotice />
       <ProductDetail product={product} relatedProducts={relatedProducts} />
     </StoreShell>
   );

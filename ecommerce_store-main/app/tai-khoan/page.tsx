@@ -29,7 +29,7 @@ export default async function MemberAccountRoute() {
 
   return (
     <StoreShell activeNav="home">
-      <CustomerPageWrap>
+      <CustomerPageWrap theme="dark">
         <MemberAccountPage productsById={productsById} />
       </CustomerPageWrap>
     </StoreShell>

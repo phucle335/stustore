@@ -11,14 +11,17 @@ import {
 
 export type ToastType = "success" | "error";
 
+export type ToastPosition = "top-center" | "bottom-right";
+
 export type Toast = {
   id: string;
   message: string;
   type: ToastType;
+  position: ToastPosition;
 };
 
 type ToastContextValue = {
-  showToast: (message: string, type?: ToastType) => void;
+  showToast: (message: string, type?: ToastType, position?: ToastPosition) => void;
 };
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -42,10 +45,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const showToast = useCallback(
-    (message: string, type: ToastType = "success"): void => {
+    (
+      message: string,
+      type: ToastType = "success",
+      position: ToastPosition = "top-center",
+    ): void => {
       const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
-      setToasts((prev) => [...prev, { id, message, type }]);
+      setToasts((prev) => [...prev, { id, message, type, position }]);
 
       const timeoutId = setTimeout(() => {
         removeToast(id);
@@ -62,31 +69,66 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={value}>
       {children}
       <div className="toast-container" aria-live="polite" aria-atomic="true">
-        {toasts.map((toast) => (
-          <div
-            key={toast.id}
-            className={`toast toast-${toast.type}`}
-            role="status"
-          >
-            <i
-              className={
-                toast.type === "success"
-                  ? "fas fa-check-circle"
-                  : "fas fa-exclamation-circle"
-              }
-              aria-hidden="true"
-            />
-            <span>{toast.message}</span>
-            <button
-              type="button"
-              className="toast-close"
-              onClick={() => removeToast(toast.id)}
-              aria-label="Đóng thông báo"
+        {toasts
+          .filter((toast) => toast.position === "top-center")
+          .map((toast) => (
+            <div
+              key={toast.id}
+              className={`toast toast-${toast.type}`}
+              role="status"
             >
-              &times;
-            </button>
-          </div>
-        ))}
+              <i
+                className={
+                  toast.type === "success"
+                    ? "fas fa-check-circle"
+                    : "fas fa-exclamation-circle"
+                }
+                aria-hidden="true"
+              />
+              <span>{toast.message}</span>
+              <button
+                type="button"
+                className="toast-close"
+                onClick={() => removeToast(toast.id)}
+                aria-label="Đóng thông báo"
+              >
+                &times;
+              </button>
+            </div>
+          ))}
+      </div>
+      <div
+        className="toast-container toast-container--bottom-right"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {toasts
+          .filter((toast) => toast.position === "bottom-right")
+          .map((toast) => (
+            <div
+              key={toast.id}
+              className={`toast toast-${toast.type}`}
+              role="status"
+            >
+              <i
+                className={
+                  toast.type === "success"
+                    ? "fas fa-check-circle"
+                    : "fas fa-exclamation-circle"
+                }
+                aria-hidden="true"
+              />
+              <span>{toast.message}</span>
+              <button
+                type="button"
+                className="toast-close"
+                onClick={() => removeToast(toast.id)}
+                aria-label="Đóng thông báo"
+              >
+                &times;
+              </button>
+            </div>
+          ))}
       </div>
     </ToastContext.Provider>
   );

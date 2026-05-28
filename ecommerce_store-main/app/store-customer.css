@@ -4,8 +4,151 @@
   flex: 1;
 }
 
+.customer-page-wrap--dark {
+  background: #0f0f0f;
+}
+
+.customer-page-wrap--dark .static-page {
+  background: #141414;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4);
+}
+
+.customer-page-wrap--dark .customer-page-title,
+.customer-page-wrap--dark .customer-auth-title,
+.customer-page-wrap--dark .checkout-card h1 {
+  color: #ffffff;
+}
+
+.customer-page-wrap--dark .customer-page-subtitle,
+.customer-page-wrap--dark .customer-auth-subtitle,
+.customer-page-wrap--dark .checkout-muted {
+  color: #c8c8c8;
+}
+
+.customer-page-wrap--dark .checkout-item-name,
+.customer-page-wrap--dark .checkout-item-price,
+.customer-page-wrap--dark .checkout-total,
+.customer-page-wrap--dark .checkout-total strong {
+  color: #ffffff;
+}
+
+.customer-page-wrap--dark .checkout-items,
+.customer-page-wrap--dark .checkout-item {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.customer-page-wrap--dark .checkout-item-media {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.customer-page-wrap--dark .checkout-input,
+.customer-page-wrap--dark .checkout-coupon-input,
+.customer-page-wrap--dark .member-field input,
+.customer-page-wrap--dark .member-field textarea {
+  background: #1e1e1e;
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.customer-page-wrap--dark .checkout-input::placeholder,
+.customer-page-wrap--dark .checkout-coupon-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.customer-page-wrap--dark .checkout-input:focus,
+.customer-page-wrap--dark .checkout-coupon-input:focus {
+  border-color: rgba(242, 78, 53, 0.75);
+  box-shadow: 0 0 0 3px rgba(242, 78, 53, 0.18);
+}
+
+.customer-page-wrap--dark .checkout-payment-panel,
+.customer-page-wrap--dark .member-panel,
+.customer-page-wrap--dark .member-panel-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.customer-page-wrap--dark .member-heading,
+.customer-page-wrap--dark .checkout-payment-title {
+  color: #ffffff;
+}
+
+.customer-page-wrap--dark .member-muted,
+.customer-page-wrap--dark .checkout-payment-hint {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.customer-page-wrap--dark .checkout-secondary-btn {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.customer-page-wrap--dark .checkout-secondary-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.customer-page-wrap--dark .checkout-item-brand,
+.customer-page-wrap--dark .checkout-item-qty,
+.customer-page-wrap--dark .member-order-meta,
+.customer-page-wrap--dark .member-order-status {
+  color: rgba(255, 255, 255, 0.65);
+}
+
 .customer-page--narrow {
   max-width: 520px;
+}
+
+@media (max-width: 640px) {
+  .customer-page--narrow {
+    max-width: 100%;
+  }
+
+  .customer-page-wrap .static-page {
+    padding: 20px 16px 22px;
+  }
+
+  .checkout-item {
+    gap: 12px;
+  }
+
+  .checkout-item-media {
+    width: 60px;
+    height: 60px;
+  }
+
+  .checkout-coupon-row,
+  .checkout-payment-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .checkout-payment-actions .checkout-primary-btn,
+  .checkout-payment-actions .checkout-secondary-btn,
+  .checkout-coupon-btn {
+    width: 100%;
+  }
+
+  .member-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .member-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .member-nav button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .member-panel {
+    padding: 18px 16px;
+  }
 }
 
 .customer-page-eyebrow,

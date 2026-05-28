@@ -55,8 +55,17 @@ export function CheckoutView() {
   const [payingOrderId, setPayingOrderId] = useState<string | null>(null);
   const [payingTotal, setPayingTotal] = useState(0);
   const [payingAmount, setPayingAmount] = useState(0);
+  const [returnProductId, setReturnProductId] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState("");
   const [qrCode, setQrCode] = useState("");
+  const [bankTransfer, setBankTransfer] = useState<{
+    bankName: string | null;
+    accountNumber: string | null;
+    accountName: string | null;
+    amount: number | null;
+    description: string | null;
+    orderCode: number | null;
+  } | null>(null);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [expiresAt, setExpiresAt] = useState(0);
   const [nowTs, setNowTs] = useState(() => Math.floor(Date.now() / 1000));
@@ -107,11 +116,26 @@ export function CheckoutView() {
     )}`;
   }, [qrCode]);
 
+  async function copyToClipboard(value: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      // best-effort; ignore
+    }
+  }
+
   function markPaymentSuccess() {
     setPaymentSuccess(true);
     setQrModalOpen(false);
     setShowConfetti(true);
     setError(null);
+
+    const orderId = payingOrderId;
+    if (orderId) {
+      router.replace(`/checkout/success?orderId=${encodeURIComponent(orderId)}`);
+      return;
+    }
+
     clearCart();
     setTimeout(() => setShowConfetti(false), 8000);
   }
@@ -252,7 +276,12 @@ export function CheckoutView() {
         throw new Error(body.error ?? "Không thể hủy đơn quá hạn.");
       }
       setQrModalOpen(false);
-      setError("Mã QR đã hết hạn sau 5 phút. Đơn hàng đã được hủy.");
+      const productId = returnProductId ?? items[0]?.productId ?? null;
+      if (productId) {
+        router.push(`/products/${productId}?order_cancelled=1&reason=timeout`);
+      } else {
+        router.push("/?order_cancelled=1&reason=timeout");
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Không thể hủy đơn quá hạn.",
@@ -357,6 +386,7 @@ export function CheckoutView() {
     }
 
     if (body.data?.id) {
+      setReturnProductId(items[0]?.productId ?? null);
       setPayingOrderId(body.data.id);
       setPayingTotal(finalVnd);
       const paymentRes = await fetch("/api/create-payment-link", {
@@ -372,6 +402,14 @@ export function CheckoutView() {
         checkoutUrl?: string | null;
         qrCode?: string | null;
         expiredAt?: number;
+        bankTransfer?: {
+          bankName?: string | null;
+          accountNumber?: string | null;
+          accountName?: string | null;
+          amount?: number | null;
+          description?: string | null;
+          orderCode?: number | null;
+        } | null;
         data?: { amount?: number };
         error?: string;
         detail?: string;
@@ -387,6 +425,24 @@ export function CheckoutView() {
 
       setCheckoutUrl(paymentBody.checkoutUrl);
       setQrCode(paymentBody.qrCode ?? "");
+      setBankTransfer(
+        paymentBody.bankTransfer
+          ? {
+              bankName: paymentBody.bankTransfer.bankName ?? null,
+              accountNumber: paymentBody.bankTransfer.accountNumber ?? null,
+              accountName: paymentBody.bankTransfer.accountName ?? null,
+              amount:
+                paymentBody.bankTransfer.amount == null
+                  ? null
+                  : Number(paymentBody.bankTransfer.amount),
+              description: paymentBody.bankTransfer.description ?? null,
+              orderCode:
+                paymentBody.bankTransfer.orderCode == null
+                  ? null
+                  : Number(paymentBody.bankTransfer.orderCode),
+            }
+          : null,
+      );
       setExpiresAt(Number(paymentBody.expiredAt) || Math.floor(Date.now() / 1000) + 300);
       setPayingAmount(Number(paymentBody.data?.amount) || 0);
       setNowTs(Math.floor(Date.now() / 1000));
@@ -649,7 +705,7 @@ export function CheckoutView() {
 
       {qrModalOpen ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-          <div className="w-full max-w-5xl rounded-2xl border border-white/20 bg-slate-950 p-5">
+          <div className="max-h-[100dvh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-white/20 bg-slate-950 p-5">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-white">
                 Quét mã QR để thanh toán
@@ -668,7 +724,8 @@ export function CheckoutView() {
                   <img
                     src={qrImageSrc}
                     alt="PayOS QR"
-                    className="mx-auto mb-3 h-[320px] w-[320px] rounded-xl border border-white/20 bg-white p-2"
+                    className="mx-auto mb-3 rounded-xl border border-white/20 bg-white p-2"
+                    style={{ width: "min(320px, 80vw)", height: "min(320px, 80vw)" }}
                   />
                 ) : (
                   <p className="rounded-lg border border-white/10 bg-black/20 p-4 text-sm text-slate-300">
@@ -701,6 +758,111 @@ export function CheckoutView() {
                   </p>
                 </div>
 
+                {bankTransfer ? (
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <p className="mb-2 text-sm font-semibold text-white">
+                      Thông tin chuyển khoản
+                    </p>
+                    <div className="space-y-2 text-sm text-slate-200">
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="text-slate-400">Ngân hàng</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-right">
+                            {bankTransfer.bankName ?? "—"}
+                          </span>
+                          {bankTransfer.bankName ? (
+                            <button
+                              type="button"
+                              onClick={() => void copyToClipboard(bankTransfer.bankName!)}
+                              className="text-xs font-semibold text-orange-200 hover:text-orange-100"
+                            >
+                              Copy
+                            </button>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="text-slate-400">Số tài khoản</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-right">
+                            {bankTransfer.accountNumber ?? "—"}
+                          </span>
+                          {bankTransfer.accountNumber ? (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                void copyToClipboard(bankTransfer.accountNumber!)
+                              }
+                              className="text-xs font-semibold text-orange-200 hover:text-orange-100"
+                            >
+                              Copy
+                            </button>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="text-slate-400">Chủ tài khoản</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-right">
+                            {bankTransfer.accountName ?? "—"}
+                          </span>
+                          {bankTransfer.accountName ? (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                void copyToClipboard(bankTransfer.accountName!)
+                              }
+                              className="text-xs font-semibold text-orange-200 hover:text-orange-100"
+                            >
+                              Copy
+                            </button>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="text-slate-400">Số tiền</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-right">
+                            {Number.isFinite(Number(bankTransfer.amount))
+                              ? formatPriceVnd(Number(bankTransfer.amount))
+                              : formatPriceVnd(payingAmount || payingTotal)}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              void copyToClipboard(
+                                String((bankTransfer.amount ?? payingAmount) || payingTotal),
+                              )
+                            }
+                            className="text-xs font-semibold text-orange-200 hover:text-orange-100"
+                          >
+                            Copy
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="text-slate-400">Nội dung</span>
+                        <div className="flex items-center gap-2">
+                          <span className="max-w-[260px] break-words text-right">
+                            {bankTransfer.description ?? `COC DON HANG ${payingOrderId}`}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              void copyToClipboard(
+                                bankTransfer.description ?? `COC DON HANG ${payingOrderId}`,
+                              )
+                            }
+                            className="text-xs font-semibold text-orange-200 hover:text-orange-100"
+                          >
+                            Copy
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <p className="text-xs text-slate-400">
                     Nếu quá 05:00 mà chưa thanh toán, hệ thống sẽ tự đóng mã và hủy
@@ -719,7 +881,7 @@ export function CheckoutView() {
               <button
                 type="button"
                 className="checkout-secondary-btn"
-                onClick={() => setQrModalOpen(false)}
+                onClick={() => void cancelExpiredOrder()}
               >
                 Đóng
               </button>

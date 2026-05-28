@@ -14,7 +14,9 @@ import {
 export function OrderConfirmationEmail({
   customerName = "Bạn",
   orderId = "",
+  totalAmount = "0đ",
   paidAmount = "0đ",
+  remainingAmount = "0đ",
   historyUrl = "https://stusport.vercel.app/tai-khoan",
 }) {
   return (
@@ -39,7 +41,13 @@ export function OrderConfirmationEmail({
                 <strong>Mã đơn hàng:</strong> #{orderId}
               </Text>
               <Text style={summaryLine}>
-                <strong>Số tiền đã thanh toán:</strong> {paidAmount}
+                <strong>Tổng đơn hàng:</strong> {totalAmount}
+              </Text>
+              <Text style={summaryLine}>
+                <strong>Đã thanh toán (cọc):</strong> {paidAmount}
+              </Text>
+              <Text style={summaryLine}>
+                <strong>Còn lại:</strong> {remainingAmount}
               </Text>
             </Section>
 
