@@ -107,6 +107,15 @@ export function CheckoutView() {
     )}`;
   }, [qrCode]);
 
+  function markPaymentSuccess() {
+    setPaymentSuccess(true);
+    setQrModalOpen(false);
+    setShowConfetti(true);
+    setError(null);
+    clearCart();
+    setTimeout(() => setShowConfetti(false), 8000);
+  }
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -153,12 +162,7 @@ export function CheckoutView() {
         (payload) => {
           const next = payload.new as { status?: string };
           if (next.status === "deposit_paid" || next.status === "payment_verified") {
-            setPaymentSuccess(true);
-            setQrModalOpen(false);
-            setShowConfetti(true);
-            setError(null);
-            clearCart();
-            setTimeout(() => setShowConfetti(false), 8000);
+            markPaymentSuccess();
           }
         },
       )
@@ -168,6 +172,34 @@ export function CheckoutView() {
       supabaseClient.removeChannel(channel);
     };
   }, [payingOrderId, clearCart]);
+
+  useEffect(() => {
+    if (!payingOrderId || paymentSuccess) return;
+
+    const poller = window.setInterval(async () => {
+      try {
+        const res = await fetch("/api/account/orders", {
+          credentials: "include",
+        });
+        const body = (await res.json()) as {
+          data?: { id: string; status?: string }[];
+        };
+        const order = (body.data ?? []).find(
+          (row) => String(row.id) === String(payingOrderId),
+        );
+        if (
+          order?.status === "deposit_paid" ||
+          order?.status === "payment_verified"
+        ) {
+          markPaymentSuccess();
+        }
+      } catch {
+        // best-effort fallback polling; ignore transient errors
+      }
+    }, 3000);
+
+    return () => window.clearInterval(poller);
+  }, [payingOrderId, paymentSuccess]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

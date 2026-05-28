@@ -187,14 +187,16 @@ export async function POST(request) {
 
     const verifiedData = await payos.webhooks.verify(body);
 
-    const webhookCode = String(body?.code ?? verifiedData?.code ?? "");
+    const webhookCode = String(
+      body?.code ?? verifiedData?.code ?? body?.data?.code ?? "",
+    );
     const orderCode = verifiedData?.orderCode ?? body?.data?.orderCode;
 
     if (!orderCode) {
       return NextResponse.json({ ok: true, message: "No orderCode" });
     }
 
-    if (webhookCode === "00") {
+    if (webhookCode === "00" || body?.success === true) {
       const supabase = getSupabaseAdmin();
       const orderCodeText = String(orderCode);
 
