@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { PayOS } from "@payos/node";
 import { createClient } from "@supabase/supabase-js";
+import nodemailer from "nodemailer";
+import { render } from "@react-email/render";
+import OrderConfirmationEmail from "@/emails/OrderConfirmationEmail";
 
 function getPayOS() {
   const clientId = process.env.PAYOS_CLIENT_ID;
@@ -27,6 +30,55 @@ function getSupabaseAdmin() {
   });
 }
 
+function getMailTransporter() {
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+  if (!user || !pass) {
+    return null;
+  }
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: { user, pass },
+  });
+}
+
+function formatVnd(amount) {
+  return `${Math.round(Number(amount) || 0).toLocaleString("vi-VN")}đ`;
+}
+
+async function sendConfirmationEmail({
+  to,
+  customerName,
+  orderId,
+  paidAmount,
+}) {
+  const transporter = getMailTransporter();
+  if (!transporter || !to) {
+    return;
+  }
+
+  const historyUrl = `${(
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+  ).replace(/\/+$/, "")}/tai-khoan`;
+
+  const html = await render(
+    OrderConfirmationEmail({
+      customerName,
+      orderId,
+      paidAmount: formatVnd(paidAmount),
+      historyUrl,
+    }),
+  );
+
+  await transporter.sendMail({
+    from: `"STUSPORT" <${process.env.GMAIL_USER}>`,
+    to,
+    subject: "Xác nhận đặt hàng & Thanh toán thành công",
+    html,
+  });
+}
+
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -45,19 +97,21 @@ export async function POST(request) {
       const supabase = getSupabaseAdmin();
       const orderCodeText = String(orderCode);
 
-      let updateQuery = supabase
+      const patch = {
+        status: "deposit_paid",
+        payment_gateway: "payos",
+        payment_reference: orderCodeText,
+        payment_paid_at: new Date().toISOString(),
+      };
+
+      const updateByReference = await supabase
         .from("orders")
-        .update({
-          status: "deposit_paid",
-          payment_gateway: "payos",
-          payment_reference: orderCodeText,
-          payment_paid_at: new Date().toISOString(),
-        })
-        .eq("payment_reference", orderCodeText);
+        .update(patch)
+        .eq("payment_reference", orderCodeText)
+        .select("id, user_id, shipping_full_name, total_price");
 
       const { data: updatedByReference, error: referenceError } =
-        await updateQuery.select("id");
-
+        updateByReference;
       if (referenceError) {
         console.error("[payos-webhook][supabase-update-error]", referenceError);
         return NextResponse.json(
@@ -67,18 +121,34 @@ export async function POST(request) {
       }
 
       if ((updatedByReference ?? []).length > 0) {
+        const order = updatedByReference[0];
+        if (order?.user_id) {
+          const { data: userRow } = await supabase
+            .from("users")
+            .select("email, full_name")
+            .eq("id", order.user_id)
+            .maybeSingle();
+
+          try {
+            await sendConfirmationEmail({
+              to: userRow?.email ?? null,
+              customerName:
+                order.shipping_full_name || userRow?.full_name || "Bạn",
+              orderId: order.id,
+              paidAmount: Number(order.total_price) || 0,
+            });
+          } catch (mailError) {
+            console.error("[payos-webhook][send-mail-error]", mailError);
+          }
+        }
         return NextResponse.json({ ok: true, message: "Webhook processed" });
       }
 
-      const { error } = await supabase
+      const { data: updatedById, error } = await supabase
         .from("orders")
-        .update({
-          status: "deposit_paid",
-          payment_gateway: "payos",
-          payment_reference: orderCodeText,
-          payment_paid_at: new Date().toISOString(),
-        })
-        .eq("id", orderCodeText);
+        .update(patch)
+        .eq("id", orderCodeText)
+        .select("id, user_id, shipping_full_name, total_price");
 
       if (error) {
         console.error("[payos-webhook][supabase-update-error]", error);
@@ -86,6 +156,29 @@ export async function POST(request) {
           { error: "Webhook verified nhưng update đơn thất bại." },
           { status: 500 },
         );
+      }
+
+      if ((updatedById ?? []).length > 0) {
+        const order = updatedById[0];
+        if (order?.user_id) {
+          const { data: userRow } = await supabase
+            .from("users")
+            .select("email, full_name")
+            .eq("id", order.user_id)
+            .maybeSingle();
+
+          try {
+            await sendConfirmationEmail({
+              to: userRow?.email ?? null,
+              customerName:
+                order.shipping_full_name || userRow?.full_name || "Bạn",
+              orderId: order.id,
+              paidAmount: Number(order.total_price) || 0,
+            });
+          } catch (mailError) {
+            console.error("[payos-webhook][send-mail-error]", mailError);
+          }
+        }
       }
     }
 

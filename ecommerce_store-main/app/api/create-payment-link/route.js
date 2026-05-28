@@ -134,6 +134,7 @@ export async function POST(request) {
     );
     const payos = getPayOS();
     const siteUrl = getSiteUrl();
+    const expiredAt = Math.floor(Date.now() / 1000) + 300;
 
     const paymentData = {
       orderCode,
@@ -141,6 +142,7 @@ export async function POST(request) {
       description,
       returnUrl: `${siteUrl}/checkout/success`,
       cancelUrl: `${siteUrl}/checkout/cancel`,
+      expiredAt,
     };
 
     const result = await createPayOSLink(payos, paymentData);
@@ -155,6 +157,8 @@ export async function POST(request) {
 
     return NextResponse.json({
       checkoutUrl: result?.checkoutUrl || null,
+      qrCode: result?.qrCode || null,
+      expiredAt: result?.expiredAt ?? expiredAt,
       data: result,
     });
   } catch (error) {

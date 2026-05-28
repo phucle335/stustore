@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.0.8",
+    "nodemailer": "^8.0.9",
+    "react-confetti": "^6.4.0"
+  }
+}
