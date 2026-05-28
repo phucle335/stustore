@@ -16,6 +16,8 @@ export type ProductSizeStock = {
   quantity: number;
 };
 
+export type SupportRequestStatus = "open" | "resolved";
+
 export type UserGender = "male" | "female" | "other" | "";
 
 export type DbUser = {
@@ -101,9 +103,49 @@ export type DbOrder = {
   shipping_phone?: string | null;
   shipping_address?: string | null;
   order_items?: unknown;
+  order_meta?: Record<string, unknown> | null;
   status: OrderStatus;
   created_at: string;
   updated_at: string;
+};
+
+export type DbSupportRequest = {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  message: string;
+  status: SupportRequestStatus;
+  handled_by: string | null;
+  resolved_at?: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AdminAuditLog = {
+  id: string;
+  admin_user_id: string | null;
+  action: string;
+  entity_type: string;
+  entity_id: string | null;
+  diff: Record<string, unknown>;
+  created_at: string;
+};
+
+export type NotificationType =
+  | "admin_action"
+  | "support_request"
+  | "order_event";
+
+export type DbNotification = {
+  id: string;
+  type: NotificationType;
+  title: string;
+  body?: string | null;
+  entity_type?: string | null;
+  entity_id?: string | null;
+  created_at: string;
+  read_at?: string | null;
 };
 
 export type CouponDiscountType = "percent" | "fixed";
@@ -161,6 +203,14 @@ export type CreateOrderInput = {
   subtotal?: number | null;
   discount_amount?: number | null;
   coupon_code?: string | null;
+  payment_method?: string | null;
+  deposit_amount?: number | null;
+  remaining_amount?: number | null;
+  shipping_full_name?: string | null;
+  shipping_phone?: string | null;
+  shipping_address?: string | null;
+  order_items?: unknown;
+  order_meta?: Record<string, unknown> | null;
   status?: OrderStatus;
 };
 
@@ -170,6 +220,14 @@ export type UpdateOrderInput = {
   subtotal?: number | null;
   discount_amount?: number | null;
   coupon_code?: string | null;
+  payment_method?: string | null;
+  deposit_amount?: number | null;
+  remaining_amount?: number | null;
+  shipping_full_name?: string | null;
+  shipping_phone?: string | null;
+  shipping_address?: string | null;
+  order_items?: unknown;
+  order_meta?: Record<string, unknown> | null;
   status?: OrderStatus;
 };
 

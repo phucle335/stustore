@@ -1,9 +1,10 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
-import { withAdminAction } from "@/lib/admin/auth";
+import { guardAdmin, withAdminAction } from "@/lib/admin/auth";
 import * as products from "@/lib/admin/data/products";
 import { STORE_PRODUCTS_TAG } from "@/lib/store/catalog";
+import { logAdminAuditAndNotification } from "@/lib/admin/audit/log";
 import type {
   CreateProductInput,
   UpdateProductInput,
@@ -40,7 +41,28 @@ export async function getProductAction(id: string) {
 export async function createProductAction(input: CreateProductInput) {
   return withAdminAction(async () => {
     const result = await products.createProduct(input);
-    if (result.ok) revalidateProducts();
+    if (result.ok) {
+      revalidateProducts();
+      const auth = await guardAdmin();
+      if (auth.ok) {
+        await logAdminAuditAndNotification(
+          {
+            adminUserId: auth.data.userId,
+            action: "product_created",
+            entityType: "product",
+            entityId: result.data.id,
+            diff: { input },
+          },
+          {
+            type: "admin_action",
+            title: "Admin cập nhật sản phẩm",
+            body: `Tạo sản phẩm ${result.data.name}`,
+            entityType: "product",
+            entityId: result.data.id,
+          },
+        );
+      }
+    }
     return result;
   });
 }
@@ -51,7 +73,28 @@ export async function updateProductAction(
 ) {
   return withAdminAction(async () => {
     const result = await products.updateProduct(id, input);
-    if (result.ok) revalidateProducts();
+    if (result.ok) {
+      revalidateProducts();
+      const auth = await guardAdmin();
+      if (auth.ok) {
+        await logAdminAuditAndNotification(
+          {
+            adminUserId: auth.data.userId,
+            action: "product_updated",
+            entityType: "product",
+            entityId: id,
+            diff: { input },
+          },
+          {
+            type: "admin_action",
+            title: "Admin cập nhật sản phẩm",
+            body: `Cập nhật sản phẩm ${result.data.name}`,
+            entityType: "product",
+            entityId: id,
+          },
+        );
+      }
+    }
     return result;
   });
 }
@@ -59,7 +102,28 @@ export async function updateProductAction(
 export async function deleteProductAction(id: string) {
   return withAdminAction(async () => {
     const result = await products.deleteProduct(id);
-    if (result.ok) revalidateProducts();
+    if (result.ok) {
+      revalidateProducts();
+      const auth = await guardAdmin();
+      if (auth.ok) {
+        await logAdminAuditAndNotification(
+          {
+            adminUserId: auth.data.userId,
+            action: "product_deleted",
+            entityType: "product",
+            entityId: id,
+            diff: { id },
+          },
+          {
+            type: "admin_action",
+            title: "Admin xóa sản phẩm",
+            body: `Xóa sản phẩm ${id}`,
+            entityType: "product",
+            entityId: id,
+          },
+        );
+      }
+    }
     return result;
   });
 }

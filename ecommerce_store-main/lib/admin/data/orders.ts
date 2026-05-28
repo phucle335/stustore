@@ -51,6 +51,14 @@ export async function createOrder(
       subtotal: input.subtotal ?? input.total_price,
       discount_amount: input.discount_amount ?? 0,
       coupon_code: input.coupon_code ?? null,
+      payment_method: input.payment_method ?? null,
+      deposit_amount: input.deposit_amount ?? null,
+      remaining_amount: input.remaining_amount ?? null,
+      shipping_full_name: input.shipping_full_name ?? null,
+      shipping_phone: input.shipping_phone ?? null,
+      shipping_address: input.shipping_address ?? null,
+      order_items: input.order_items ?? [],
+      order_meta: input.order_meta ?? {},
       status: input.status ?? "pending",
     })
     .select("*")
@@ -74,6 +82,14 @@ export async function createOrdersBulk(
     subtotal: input.subtotal ?? input.total_price,
     discount_amount: input.discount_amount ?? 0,
     coupon_code: input.coupon_code ?? null,
+    payment_method: input.payment_method ?? null,
+    deposit_amount: input.deposit_amount ?? null,
+    remaining_amount: input.remaining_amount ?? null,
+    shipping_full_name: input.shipping_full_name ?? null,
+    shipping_phone: input.shipping_phone ?? null,
+    shipping_address: input.shipping_address ?? null,
+    order_items: input.order_items ?? [],
+    order_meta: input.order_meta ?? {},
     status: input.status ?? "pending",
   }));
 

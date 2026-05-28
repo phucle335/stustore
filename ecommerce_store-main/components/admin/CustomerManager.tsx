@@ -1,15 +1,18 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { Shield, ShieldOff, Trash2 } from "lucide-react";
 import {
   assignRoleAction,
   deleteUserAction,
 } from "@/lib/admin/actions/users";
+import { resolveSupportRequestAction } from "@/lib/admin/actions/support-requests";
 import type { DbUser, UserRole } from "@/lib/supabase/types";
+import type { DbSupportRequest } from "@/lib/supabase/types";
 
 type CustomerManagerProps = {
   initialUsers: DbUser[];
+  supportRequests: DbSupportRequest[];
 };
 
 function formatDate(value: string) {
@@ -20,8 +23,21 @@ function formatDate(value: string) {
   });
 }
 
-export function CustomerManager({ initialUsers }: CustomerManagerProps) {
+export function CustomerManager({
+  initialUsers,
+  supportRequests: initialSupportRequests,
+}: CustomerManagerProps) {
   const [users, setUsers] = useState(initialUsers);
+  const [supportRequests, setSupportRequests] = useState(
+    initialSupportRequests ?? [],
+  );
+  const openSupportRequests = useMemo(
+    () => supportRequests.filter((r) => r.status === "open"),
+    [supportRequests],
+  );
+  const [resolvingRequestId, setResolvingRequestId] = useState<
+    string | null
+  >(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
@@ -73,6 +89,38 @@ export function CustomerManager({ initialUsers }: CustomerManagerProps) {
     });
   }
 
+  function formatPhone(phone: string) {
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length !== 10) return phone;
+    return `${digits.slice(0, 4)} ${digits.slice(4, 7)} ${digits.slice(7)}`;
+  }
+
+  function resolveRequest(id: string) {
+    if (!id) return;
+    if (resolvingRequestId) return;
+
+    startTransition(async () => {
+      setResolvingRequestId(id);
+      setError(null);
+      setMessage(null);
+
+      const result = await resolveSupportRequestAction(id);
+      if (!result.ok) {
+        setError(result.error);
+        setResolvingRequestId(null);
+        return;
+      }
+
+      setSupportRequests((current) =>
+        current.map((r) =>
+          r.id === id ? { ...r, status: "resolved" } : r,
+        ),
+      );
+      setMessage("Đã đánh dấu yêu cầu hỗ trợ là đã xử lý.");
+      setResolvingRequestId(null);
+    });
+  }
+
   return (
     <section className="admin-panel">
       <div className="mb-5">
@@ -82,6 +130,97 @@ export function CustomerManager({ initialUsers }: CustomerManagerProps) {
         <p className="text-sm admin-muted">
           Gán role admin hoặc user cho từng tài khoản
         </p>
+      </div>
+
+      <div className="mb-6">
+        <h3 className="text-base font-semibold admin-text">
+          Khách hàng cần hỗ trợ
+        </h3>
+        <p className="text-sm admin-muted">
+          Yêu cầu mới gửi từ footer Contact (Zalo/Email)
+        </p>
+
+        <div className="admin-table-wrap" style={{ marginTop: 12 }}>
+          <table className="admin-table">
+            <thead className="admin-muted">
+              <tr>
+                <th className="px-4 py-3 font-medium">Khách</th>
+                <th className="px-4 py-3 font-medium">Liên hệ</th>
+                <th className="px-4 py-3 font-medium">Nội dung</th>
+                <th className="px-4 py-3 font-medium text-right">
+                  Thao tác
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {openSupportRequests.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="px-4 py-8 text-center admin-muted"
+                  >
+                    Chưa có yêu cầu mới
+                  </td>
+                </tr>
+              ) : (
+                openSupportRequests.slice(0, 5).map((req) => {
+                  const digits = req.phone.replace(/\D/g, "");
+                  const zaloUrl =
+                    digits.length > 0 ? `https://zalo.me/${digits}` : null;
+                  const resolving = resolvingRequestId === req.id;
+                  return (
+                    <tr key={req.id}>
+                      <td className="px-4 py-3 font-medium admin-text">
+                        {req.name}
+                      </td>
+                      <td className="px-4 py-3 admin-muted">
+                        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                          {zaloUrl ? (
+                            <a
+                              href={zaloUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{ color: "#f24e35", textDecoration: "none" }}
+                            >
+                              Zalo: {formatPhone(req.phone)}
+                            </a>
+                          ) : (
+                            <span>Zalo: —</span>
+                          )}
+                          <a
+                            href={`mailto:${req.email}`}
+                            style={{
+                              color: "#f24e35",
+                              textDecoration: "none",
+                            }}
+                          >
+                            Email: {req.email}
+                          </a>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 admin-muted" style={{ maxWidth: 380 }}>
+                        {String(req.message ?? "").slice(0, 90)}
+                        {String(req.message ?? "").length > 90 ? "…" : ""}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                          <button
+                            type="button"
+                            className="admin-btn admin-btn--primary"
+                            disabled={resolving}
+                            onClick={() => resolveRequest(req.id)}
+                          >
+                            {resolving ? "Đang xử lý…" : "Đã xử lý"}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {error ? (

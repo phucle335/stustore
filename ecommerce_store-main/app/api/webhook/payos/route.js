@@ -60,6 +60,7 @@ async function sendConfirmationEmail({
   totalAmount,
   paidAmount,
   remainingAmount,
+  items,
 }) {
   const transporter = getMailTransporter();
   if (!transporter) {
@@ -82,6 +83,7 @@ async function sendConfirmationEmail({
       totalAmount: formatVnd(totalAmount),
       paidAmount: formatVnd(paidAmount),
       remainingAmount: formatVnd(remainingAmount),
+      items: Array.isArray(items) ? items : [],
       historyUrl,
     }),
   );
@@ -169,6 +171,7 @@ export async function POST(request) {
             totalAmount: Number(order.total_price) || 0,
             paidAmount: Number(order.deposit_amount) || 0,
             remainingAmount: Number(order.remaining_amount) || 0,
+            items: Array.isArray(order.order_items) ? order.order_items : [],
           });
         } catch (mailError) {
           console.error("[payos-webhook][send-mail-error]", mailError);

@@ -1,20 +1,21 @@
 /* Admin redesign system — Stusport */
 
 .admin-app {
-  --admin-sidebar-bg: #ffffff;
-  --admin-sidebar-active: #1e2a3a;
-  --admin-sidebar-text: #6b7a99;
-  --admin-sidebar-text-hover: #1e2a3a;
-  --admin-bg: #eef2f7;
-  --admin-surface: rgba(255, 255, 255, 0.92);
-  --admin-border: rgba(0, 0, 0, 0.06);
-  --admin-text: #1e2a3a;
-  --admin-muted: #6b7a99;
-  --admin-primary: #1e2a3a;
-  --admin-accent: #a8d5d1;
+  /* Linear-style dark theme (near-black + charcoal surfaces). */
+  --admin-sidebar-bg: #0b0b0f;
+  --admin-sidebar-active: rgba(242, 78, 53, 0.14);
+  --admin-sidebar-text: rgba(247, 248, 248, 0.72);
+  --admin-sidebar-text-hover: rgba(247, 248, 248, 0.96);
+  --admin-bg: #0a0a0d;
+  --admin-surface: rgba(255, 255, 255, 0.05);
+  --admin-border: rgba(255, 255, 255, 0.10);
+  --admin-text: #f7f8f8;
+  --admin-muted: rgba(208, 214, 224, 0.85);
+  --admin-primary: #f24e35;
+  --admin-accent: rgba(242, 78, 53, 0.75);
   --admin-success: #10b981;
   --admin-danger: #ef4444;
-  --admin-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --admin-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 
   display: flex;
   min-height: 100vh;
@@ -49,7 +50,7 @@
 }
 
 .admin-sidebar-brand strong {
-  color: #1e2a3a;
+  color: var(--admin-text);
   font-size: 1.15rem;
   font-weight: 800;
   white-space: nowrap;
@@ -267,9 +268,9 @@
 }
 
 .admin-btn:hover {
-  background: #fff;
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
   transform: translateY(-1px);
 }
 
@@ -287,8 +288,8 @@
 .admin-card {
   background: var(--admin-surface);
   border: 1px solid var(--admin-border);
-  border-radius: 24px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 16px;
   box-shadow: var(--admin-shadow);
 }
 
@@ -392,14 +393,14 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #e2e8f0;
+  background: rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 13px;
   font-weight: 600;
-  color: #475569;
+  color: rgba(208, 214, 224, 0.9);
 }
 
 .admin-footer-copy {
@@ -416,7 +417,7 @@
 .admin-app select,
 .admin-app textarea {
   color: var(--admin-text);
-  background: #fff;
+  background: #0f0f12;
   border-color: var(--admin-border);
 }
 
@@ -539,12 +540,12 @@
 }
 
 .admin-list-item:hover {
-  background: rgb(59 130 246 / 8%);
+  background: rgba(242, 78, 53, 0.10);
 }
 
 .admin-list-item.is-active {
-  background: rgb(59 130 246 / 12%);
-  color: var(--admin-primary);
+  background: rgba(242, 78, 53, 0.16);
+  color: var(--admin-text);
   font-weight: 600;
 }
 

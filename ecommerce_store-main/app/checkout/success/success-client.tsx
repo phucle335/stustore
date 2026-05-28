@@ -14,6 +14,7 @@ type OrderRow = {
   total_price?: number | null;
   deposit_amount?: number | null;
   remaining_amount?: number | null;
+  order_items?: unknown;
 };
 
 export default function SuccessClient() {
@@ -71,6 +72,10 @@ export default function SuccessClient() {
     [order],
   );
   const total = useMemo(() => Number(order?.total_price) || 0, [order]);
+  const orderItems = useMemo(() => {
+    const raw = order?.order_items;
+    return Array.isArray(raw) ? raw : [];
+  }, [order]);
 
   return (
     <div className="static-page-wrap customer-page-wrap customer-page-wrap--dark">
@@ -106,6 +111,112 @@ export default function SuccessClient() {
             </p>
           </div>
         </div>
+
+        {orderItems.length > 0 ? (
+          <div className="checkout-payment-panel" style={{ marginTop: 14 }}>
+            <p className="checkout-payment-title">Sản phẩm đã mua</p>
+            <div style={{ overflowX: "auto" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  minWidth: 520,
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th
+                      style={{
+                        textAlign: "left",
+                        fontSize: 12,
+                        padding: "10px 8px",
+                        color: "rgba(255,255,255,0.75)",
+                        borderBottom: "1px solid rgba(255,255,255,0.12)",
+                      }}
+                    >
+                      Sản phẩm
+                    </th>
+                    <th
+                      style={{
+                        textAlign: "right",
+                        fontSize: 12,
+                        padding: "10px 8px",
+                        color: "rgba(255,255,255,0.75)",
+                        borderBottom: "1px solid rgba(255,255,255,0.12)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Số lượng
+                    </th>
+                    <th
+                      style={{
+                        textAlign: "right",
+                        fontSize: 12,
+                        padding: "10px 8px",
+                        color: "rgba(255,255,255,0.75)",
+                        borderBottom: "1px solid rgba(255,255,255,0.12)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Đơn giá
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orderItems.slice(0, 30).map((it: any, idx) => {
+                    const name = typeof it?.name === "string" ? it.name : "Sản phẩm";
+                    const size =
+                      typeof it?.size === "string" && it.size.trim()
+                        ? ` — Size ${it.size}`
+                        : "";
+                    const qty = Math.max(0, Number(it?.quantity) || 0);
+                    const unit = Math.max(0, Number(it?.unit_price) || 0);
+                    if (!name || qty <= 0) return null;
+                    return (
+                      <tr key={`${idx}-${name}`}>
+                        <td
+                          style={{
+                            padding: "10px 8px",
+                            borderBottom: "1px solid rgba(255,255,255,0.08)",
+                            color: "#fff",
+                            fontSize: 14,
+                          }}
+                        >
+                          {name}
+                          {size}
+                        </td>
+                        <td
+                          style={{
+                            padding: "10px 8px",
+                            borderBottom: "1px solid rgba(255,255,255,0.08)",
+                            textAlign: "right",
+                            color: "rgba(255,255,255,0.92)",
+                            whiteSpace: "nowrap",
+                            fontSize: 14,
+                          }}
+                        >
+                          {qty}
+                        </td>
+                        <td
+                          style={{
+                            padding: "10px 8px",
+                            borderBottom: "1px solid rgba(255,255,255,0.08)",
+                            textAlign: "right",
+                            color: "rgba(255,255,255,0.92)",
+                            whiteSpace: "nowrap",
+                            fontSize: 14,
+                          }}
+                        >
+                          {unit ? formatPriceVnd(unit) : "—"}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : null}
 
         <div className="checkout-payment-actions" style={{ marginTop: 18 }}>
           <Link href="/tai-khoan" className="checkout-primary-btn">

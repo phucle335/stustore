@@ -314,6 +314,20 @@ export async function POST(request: Request) {
     );
   }
 
+  // Notification for admin dashboard (order_event)
+  try {
+    await supabase.from("notifications").insert({
+      type: "order_event",
+      title: "Có đơn hàng mới",
+      body: `Mã đơn: ${orderId}`,
+      entity_type: "order",
+      entity_id: String(orderId),
+    });
+  } catch (e) {
+    // best-effort; notification không chặn checkout
+    console.warn("[checkout][notification]", e);
+  }
+
   return NextResponse.json({
     data: {
       id: orderId,

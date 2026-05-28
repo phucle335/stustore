@@ -11,13 +11,22 @@ import { CouponManager } from "@/components/admin/CouponManager";
 import { CustomerManager } from "@/components/admin/CustomerManager";
 import { OrderManager } from "@/components/admin/OrderManager";
 import { ProductManager } from "@/components/admin/ProductManager";
-import { RecentActivityCard } from "@/components/admin/RecentActivityCard";
 import { RevenueChart } from "@/components/admin/RevenueChart";
 import { StatCards } from "@/components/admin/StatCards";
 import type { DashboardStats } from "@/lib/admin/stats";
-import type { DbCoupon, DbOrder, DbProduct, DbUser } from "@/lib/supabase/types";
+import type {
+  DbCoupon,
+  DbOrder,
+  DbProduct,
+  DbSupportRequest,
+  DbUser,
+  AdminAuditLog,
+  DbNotification,
+} from "@/lib/supabase/types";
 import { SiteContentManager } from "@/components/admin/SiteContentManager";
 import { BlogPostManager } from "@/components/admin/BlogPostManager";
+import { OrdersTablePreview } from "@/components/admin/OrdersTablePreview";
+import { AdminAuditNotificationsTabs } from "@/components/admin/AdminAuditNotificationsTabs";
 
 type AdminDashboardClientProps = {
   stats: DashboardStats;
@@ -25,6 +34,9 @@ type AdminDashboardClientProps = {
   orders: DbOrder[];
   users: DbUser[];
   coupons: DbCoupon[];
+  supportRequests: DbSupportRequest[];
+  auditLogs: AdminAuditLog[];
+  notifications: DbNotification[];
 };
 
 export function AdminDashboardClient({
@@ -33,6 +45,9 @@ export function AdminDashboardClient({
   orders,
   users,
   coupons,
+  supportRequests,
+  auditLogs,
+  notifications,
 }: AdminDashboardClientProps) {
   const [view, setView] = useState<AdminView>("overview");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -119,8 +134,15 @@ export function AdminDashboardClient({
             <div className="space-y-6">
               <StatCards stats={stats} />
               <div className="admin-grid-2">
-                <RevenueChart data={stats.revenueByMonth} />
-                <RecentActivityCard />
+                <OrdersTablePreview orders={orders} users={users} />
+                <div className="space-y-6">
+                  <RevenueChart data={stats.revenueByMonth} />
+                  <AdminAuditNotificationsTabs
+                    auditLogs={auditLogs}
+                    notifications={notifications}
+                    users={users}
+                  />
+                </div>
               </div>
             </div>
           ) : null}
@@ -130,10 +152,17 @@ export function AdminDashboardClient({
             <ProductManager initialProducts={products} />
           ) : null}
           {view === "orders" ? (
-            <OrderManager initialOrders={orders} customers={customers} />
+            <OrderManager
+              initialOrders={orders}
+              customers={customers}
+              auditLogs={auditLogs}
+            />
           ) : null}
           {view === "customers" ? (
-            <CustomerManager initialUsers={users} />
+            <CustomerManager
+              initialUsers={users}
+              supportRequests={supportRequests}
+            />
           ) : null}
           {view === "coupons" ? (
             <CouponManager initialCoupons={coupons} />

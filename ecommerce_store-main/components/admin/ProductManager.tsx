@@ -479,17 +479,12 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
                     >
                       <Minus className="h-4 w-4" />
                     </button>
-                    <input
-                      type="number"
-                      min={0}
-                      value={form.sizes[0]?.quantity ?? 0}
-                      onChange={(e) =>
-                        updateSize(0, {
-                          quantity: Math.max(0, Number(e.target.value) || 0),
-                        })
-                      }
-                      className="admin-input w-24 text-center tabular-nums"
-                    />
+                    <span
+                      className="min-w-[4rem] text-center text-lg font-semibold tabular-nums admin-text"
+                      aria-label="Số lượng hiện tại"
+                    >
+                      {form.sizes[0]?.quantity ?? 0}
+                    </span>
                     <button
                       type="button"
                       aria-label="Tăng số lượng"

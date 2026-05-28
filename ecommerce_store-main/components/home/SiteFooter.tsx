@@ -3,6 +3,7 @@ import { StusportLogo } from "@/components/brand/StusportLogo";
 import { LivePresenceBar } from "@/components/store/LivePresenceBar";
 import { NAV_LINKS } from "@/lib/store/navigation";
 import { PAGE_ROUTES, STORE_NAME } from "@/lib/store/site";
+import { FooterContact } from "@/components/store/FooterContact";
 
 export function SiteFooter() {
   return (
@@ -72,6 +73,28 @@ export function SiteFooter() {
             ))}
           </ul>
         </div>
+      </div>
+
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto 40px",
+          paddingTop: 12,
+        }}
+      >
+        <h3
+          style={{
+            fontSize: 14,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: 1,
+            color: "#fff",
+            marginBottom: 16,
+          }}
+        >
+          Contact
+        </h3>
+        <FooterContact compact />
       </div>
 
       <LivePresenceBar />

@@ -97,6 +97,26 @@
   color: rgba(255, 255, 255, 0.65);
 }
 
+.customer-page-wrap--dark .member-order-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  margin-top: 10px;
+}
+
+.customer-page-wrap--dark .member-order-total {
+  color: #ffffff;
+}
+
+.customer-page-wrap--dark .member-order-item-line {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.customer-page-wrap--dark .member-order-items-more {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .customer-page--narrow {
   max-width: 520px;
 }

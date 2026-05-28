@@ -1,12 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { withAdminAction } from "@/lib/admin/auth";
+import { guardAdmin, withAdminAction } from "@/lib/admin/auth";
 import * as orders from "@/lib/admin/data/orders";
 import * as users from "@/lib/admin/data/users";
 import { parseOrdersCsv } from "@/lib/admin/parse-orders-import";
 import { failure } from "@/lib/admin/result";
 import type { CreateOrderInput, UpdateOrderInput } from "@/lib/supabase/types";
+import { logAdminAuditAndNotification } from "@/lib/admin/audit/log";
 
 const ADMIN_PATH = "/admin";
 
@@ -26,7 +27,28 @@ export async function getOrderAction(id: string) {
 export async function createOrderAction(input: CreateOrderInput) {
   return withAdminAction(async () => {
     const result = await orders.createOrder(input);
-    if (result.ok) revalidateOrders();
+    if (result.ok) {
+      revalidateOrders();
+      const auth = await guardAdmin();
+      if (auth.ok) {
+        await logAdminAuditAndNotification(
+          {
+            adminUserId: auth.data.userId,
+            action: "order_created",
+            entityType: "order",
+            entityId: result.data.id,
+            diff: { input },
+          },
+          {
+            type: "admin_action",
+            title: "Admin tạo đơn hàng",
+            body: `Tạo đơn ${result.data.id}`,
+            entityType: "order",
+            entityId: result.data.id,
+          },
+        );
+      }
+    }
     return result;
   });
 }
@@ -34,7 +56,28 @@ export async function createOrderAction(input: CreateOrderInput) {
 export async function updateOrderAction(id: string, input: UpdateOrderInput) {
   return withAdminAction(async () => {
     const result = await orders.updateOrder(id, input);
-    if (result.ok) revalidateOrders();
+    if (result.ok) {
+      revalidateOrders();
+      const auth = await guardAdmin();
+      if (auth.ok) {
+        await logAdminAuditAndNotification(
+          {
+            adminUserId: auth.data.userId,
+            action: "order_updated",
+            entityType: "order",
+            entityId: id,
+            diff: { input },
+          },
+          {
+            type: "admin_action",
+            title: "Admin cập nhật đơn hàng",
+            body: `Cập nhật đơn ${id}`,
+            entityType: "order",
+            entityId: id,
+          },
+        );
+      }
+    }
     return result;
   });
 }
@@ -42,7 +85,28 @@ export async function updateOrderAction(id: string, input: UpdateOrderInput) {
 export async function deleteOrderAction(id: string) {
   return withAdminAction(async () => {
     const result = await orders.deleteOrder(id);
-    if (result.ok) revalidateOrders();
+    if (result.ok) {
+      revalidateOrders();
+      const auth = await guardAdmin();
+      if (auth.ok) {
+        await logAdminAuditAndNotification(
+          {
+            adminUserId: auth.data.userId,
+            action: "order_deleted",
+            entityType: "order",
+            entityId: id,
+            diff: { id },
+          },
+          {
+            type: "admin_action",
+            title: "Admin xóa đơn hàng",
+            body: `Xóa đơn ${id}`,
+            entityType: "order",
+            entityId: id,
+          },
+        );
+      }
+    }
     return result;
   });
 }

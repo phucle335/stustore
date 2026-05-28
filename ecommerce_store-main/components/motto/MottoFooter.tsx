@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MOTTO_NAV } from "@/lib/motto/content";
 import { MottoLogo } from "./MottoLogo";
+import { FooterContact } from "@/components/store/FooterContact";
 
 export function MottoFooter() {
   return (
@@ -26,12 +27,11 @@ export function MottoFooter() {
           </div>
           <div>
             <p className="motto-footer-label">Contact</p>
-            <ul className="motto-footer-links">
-              <li>
-                <a href="mailto:support@stusport.vn">support@stusport.vn</a>
-              </li>
-              <li>123 Nguyễn Huệ, Q.1, TP.HCM</li>
-            </ul>
+            <FooterContact
+              compact
+              zaloPhoneDigits="0901234567"
+              email="stusport22@gmail.com"
+            />
           </div>
           <div className="motto-footer-newsletter">
             <p className="motto-footer-label">Newsletter</p>

@@ -5,7 +5,13 @@ import { CouponManager } from "@/components/admin/CouponManager";
 import { CustomerManager } from "@/components/admin/CustomerManager";
 import { OrderManager } from "@/components/admin/OrderManager";
 import { ProductManager } from "@/components/admin/ProductManager";
-import type { DbCoupon, DbOrder, DbProduct, DbUser } from "@/lib/supabase/types";
+import type {
+  DbCoupon,
+  DbOrder,
+  DbProduct,
+  DbSupportRequest,
+  DbUser,
+} from "@/lib/supabase/types";
 
 type TabId = "products" | "orders" | "customers" | "coupons";
 
@@ -21,9 +27,16 @@ type AdminTabsProps = {
   orders: DbOrder[];
   users: DbUser[];
   coupons: DbCoupon[];
+  supportRequests: DbSupportRequest[];
 };
 
-export function AdminTabs({ products, orders, users, coupons }: AdminTabsProps) {
+export function AdminTabs({
+  products,
+  orders,
+  users,
+  coupons,
+  supportRequests,
+}: AdminTabsProps) {
   const [activeTab, setActiveTab] = useState<TabId>("products");
 
   const customers = users.filter((user) => user.role === "user");
@@ -65,7 +78,10 @@ export function AdminTabs({ products, orders, users, coupons }: AdminTabsProps) 
         <OrderManager initialOrders={orders} customers={customers} />
       ) : null}
       {activeTab === "customers" ? (
-        <CustomerManager initialUsers={users} />
+        <CustomerManager
+          initialUsers={users}
+          supportRequests={supportRequests}
+        />
       ) : null}
       {activeTab === "coupons" ? (
         <CouponManager initialCoupons={coupons} />

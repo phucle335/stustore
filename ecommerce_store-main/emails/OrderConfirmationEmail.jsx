@@ -17,8 +17,11 @@ export function OrderConfirmationEmail({
   totalAmount = "0đ",
   paidAmount = "0đ",
   remainingAmount = "0đ",
+  items = [],
   historyUrl = "https://stusport.vercel.app/tai-khoan",
 }) {
+  const safeItems = Array.isArray(items) ? items : [];
+
   return (
     <Html>
       <Head />
@@ -50,6 +53,47 @@ export function OrderConfirmationEmail({
                 <strong>Còn lại:</strong> {remainingAmount}
               </Text>
             </Section>
+
+            {safeItems.length > 0 ? (
+              <Section style={itemsBox}>
+                <Text style={itemsTitle}>Sản phẩm đã mua</Text>
+                <table style={table}>
+                  <thead>
+                    <tr>
+                      <th style={th}>Sản phẩm</th>
+                      <th style={thRight}>SL</th>
+                      <th style={thRight}>Đơn giá</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {safeItems
+                      .filter((it) => it && typeof it === "object")
+                      .slice(0, 20)
+                      .map((it, idx) => {
+                        const name = typeof it?.name === "string" ? it.name : "Sản phẩm";
+                        const size =
+                          typeof it?.size === "string" && it.size.trim()
+                            ? ` — Size ${it.size}`
+                            : "";
+                        const qty = Math.max(0, Number(it?.quantity) || 0);
+                        const unit = Math.max(0, Number(it?.unit_price) || 0);
+                        return (
+                          <tr key={`${idx}-${name}`}>
+                            <td style={td}>
+                              {name}
+                              {size}
+                            </td>
+                            <td style={tdRight}>{qty}</td>
+                            <td style={tdRight}>
+                              {unit ? `${unit.toLocaleString("vi-VN")}đ` : "—"}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </Section>
+            ) : null}
 
             <Text style={paragraph}>
               Đơn hàng của bạn đã được ghi nhận trên hệ thống. Nhân viên của
@@ -136,6 +180,53 @@ const summaryLine = {
   fontSize: "14px",
   lineHeight: "22px",
   margin: "0 0 6px",
+};
+
+const itemsBox = {
+  backgroundColor: "#1d1d1d",
+  border: "1px solid #343434",
+  borderRadius: "10px",
+  padding: "12px 14px",
+  margin: "0 0 16px",
+};
+
+const itemsTitle = {
+  color: "#f2f2f2",
+  fontSize: "14px",
+  lineHeight: "22px",
+  margin: "0 0 10px",
+  fontWeight: 700,
+};
+
+const table = {
+  width: "100%",
+  borderCollapse: "collapse",
+};
+
+const th = {
+  textAlign: "left",
+  color: "#cfcfcf",
+  fontSize: "12px",
+  padding: "8px 0",
+  borderBottom: "1px solid #343434",
+};
+
+const thRight = {
+  ...th,
+  textAlign: "right",
+};
+
+const td = {
+  color: "#f2f2f2",
+  fontSize: "13px",
+  padding: "8px 0",
+  borderBottom: "1px solid #2b2b2b",
+};
+
+const tdRight = {
+  ...td,
+  textAlign: "right",
+  whiteSpace: "nowrap",
 };
 
 const buttonWrap = {
