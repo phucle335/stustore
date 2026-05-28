@@ -84,14 +84,59 @@ function productToForm(product: DbProduct): ProductFormState {
 
 export function ProductManager({ initialProducts }: ProductManagerProps) {
   const [products, setProducts] = useState(initialProducts);
-  const [tab, setTab] = useState<"all" | "medicine">("all");
+  const [tab, setTab] = useState<"all" | "in_stock" | "pre_order">("all");
+  const [queryInput, setQueryInput] = useState("");
   const [query, setQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<StoreProductCategory | "all">(
+    "all",
+  );
+  const [brandFilter, setBrandFilter] = useState<string>("all");
+  const [dateSort, setDateSort] = useState<"newest" | "oldest">("newest");
+  const [sortBy, setSortBy] = useState<
+    "created_newest" | "created_oldest" | "price_asc" | "price_desc" | "name_asc" | "name_desc"
+  >("created_newest");
+  const [stockFilter, setStockFilter] = useState<
+    "all" | "in_stock" | "out_stock" | "low_stock"
+  >("all");
   const [form, setForm] = useState<ProductFormState>(() =>
     initialProducts.length > 0 ? productToForm(initialProducts[0]) : emptyForm(),
   );
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = window.localStorage.getItem("admin-product-filters");
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw) as {
+        categoryFilter?: StoreProductCategory | "all";
+        brandFilter?: string;
+        dateSort?: "newest" | "oldest";
+        sortBy?:
+          | "created_newest"
+          | "created_oldest"
+          | "price_asc"
+          | "price_desc"
+          | "name_asc"
+          | "name_desc";
+        stockFilter?: "all" | "in_stock" | "out_stock" | "low_stock";
+        query?: string;
+      };
+      if (parsed.categoryFilter) setCategoryFilter(parsed.categoryFilter);
+      if (parsed.brandFilter) setBrandFilter(parsed.brandFilter);
+      if (parsed.dateSort) setDateSort(parsed.dateSort);
+      if (parsed.sortBy) setSortBy(parsed.sortBy);
+      if (parsed.stockFilter) setStockFilter(parsed.stockFilter);
+      if (parsed.query) {
+        setQueryInput(parsed.query);
+        setQuery(parsed.query);
+      }
+    } catch {
+      // ignore invalid saved filters
+    }
+  }, []);
 
   useEffect(() => {
     setProducts(initialProducts);
@@ -114,18 +159,54 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
     [form.sizes],
   );
 
+  const brandOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          products
+            .map((p) => (p.brand_tag ?? "").trim())
+            .filter((v) => v.length > 0),
+        ),
+      ).sort((a, b) => a.localeCompare(b)),
+    [products],
+  );
+
   const productRows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return products.filter((p) => {
-      if (tab === "medicine" && p.category !== "clothing") return false;
-      if (!q) return true;
-      return (
-        p.name.toLowerCase().includes(q) ||
-        p.id.toLowerCase().includes(q) ||
-        p.brand_tag.toLowerCase().includes(q)
+    return [...products]
+      .filter((p) => {
+        const fulfillment = p.fulfillment_type ?? "in_stock";
+        if (tab !== "all" && fulfillment !== tab) return false;
+        if (categoryFilter !== "all" && p.category !== categoryFilter) return false;
+        if (brandFilter !== "all" && p.brand_tag !== brandFilter) return false;
+
+        const sizes = Array.isArray(p.sizes) ? p.sizes : [];
+        const stock = sizes.reduce((sum, row) => sum + (Number(row?.quantity) || 0), 0);
+        if (stockFilter === "out_stock" && stock > 0) return false;
+        if (stockFilter === "in_stock" && stock <= 0) return false;
+        if (stockFilter === "low_stock" && !(stock > 0 && stock <= 5)) return false;
+
+        if (!q) return true;
+        return (
+          p.name.toLowerCase().includes(q) ||
+          p.id.toLowerCase().includes(q) ||
+          p.brand_tag.toLowerCase().includes(q)
+        );
+      })
+      .sort((a, b) =>
+        sortBy === "created_oldest"
+          ? a.created_at.localeCompare(b.created_at)
+          : sortBy === "price_asc"
+            ? Number(a.price) - Number(b.price)
+            : sortBy === "price_desc"
+              ? Number(b.price) - Number(a.price)
+              : sortBy === "name_asc"
+                ? (a.name ?? "").localeCompare(b.name ?? "", "vi")
+                : sortBy === "name_desc"
+                  ? (b.name ?? "").localeCompare(a.name ?? "", "vi")
+                  : b.created_at.localeCompare(a.created_at),
       );
-    });
-  }, [products, query, tab]);
+  }, [products, query, tab, categoryFilter, brandFilter, stockFilter, dateSort, sortBy]);
 
   function handleCategoryChange(category: StoreProductCategory) {
     setForm((current) => {
@@ -300,12 +381,9 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
       <div className="mb-5 flex items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold admin-text">Danh sách sản phẩm</h2>
-        </div>
-        <div className="flex items-center gap-3 text-sm admin-muted">
-          <span>Vay vốn</span>
-          <span>Trợ giúp</span>
-          <span>Góp ý</span>
-          <span>User Profile</span>
+          <p className="text-sm admin-muted">
+            Sắp xếp và quản lý toàn bộ sản phẩm theo layout bảng mới.
+          </p>
         </div>
       </div>
 
@@ -313,15 +391,28 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" className="admin-btn">Xuất file</button>
           <button type="button" className="admin-btn">Nhập file</button>
-          <button type="button" className="admin-btn">Loại sản phẩm</button>
-          <button type="button" className="admin-btn">Khác</button>
+          <button
+            type="button"
+            className="admin-btn"
+            onClick={() => {
+              setCategoryFilter("all");
+              setBrandFilter("all");
+              setDateSort("newest");
+              setSortBy("created_newest");
+              setStockFilter("all");
+              setQueryInput("");
+              setQuery("");
+            }}
+          >
+            Reset lọc
+          </button>
         </div>
         <button
           type="button"
           onClick={resetForm}
           className="admin-btn admin-btn--primary"
         >
-          + Thêm thuốc/sản phẩm
+          + Thêm sản phẩm
         </button>
       </div>
 
@@ -335,40 +426,128 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
         </button>
         <button
           type="button"
-          className={`admin-btn ${tab === "medicine" ? "admin-btn--primary" : ""}`}
-          onClick={() => setTab("medicine")}
+          className={`admin-btn ${tab === "in_stock" ? "admin-btn--primary" : ""}`}
+          onClick={() => setTab("in_stock")}
         >
-          Thuốc
+          Hàng có sẵn
+        </button>
+        <button
+          type="button"
+          className={`admin-btn ${tab === "pre_order" ? "admin-btn--primary" : ""}`}
+          onClick={() => setTab("pre_order")}
+        >
+          Pre-order
         </button>
       </div>
 
       <div className="mb-5 rounded-xl border border-[var(--admin-border)] p-3 admin-product-filter-row">
         <div className="flex flex-wrap items-center gap-2">
           <input
-            className="admin-input flex-1 min-w-[240px]"
+            className="admin-input flex-1 min-w-[240px] max-md:min-w-full"
             placeholder="Tìm kiếm sản phẩm"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={queryInput}
+            onChange={(e) => setQueryInput(e.target.value)}
           />
-          <select className="admin-input w-[160px]">
-            <option>Loại sản phẩm</option>
+          <select
+            className="admin-input w-[160px] max-md:w-full"
+            value={categoryFilter}
+            onChange={(e) =>
+              setCategoryFilter(e.target.value as StoreProductCategory | "all")
+            }
+          >
+            <option value="all">Loại sản phẩm</option>
+            {CATEGORY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
           </select>
-          <select className="admin-input w-[140px]">
-            <option>Ngày tạo</option>
+          <select
+            className="admin-input w-[140px] max-md:w-full"
+            value={dateSort}
+            onChange={(e) => setDateSort(e.target.value as "newest" | "oldest")}
+          >
+            <option value="newest">Ngày tạo mới</option>
+            <option value="oldest">Ngày tạo cũ</option>
           </select>
-          <select className="admin-input w-[140px]">
-            <option>Nhãn hiệu</option>
+          <select
+            className="admin-input w-[160px] max-md:w-full"
+            value={sortBy}
+            onChange={(e) =>
+              setSortBy(
+                e.target.value as
+                  | "created_newest"
+                  | "created_oldest"
+                  | "price_asc"
+                  | "price_desc"
+                  | "name_asc"
+                  | "name_desc",
+              )
+            }
+          >
+            <option value="created_newest">Mới nhất</option>
+            <option value="created_oldest">Cũ nhất</option>
+            <option value="price_asc">Giá thấp tới cao</option>
+            <option value="price_desc">Giá cao tới thấp</option>
+            <option value="name_asc">Tên A tới Z</option>
+            <option value="name_desc">Tên Z tới A</option>
           </select>
-          <select className="admin-input w-[140px]">
-            <option>Bộ lọc khác</option>
+          <select
+            className="admin-input w-[140px] max-md:w-full"
+            value={brandFilter}
+            onChange={(e) => setBrandFilter(e.target.value)}
+          >
+            <option value="all">Nhãn hiệu</option>
+            {brandOptions.map((brand) => (
+              <option key={brand} value={brand}>
+                {brand}
+              </option>
+            ))}
           </select>
-          <button type="button" className="admin-btn">
+          <select
+            className="admin-input w-[140px] max-md:w-full"
+            value={stockFilter}
+            onChange={(e) =>
+              setStockFilter(
+                e.target.value as "all" | "in_stock" | "out_stock" | "low_stock",
+              )
+            }
+          >
+            <option value="all">Tất cả tồn kho</option>
+            <option value="in_stock">Còn hàng</option>
+            <option value="out_stock">Hết hàng</option>
+            <option value="low_stock">Sắp hết (&le;5)</option>
+          </select>
+          <button type="button" className="admin-btn" onClick={() => setQuery(queryInput)}>
+            Tìm
+          </button>
+          <button
+            type="button"
+            className="admin-btn"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.localStorage.setItem(
+                  "admin-product-filters",
+                  JSON.stringify({
+                    categoryFilter,
+                    brandFilter,
+                    dateSort,
+                    sortBy,
+                    stockFilter,
+                    query: queryInput,
+                  }),
+                );
+              }
+              setMessage("Đã lưu bộ lọc.");
+              setError(null);
+            }}
+          >
             Lưu bộ lọc
           </button>
         </div>
       </div>
 
-      <div className="admin-table-wrap mb-6">
+      <div className="admin-table-wrap mb-6 hidden md:block">
         <table className="admin-table admin-product-table">
           <thead>
             <tr>
@@ -440,6 +619,48 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
             })}
           </tbody>
         </table>
+      </div>
+
+      <div className="mb-6 space-y-3 md:hidden">
+        {productRows.map((product) => {
+          const sizes = Array.isArray(product.sizes) ? product.sizes : [];
+          const stock = sizes.reduce((sum, row) => sum + (Number(row?.quantity) || 0), 0);
+          const variants = Math.max(1, sizes.length);
+          const active = form.id === product.id;
+          return (
+            <button
+              key={product.id}
+              type="button"
+              onClick={() => selectProduct(product)}
+              className={`w-full rounded-xl border border-[var(--admin-border)] p-3 text-left ${
+                active ? "bg-[rgba(242,78,53,0.16)]" : "bg-[var(--admin-surface)]"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="admin-text text-sm font-semibold">{product.name}</p>
+                  <p className="admin-muted text-xs">ID: {product.id}</p>
+                </div>
+                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs text-emerald-400">
+                  Đang bán
+                </span>
+              </div>
+              <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
+                <p className="admin-muted">Loại: <span className="admin-text">{product.category}</span></p>
+                <p className="admin-muted">Nhãn hiệu: <span className="admin-text">{product.brand_tag}</span></p>
+                <p className="admin-muted">Tồn kho: <span className="admin-text">{stock}</span></p>
+                <p className="admin-muted">Biến thể: <span className="admin-text">{variants}</span></p>
+                <p className="admin-muted">Giá: <span className="admin-text">{formatCurrency(product.price)}</span></p>
+                <p className="admin-muted">
+                  Ngày tạo:{" "}
+                  <span className="admin-text">
+                    {new Date(product.created_at).toLocaleDateString("vi-VN")}
+                  </span>
+                </p>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       <div className="mb-5">

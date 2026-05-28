@@ -16,6 +16,11 @@ type HeaderProps = {
 export function Header({ activeNav, onLoginClick }: HeaderProps) {
   const { itemCount, openCart } = useCart();
   const { user, loading, signOut } = useCustomerAuth();
+  const greetingName =
+    (user?.display_name && user.display_name.trim()) ||
+    (user?.full_name && user.full_name.trim()) ||
+    (user?.email ? user.email.split("@")[0] : "") ||
+    "bạn";
 
   return (
     <header className="header">
@@ -48,7 +53,7 @@ export function Header({ activeNav, onLoginClick }: HeaderProps) {
           ) : user ? (
             <div className="header-user-menu">
               <Link href="/tai-khoan" className="header-user-greeting">
-                Hi {user.display_name}
+                Hi, {greetingName}
               </Link>
               <button
                 type="button"

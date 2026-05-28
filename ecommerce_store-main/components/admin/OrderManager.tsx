@@ -384,7 +384,7 @@ export function OrderManager({
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2">
                 <select
-                  className="admin-input"
+                  className="admin-input max-md:w-full"
                   style={{ width: 130 }}
                   value={statusFilter}
                   onChange={(e) =>
@@ -399,7 +399,7 @@ export function OrderManager({
                   ))}
                 </select>
                 <input
-                  className="admin-input"
+                  className="admin-input max-md:w-full"
                   style={{ width: 260 }}
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
@@ -427,7 +427,7 @@ export function OrderManager({
             </div>
           </div>
 
-          <div className="admin-table-wrap">
+          <div className="admin-table-wrap hidden md:block">
             <table className="admin-table admin-order-table">
               <thead>
                 <tr>
@@ -529,6 +529,50 @@ export function OrderManager({
                 })}
               </tbody>
             </table>
+          </div>
+
+          <div className="space-y-3 md:hidden">
+            {filteredOrders.map((order) => {
+              const meta = parseOrderMeta(order);
+              const page = String(meta.source_page ?? "My Love Story");
+              const note = String(meta.note ?? "");
+              return (
+                <button
+                  key={order.id}
+                  type="button"
+                  className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-surface)] p-3 text-left"
+                  onClick={() => selectOrder(order)}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm font-semibold" style={{ color: "#60a5fa" }}>
+                      {order.id}
+                    </p>
+                    <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${statusChipClass(order.status)}`}>
+                      {ORDER_STATUS_LABELS[order.status]}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm admin-text">
+                    {order.shipping_full_name || "Khách lẻ"} · {order.shipping_phone || "—"}
+                  </p>
+                  <div className="mt-2 space-y-1 text-xs admin-muted">
+                    {productLines(order).slice(0, 2).map((line, idx) => (
+                      <p key={idx}>{line}</p>
+                    ))}
+                    <p>
+                      {new Date(order.created_at).toLocaleDateString("vi-VN")}{" "}
+                      {new Date(order.created_at).toLocaleTimeString("vi-VN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                    <p>Tổng: <span className="admin-text">{formatCurrency(order.total_price)}</span></p>
+                    <p>Page: <span className="text-blue-300">{page}</span></p>
+                    <p>Thanh toán: {paymentStatusText(order)}</p>
+                    {note ? <p>Ghi chú: {note}</p> : null}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       ) : (

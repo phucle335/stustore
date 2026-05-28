@@ -1364,6 +1364,65 @@
   text-decoration: none;
 }
 
+@media (max-width: 768px) {
+  .motto-container {
+    width: min(100% - 24px, 100%);
+  }
+
+  .motto-header-inner {
+    min-height: 68px;
+    gap: 10px;
+  }
+
+  .motto-header-nav {
+    display: none;
+  }
+
+  .motto-header-actions .motto-btn--pill {
+    display: none;
+  }
+
+  .motto-mobile-nav {
+    width: min(88vw, 360px);
+  }
+
+  .motto-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Pixel alignment sweep */
+.motto-header,
+.motto-mobile-nav,
+.motto-footer-grid > div,
+.motto-footer-form input {
+  border-radius: 12px;
+}
+
+.motto-btn,
+.motto-header-burger {
+  min-height: 38px;
+}
+
+@media (max-width: 768px) {
+  .motto-header-burger {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+  }
+
+  .motto-mobile-nav-link {
+    padding: 10px 0;
+    font-size: 15px;
+  }
+
+  .motto-footer-form input {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .motto-method-marquee-track,

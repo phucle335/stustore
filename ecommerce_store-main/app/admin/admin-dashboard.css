@@ -1,5 +1,11 @@
 /* Admin redesign system — Stusport */
 
+.admin-page-root {
+  min-height: 100vh;
+  background: #0a0a0d;
+  overflow-x: hidden;
+}
+
 .admin-app {
   /* Linear-style dark theme (near-black + charcoal surfaces). */
   --admin-sidebar-bg: #0b0b0f;
@@ -121,6 +127,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .admin-topbar {
@@ -289,6 +296,8 @@
 .admin-content {
   flex: 1;
   padding: 32px;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 .admin-page-head {
@@ -355,6 +364,7 @@
 .admin-btn--primary:hover {
   background: #15212f;
   border-color: #15212f;
+  color: #fff;
 }
 
 .admin-card {
@@ -561,6 +571,9 @@
   overflow-x: auto;
   border-radius: 10px;
   border: 1px solid var(--admin-border);
+  width: 100%;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 .admin-table {
@@ -735,7 +748,7 @@
 
   .admin-order-table,
   .admin-product-table {
-    min-width: 980px;
+    min-width: 760px;
   }
 
   .admin-order-table td:nth-child(4),
@@ -771,7 +784,7 @@
     pointer-events: auto;
     position: fixed;
     inset: 0;
-    background: rgb(15 23 42 / 45%);
+    background: rgb(2 6 23 / 62%);
     z-index: 35;
     border: none;
     cursor: pointer;
@@ -782,6 +795,7 @@
     left: 16px;
     top: 16px;
     bottom: 16px;
+    width: min(82vw, 320px);
     border-radius: 24px;
     transform: translateX(calc(-100% - 24px));
   }
@@ -823,11 +837,82 @@
 
   .admin-order-table,
   .admin-product-table {
-    min-width: 860px;
+    min-width: 680px;
   }
 
   .admin-table thead {
     font-size: 11px;
+  }
+}
+
+/* Pixel alignment sweep */
+.admin-app {
+  overflow-x: hidden;
+}
+
+.admin-card,
+.admin-panel,
+.admin-table-wrap,
+.admin-list-aside {
+  border-radius: 12px;
+}
+
+.admin-btn,
+.admin-input,
+.admin-icon-btn {
+  min-height: 38px;
+}
+
+.admin-page-head {
+  margin-bottom: 16px;
+}
+
+.admin-table th,
+.admin-table td {
+  line-height: 1.35;
+}
+
+.admin-table td {
+  vertical-align: middle;
+}
+
+@media (max-width: 1024px) {
+  .admin-topbar {
+    padding: 12px 14px;
+  }
+
+  .admin-content {
+    padding: 14px;
+  }
+
+  .admin-page-head h1 {
+    font-size: 1.5rem;
+  }
+
+  .admin-panel,
+  .admin-card {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-topbar-search {
+    min-width: 0;
+    padding: 8px 12px;
+  }
+
+  .admin-topbar-actions {
+    gap: 6px;
+  }
+
+  .admin-btn {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .admin-input {
+    font-size: 13px;
+    padding: 7px 10px;
   }
 }
 

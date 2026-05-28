@@ -113,10 +113,10 @@ export function AdminTopBar({
         >
           <LogOut className="h-4 w-4" />
         </button>
-        <div className="admin-user-pill">
+        <Link href="/tai-khoan" className="admin-user-pill" aria-label="Hồ sơ cá nhân">
           <span className="admin-user-avatar">AD</span>
           <span className="hidden sm:inline">Admin</span>
-        </div>
+        </Link>
       </div>
     </header>
   );
