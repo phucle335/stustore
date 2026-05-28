@@ -53,6 +53,17 @@ export async function POST(request) {
       .single();
 
     if (error) {
+      const msg = String(error.message ?? "");
+      if (/Could not find the table|schema cache|does not exist/i.test(msg)) {
+        return NextResponse.json(
+          {
+            error:
+              "Thiếu bảng support_requests trên Supabase. Hãy chạy file supabase/support-requests.sql và reload schema cache.",
+            detail: msg,
+          },
+          { status: 500 },
+        );
+      }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 

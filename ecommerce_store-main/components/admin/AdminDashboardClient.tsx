@@ -90,6 +90,7 @@ export function AdminDashboardClient({
 
       <div className="admin-main">
         <AdminTopBar
+          notifications={notifications}
           onMenuClick={() => {
             if (window.innerWidth < 900) {
               setMobileSidebarOpen((open) => !open);

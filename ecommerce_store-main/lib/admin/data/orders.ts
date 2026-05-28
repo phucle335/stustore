@@ -6,6 +6,12 @@ import type {
 } from "@/lib/supabase/types";
 import { failure, success, type ActionResult } from "@/lib/admin/result";
 
+function hasMissingOrderMetaColumn(message: string): boolean {
+  return /order_meta|schema cache|Could not find the 'order_meta' column/i.test(
+    message,
+  );
+}
+
 function mapOrder(row: DbOrder): DbOrder {
   return {
     ...row,
@@ -43,9 +49,7 @@ export async function createOrder(
   input: CreateOrderInput,
 ): Promise<ActionResult<DbOrder>> {
   const supabase = createAdminSupabaseClient();
-  const { data, error } = await supabase
-    .from("orders")
-    .insert({
+  const insertPayload: Record<string, unknown> = {
       user_id: input.user_id ?? null,
       total_price: input.total_price,
       subtotal: input.subtotal ?? input.total_price,
@@ -60,9 +64,24 @@ export async function createOrder(
       order_items: input.order_items ?? [],
       order_meta: input.order_meta ?? {},
       status: input.status ?? "pending",
-    })
+    };
+
+  let { data, error } = await supabase
+    .from("orders")
+    .insert(insertPayload)
     .select("*")
     .single();
+
+  if (error && hasMissingOrderMetaColumn(error.message)) {
+    const { order_meta: _ignored, ...legacyPayload } = insertPayload;
+    const retry = await supabase
+      .from("orders")
+      .insert(legacyPayload)
+      .select("*")
+      .single();
+    data = retry.data;
+    error = retry.error;
+  }
 
   if (error) return failure(error.message);
   return success(mapOrder(data as DbOrder));
@@ -93,10 +112,17 @@ export async function createOrdersBulk(
     status: input.status ?? "pending",
   }));
 
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from("orders")
     .insert(payload)
     .select("*");
+
+  if (error && hasMissingOrderMetaColumn(error.message)) {
+    const legacyPayload = payload.map(({ order_meta: _ignored, ...row }) => row);
+    const retry = await supabase.from("orders").insert(legacyPayload).select("*");
+    data = retry.data;
+    error = retry.error;
+  }
 
   if (error) return failure(error.message);
   return success((data ?? []).map((row) => mapOrder(row as DbOrder)));
@@ -107,12 +133,27 @@ export async function updateOrder(
   input: UpdateOrderInput,
 ): Promise<ActionResult<DbOrder>> {
   const supabase = createAdminSupabaseClient();
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from("orders")
     .update(input)
     .eq("id", id)
     .select("*")
     .single();
+
+  if (error && hasMissingOrderMetaColumn(error.message)) {
+    const { order_meta: _ignored, ...legacyInput } = input as Record<
+      string,
+      unknown
+    >;
+    const retry = await supabase
+      .from("orders")
+      .update(legacyInput)
+      .eq("id", id)
+      .select("*")
+      .single();
+    data = retry.data;
+    error = retry.error;
+  }
 
   if (error) return failure(error.message);
   return success(mapOrder(data as DbOrder));

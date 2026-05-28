@@ -10,7 +10,9 @@ create extension if not exists "pgcrypto";
 
 create table if not exists public.admin_audit_logs (
   id uuid primary key default gen_random_uuid(),
-  admin_user_id uuid references public.users (id) on delete set null,
+  -- Không gắn FK cứng để tránh lỗi khi bảng users chưa có PK/unique đúng.
+  -- Sau khi users.id chuẩn hóa, có thể thêm FK ở migration riêng.
+  admin_user_id uuid,
   action text not null,
   entity_type text not null,
   entity_id text,
@@ -72,4 +74,6 @@ drop policy if exists "Public can insert notifications" on public.notifications;
 create policy "Public can insert notifications"
   on public.notifications for insert
   with check (true);
+
+notify pgrst, 'reload schema';
 

@@ -10,7 +10,9 @@ create table if not exists public.support_requests (
   message text not null,
   status text not null default 'open'
     check (status in ('open', 'resolved')),
-  handled_by uuid references public.users (id) on delete set null,
+  -- Không gắn FK cứng để tránh lỗi nếu bảng users đang thiếu PK/unique.
+  -- Nếu đã sửa users PK ổn định, có thể thêm FK lại ở migration riêng.
+  handled_by uuid,
   resolved_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -47,4 +49,6 @@ create policy "Admins can update support requests"
   on public.support_requests for update
   using (public.is_admin())
   with check (public.is_admin());
+
+notify pgrst, 'reload schema';
 
