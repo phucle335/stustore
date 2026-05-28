@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { usePathname } from "next/navigation";
 import {
   fetchProductStockMap,
   getStockFromMap,
@@ -43,6 +44,7 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const { showToast } = useToast();
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -218,10 +220,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     ],
   );
 
+  const isAdminRoute = pathname?.startsWith("/admin");
+
   return (
     <CartContext.Provider value={value}>
       {children}
-      <CartModal />
+      {isAdminRoute ? null : <CartModal />}
     </CartContext.Provider>
   );
 }

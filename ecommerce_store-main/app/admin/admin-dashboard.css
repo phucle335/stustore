@@ -846,6 +846,22 @@
 }
 
 @media (max-width: 640px) {
+  .admin-topbar {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .admin-topbar-search {
+    order: 3;
+    width: 100%;
+    max-width: none;
+    margin-top: 6px;
+  }
+
+  .admin-topbar-actions {
+    margin-left: auto;
+  }
+
   .admin-btn {
     padding: 8px 12px;
     font-size: 12px;
