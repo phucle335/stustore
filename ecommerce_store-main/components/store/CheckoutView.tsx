@@ -147,6 +147,7 @@ export function CheckoutView() {
             setQrModalOpen(false);
             setShowConfetti(true);
             setError(null);
+            clearCart();
             setTimeout(() => setShowConfetti(false), 8000);
           }
         },
@@ -156,7 +157,7 @@ export function CheckoutView() {
     return () => {
       supabaseClient.removeChannel(channel);
     };
-  }, [payingOrderId]);
+  }, [payingOrderId, clearCart]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -348,11 +349,15 @@ export function CheckoutView() {
       setPayingAmount(Number(paymentBody.data?.amount) || 0);
       setNowTs(Math.floor(Date.now() / 1000));
       setQrModalOpen(true);
-      clearCart();
     }
   }
 
-  if (items.length === 0) {
+  if (
+    items.length === 0 &&
+    !payingOrderId &&
+    !qrModalOpen &&
+    !paymentSuccess
+  ) {
     return (
       <div className="checkout-card">
         <p className="customer-page-eyebrow">Stusport</p>
