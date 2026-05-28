@@ -31,8 +31,8 @@ export function CustomerManager({
   const [supportRequests, setSupportRequests] = useState(
     initialSupportRequests ?? [],
   );
-  const openSupportRequests = useMemo(
-    () => supportRequests.filter((r) => r.status === "open"),
+  const recentSupportRequests = useMemo(
+    () => [...supportRequests].sort((a, b) => b.created_at.localeCompare(a.created_at)),
     [supportRequests],
   );
   const [resolvingRequestId, setResolvingRequestId] = useState<
@@ -153,7 +153,7 @@ export function CustomerManager({
               </tr>
             </thead>
             <tbody>
-              {openSupportRequests.length === 0 ? (
+              {recentSupportRequests.length === 0 ? (
                 <tr>
                   <td
                     colSpan={4}
@@ -163,7 +163,7 @@ export function CustomerManager({
                   </td>
                 </tr>
               ) : (
-                openSupportRequests.slice(0, 5).map((req) => {
+                recentSupportRequests.slice(0, 8).map((req) => {
                   const digits = req.phone.replace(/\D/g, "");
                   const zaloUrl =
                     digits.length > 0 ? `https://zalo.me/${digits}` : null;
@@ -201,16 +201,31 @@ export function CustomerManager({
                       <td className="px-4 py-3 admin-muted" style={{ maxWidth: 380 }}>
                         {String(req.message ?? "").slice(0, 90)}
                         {String(req.message ?? "").length > 90 ? "…" : ""}
+                        <div className="mt-2">
+                          <span
+                            className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${
+                              req.status === "open"
+                                ? "bg-sky-500/20 text-sky-300"
+                                : "bg-emerald-500/20 text-emerald-300"
+                            }`}
+                          >
+                            {req.status === "open" ? "Mới" : "Đã xử lý"}
+                          </span>
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         <div style={{ display: "flex", justifyContent: "flex-end" }}>
                           <button
                             type="button"
                             className="admin-btn admin-btn--primary"
-                            disabled={resolving}
+                            disabled={resolving || req.status === "resolved"}
                             onClick={() => resolveRequest(req.id)}
                           >
-                            {resolving ? "Đang xử lý…" : "Đã xử lý"}
+                            {req.status === "resolved"
+                              ? "Đã xử lý"
+                              : resolving
+                                ? "Đang xử lý…"
+                                : "Đánh dấu đã xử lý"}
                           </button>
                         </div>
                       </td>

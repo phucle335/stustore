@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Download, Plus, RefreshCw } from "lucide-react";
 import { AnalyticsOverview } from "@/components/admin/analytics/AnalyticsOverview";
 import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
@@ -49,7 +50,25 @@ export function AdminDashboardClient({
   auditLogs,
   notifications,
 }: AdminDashboardClientProps) {
-  const [view, setView] = useState<AdminView>("overview");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const viewParam = searchParams.get("view");
+  const initialView: AdminView =
+    viewParam &&
+    [
+      "overview",
+      "analytics",
+      "products",
+      "orders",
+      "customers",
+      "coupons",
+      "site_content",
+      "blog_cms",
+    ].includes(viewParam)
+      ? (viewParam as AdminView)
+      : "overview";
+  const [view, setView] = useState<AdminView>(initialView);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
@@ -58,7 +77,17 @@ export function AdminDashboardClient({
   function handleViewChange(next: AdminView) {
     setView(next);
     setMobileSidebarOpen(false);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("view", next);
+    router.replace(`${pathname}?${params.toString()}`);
   }
+
+  useEffect(() => {
+    if (!viewParam) return;
+    if (viewParam !== view) {
+      setView(viewParam as AdminView);
+    }
+  }, [viewParam, view]);
 
   const subtitle =
     view === "overview"
@@ -155,7 +184,8 @@ export function AdminDashboardClient({
           {view === "orders" ? (
             <OrderManager
               initialOrders={orders}
-              customers={customers}
+              customers={users}
+              products={products}
               auditLogs={auditLogs}
             />
           ) : null}
@@ -171,17 +201,6 @@ export function AdminDashboardClient({
           {view === "site_content" ? <SiteContentManager /> : null}
           {view === "blog_cms" ? <BlogPostManager /> : null}
 
-          <p className="admin-footer-copy">
-            Stusport Admin · Giao diện tham khảo{" "}
-            <a
-              href="https://preview.colorlib.com/theme/cooladmin/index.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
-            >
-              CoolAdmin
-            </a>
-          </p>
         </div>
       </div>
     </div>

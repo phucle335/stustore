@@ -22,6 +22,7 @@ import type {
 type OrderManagerProps = {
   initialOrders: DbOrder[];
   customers: DbUser[];
+  products?: { id: string; name: string; price: number }[];
   auditLogs?: AdminAuditLog[];
 };
 
@@ -29,6 +30,7 @@ type OrderFormState = {
   id: string | null;
   user_id: string;
   product_name: string;
+  product_id: string;
   product_quantity: string;
   product_unit_price: string;
   shipping_full_name: string;
@@ -59,6 +61,7 @@ const emptyOrderForm = (): OrderFormState => ({
   id: null,
   user_id: "",
   product_name: "",
+  product_id: "",
   product_quantity: "1",
   product_unit_price: "0",
   shipping_full_name: "",
@@ -101,6 +104,7 @@ function orderToForm(order: DbOrder): OrderFormState {
     id: order.id,
     user_id: order.user_id ?? "",
     product_name: String(firstItem?.name ?? ""),
+    product_id: String(firstItem?.product_id ?? ""),
     product_quantity: String(Number(firstItem?.quantity ?? 1) || 1),
     product_unit_price: String(Number(firstItem?.unit_price ?? 0) || 0),
     shipping_full_name: String(order.shipping_full_name ?? ""),
@@ -143,6 +147,7 @@ function formatDate(value: string) {
 export function OrderManager({
   initialOrders,
   customers,
+  products = [],
   auditLogs = [],
 }: OrderManagerProps) {
   const [orders, setOrders] = useState(initialOrders);
@@ -216,9 +221,21 @@ export function OrderManager({
         const row = it as Record<string, unknown>;
         const qty = Number(row.quantity ?? 1) || 1;
         const name = String(row.name ?? "").trim();
-        return name ? `${qty} x ${name}` : "";
+        const pid = String(row.product_id ?? "").trim();
+        return name ? `${qty} x ${name}${pid ? ` (#${pid})` : ""}` : "";
       })
       .filter(Boolean);
+  }
+
+  function applyProductById(id: string) {
+    const product = products.find((p) => p.id === id);
+    if (!product) return;
+    setForm((c) => ({
+      ...c,
+      product_id: id,
+      product_name: product.name,
+      product_unit_price: String(product.price),
+    }));
   }
 
   function selectOrder(order: DbOrder) {
@@ -268,6 +285,7 @@ export function OrderManager({
         order_items: [
           {
             name: form.product_name.trim(),
+            product_id: form.product_id.trim(),
             quantity: product_quantity,
             unit_price: product_unit_price,
           },
@@ -410,7 +428,7 @@ export function OrderManager({
           </div>
 
           <div className="admin-table-wrap">
-            <table className="admin-table">
+            <table className="admin-table admin-order-table">
               <thead>
                 <tr>
                   <th style={{ width: 40 }}>
@@ -587,6 +605,15 @@ export function OrderManager({
                         </td>
                         <td>
                           <input
+                            placeholder="Product ID"
+                            value={form.product_id}
+                            onChange={(e) =>
+                              setForm((c) => ({ ...c, product_id: e.target.value }))
+                            }
+                            onBlur={(e) => applyProductById(e.target.value.trim())}
+                            className="admin-input mb-1"
+                          />
+                          <input
                             value={form.product_name}
                             onChange={(e) =>
                               setForm((c) => ({ ...c, product_name: e.target.value }))
@@ -692,6 +719,18 @@ export function OrderManager({
                       <span className="admin-muted">Phương thức thanh toán</span>
                       <span className="admin-text">
                         {form.payment_method || "—"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="admin-muted">Đã cọc</span>
+                      <span className="admin-text">
+                        {formatCurrency(Number(form.deposit_amount || 0))}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="admin-muted">Còn lại</span>
+                      <span className="admin-text">
+                        {formatCurrency(Number(form.remaining_amount || 0))}
                       </span>
                     </div>
                   </div>

@@ -42,6 +42,7 @@ export function ProductDetail({
             <h1 className="product-detail-title">{product.name}</h1>
             <FavoriteButton productId={product.id} />
           </div>
+          <p className="product-detail-sku">Product ID: {product.id}</p>
           <div className="price-box product-detail-price">
             <span className="price">{product.price}</span>
             {product.oldPrice ? (

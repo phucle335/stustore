@@ -75,25 +75,8 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto 40px",
-          paddingTop: 12,
-        }}
-      >
-        <h3
-          style={{
-            fontSize: 14,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            letterSpacing: 1,
-            color: "#fff",
-            marginBottom: 16,
-          }}
-        >
-          Contact
-        </h3>
+      <div className="site-footer-contact-wrap">
+        <h3 className="site-footer-contact-title">Contact</h3>
         <FooterContact compact />
       </div>
 

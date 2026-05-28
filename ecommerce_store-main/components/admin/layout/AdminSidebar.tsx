@@ -91,14 +91,6 @@ export function AdminSidebar({
           );
         })}
       </nav>
-
-      <div className="admin-sidebar-footer">
-        {!collapsed ? (
-          <p className="text-xs" style={{ color: "#64748b", padding: "0 8px" }}>
-            Stusport Admin · 2026
-          </p>
-        ) : null}
-      </div>
     </aside>
   );
 }

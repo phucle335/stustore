@@ -78,6 +78,24 @@ export function BlogPostManager() {
     }
   }
 
+  function createPostDraft() {
+    const id = `blog-${Date.now()}`;
+    const now = new Date().toLocaleDateString("vi-VN");
+    const next: BlogPost = {
+      id,
+      title: "Bài viết mới",
+      excerpt: "",
+      image: "",
+      date: now,
+      body: "",
+    };
+    setPosts((prev) => (prev ? [next, ...prev] : [next]));
+    setSelectedId(id);
+    setDraft(next);
+    setMessage("Đã tạo draft bài viết mới.");
+    setError(null);
+  }
+
   function handleSave() {
     if (!draft) return;
     if (!draft.id) return;
@@ -133,6 +151,12 @@ export function BlogPostManager() {
         <div className="text-sm admin-muted">
           {selectedIndex + 1}/{posts.length}
         </div>
+      </div>
+
+      <div>
+        <button type="button" className="admin-btn admin-btn--primary" onClick={createPostDraft}>
+          + Tạo post mới
+        </button>
       </div>
 
       <div className="admin-card">

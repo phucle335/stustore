@@ -10,6 +10,9 @@ type AddToCartButtonProps = {
   stock: number;
   lineId: string;
   disabled?: boolean;
+  label?: string;
+  openOnAdd?: boolean;
+  quantity?: number;
 };
 
 export function AddToCartButton({
@@ -18,26 +21,34 @@ export function AddToCartButton({
   stock,
   lineId,
   disabled = false,
+  label,
+  openOnAdd = true,
+  quantity = 1,
 }: AddToCartButtonProps) {
   const { addItem, openCart } = useCart();
   const isOutOfStock = stock <= 0;
   const isDisabled = isOutOfStock || disabled;
 
   const handleClick = (): void => {
-    const added = addItem({
-      lineId,
-      productId: product.id,
-      ...(size !== undefined ? { size } : {}),
-      name: product.name,
-      brand: product.brand,
-      image: getPrimaryImage(product.images),
-      imageAlt: product.imageAlt,
-      price: product.price,
-      oldPrice: product.oldPrice,
-      fulfillmentType: product.fulfillmentType,
-    });
+    let added = false;
+    for (let i = 0; i < quantity; i += 1) {
+      const ok = addItem({
+        lineId,
+        productId: product.id,
+        ...(size !== undefined ? { size } : {}),
+        name: product.name,
+        brand: product.brand,
+        image: getPrimaryImage(product.images),
+        imageAlt: product.imageAlt,
+        price: product.price,
+        oldPrice: product.oldPrice,
+        fulfillmentType: product.fulfillmentType,
+      });
+      if (!ok) break;
+      added = true;
+    }
 
-    if (added) {
+    if (added && openOnAdd) {
       openCart();
     }
   };
@@ -50,13 +61,14 @@ export function AddToCartButton({
       disabled={isDisabled}
     >
       <i className="fas fa-shopping-bag" aria-hidden="true" />
-      {isOutOfStock
+      {label ??
+        (isOutOfStock
         ? size
           ? `Size ${size} hết hàng`
           : "Hết hàng"
         : disabled && size === undefined
           ? "Chọn size"
-          : "MUA NGAY"}
+          : "MUA NGAY")}
     </button>
   );
 }

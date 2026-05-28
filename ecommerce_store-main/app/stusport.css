@@ -166,8 +166,11 @@ body {
 .header-user-menu {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 10px;
   margin-right: 4px;
+  max-width: 260px;
 }
 
 .header-user-greeting {
@@ -215,6 +218,14 @@ body {
   font-size: 18px;
   cursor: pointer;
   margin-left: 12px;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
 }
 
 .header-icons a {
@@ -767,6 +778,30 @@ body {
 
 .product-detail-add-btn:disabled:hover {
   background: #555;
+}
+
+.product-qty-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.product-qty-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #444;
+  background: transparent;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.product-qty-value {
+  min-width: 28px;
+  text-align: center;
+  font-weight: 700;
 }
 
 .product-purchase-policies {
@@ -1365,11 +1400,21 @@ body {
   .header-end {
     width: 100%;
     justify-content: space-between;
+    gap: 8px;
   }
 
   .header-search {
     flex: 1;
     max-width: none;
+  }
+
+  .header-user-menu {
+    max-width: 100%;
+    justify-content: flex-start;
+  }
+
+  .header-icons {
+    justify-content: flex-start;
   }
 
   .commitment-bar-inner {
@@ -1429,6 +1474,17 @@ body {
 
   .product-detail-title {
     font-size: 22px;
+  }
+
+  .product-qty-row {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .product-detail-add-btn {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 14px;
   }
 
   .product-detail-tab-panel--description {
@@ -2227,6 +2283,21 @@ body {
   margin: 0 auto 40px;
 }
 
+.site-footer-contact-wrap {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding-top: 12px;
+}
+
+.site-footer-contact-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
 .site-footer-logo {
   font-size: 36px;
   font-weight: 800;
@@ -2640,5 +2711,14 @@ body {
   .site-footer-grid {
     grid-template-columns: 1fr;
     gap: 28px;
+  }
+
+  .site-footer-contact-wrap {
+    margin-bottom: 24px;
+  }
+
+  .site-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

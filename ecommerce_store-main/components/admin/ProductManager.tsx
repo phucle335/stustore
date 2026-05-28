@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Minus, Plus, Settings, Trash2 } from "lucide-react";
 import {
   createProductAction,
   deleteProductAction,
@@ -84,6 +84,8 @@ function productToForm(product: DbProduct): ProductFormState {
 
 export function ProductManager({ initialProducts }: ProductManagerProps) {
   const [products, setProducts] = useState(initialProducts);
+  const [tab, setTab] = useState<"all" | "medicine">("all");
+  const [query, setQuery] = useState("");
   const [form, setForm] = useState<ProductFormState>(() =>
     initialProducts.length > 0 ? productToForm(initialProducts[0]) : emptyForm(),
   );
@@ -111,6 +113,19 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
     () => totalQuantityFromSizeRows(form.sizes),
     [form.sizes],
   );
+
+  const productRows = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return products.filter((p) => {
+      if (tab === "medicine" && p.category !== "clothing") return false;
+      if (!q) return true;
+      return (
+        p.name.toLowerCase().includes(q) ||
+        p.id.toLowerCase().includes(q) ||
+        p.brand_tag.toLowerCase().includes(q)
+      );
+    });
+  }, [products, query, tab]);
 
   function handleCategoryChange(category: StoreProductCategory) {
     setForm((current) => {
@@ -282,25 +297,160 @@ export function ProductManager({ initialProducts }: ProductManagerProps) {
 
   return (
     <section className="admin-panel">
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-5 flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold admin-text">Quản lý sản phẩm</h2>
-          <p className="text-sm admin-muted">
-            {noSizeCategory
-              ? "Số lượng tồn kho"
-              : "Tăng/giảm tồn kho theo từng size"}{" "}
-            — tổng:{" "}
-            <span className="font-medium text-[#1e2a3a]">{totalStock}</span>{" "}
-            {noSizeCategory ? "sản phẩm" : "đôi"}
-          </p>
+          <h2 className="text-lg font-semibold admin-text">Danh sách sản phẩm</h2>
+        </div>
+        <div className="flex items-center gap-3 text-sm admin-muted">
+          <span>Vay vốn</span>
+          <span>Trợ giúp</span>
+          <span>Góp ý</span>
+          <span>User Profile</span>
+        </div>
+      </div>
+
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <button type="button" className="admin-btn">Xuất file</button>
+          <button type="button" className="admin-btn">Nhập file</button>
+          <button type="button" className="admin-btn">Loại sản phẩm</button>
+          <button type="button" className="admin-btn">Khác</button>
         </div>
         <button
           type="button"
           onClick={resetForm}
           className="admin-btn admin-btn--primary"
         >
-          + Sản phẩm mới
+          + Thêm thuốc/sản phẩm
         </button>
+      </div>
+
+      <div className="mb-3 flex items-center gap-2">
+        <button
+          type="button"
+          className={`admin-btn ${tab === "all" ? "admin-btn--primary" : ""}`}
+          onClick={() => setTab("all")}
+        >
+          Tất cả sản phẩm
+        </button>
+        <button
+          type="button"
+          className={`admin-btn ${tab === "medicine" ? "admin-btn--primary" : ""}`}
+          onClick={() => setTab("medicine")}
+        >
+          Thuốc
+        </button>
+      </div>
+
+      <div className="mb-5 rounded-xl border border-[var(--admin-border)] p-3 admin-product-filter-row">
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            className="admin-input flex-1 min-w-[240px]"
+            placeholder="Tìm kiếm sản phẩm"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <select className="admin-input w-[160px]">
+            <option>Loại sản phẩm</option>
+          </select>
+          <select className="admin-input w-[140px]">
+            <option>Ngày tạo</option>
+          </select>
+          <select className="admin-input w-[140px]">
+            <option>Nhãn hiệu</option>
+          </select>
+          <select className="admin-input w-[140px]">
+            <option>Bộ lọc khác</option>
+          </select>
+          <button type="button" className="admin-btn">
+            Lưu bộ lọc
+          </button>
+        </div>
+      </div>
+
+      <div className="admin-table-wrap mb-6">
+        <table className="admin-table admin-product-table">
+          <thead>
+            <tr>
+              <th>
+                <div className="flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  <input type="checkbox" />
+                  <span>&gt;&gt;</span>
+                </div>
+              </th>
+              <th>Ảnh</th>
+              <th>Sản phẩm</th>
+              <th>Tồn kho</th>
+              <th>Có thể bán</th>
+              <th>Ngày khởi tạo</th>
+              <th>Loại</th>
+              <th>Nhãn hiệu</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            {productRows.map((product) => {
+              const sizes = Array.isArray(product.sizes) ? product.sizes : [];
+              const stock = sizes.reduce(
+                (sum, row) => sum + (Number(row?.quantity) || 0),
+                0,
+              );
+              const variants = Math.max(1, sizes.length);
+              return (
+                <tr
+                  key={product.id}
+                  onClick={() => selectProduct(product)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <td>
+                    <input type="checkbox" onClick={(e) => e.stopPropagation()} />
+                  </td>
+                  <td>
+                    <div className="h-10 w-10 rounded bg-white/10" />
+                  </td>
+                  <td>
+                    <div className="flex flex-col">
+                      <strong className="admin-text">{product.name}</strong>
+                      <span className="admin-muted text-xs">ID: {product.id}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="flex flex-col">
+                      <strong className="admin-text">{stock}</strong>
+                      <span className="admin-muted text-xs">({variants} phiên bản)</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="flex flex-col">
+                      <strong className="admin-text">{stock}</strong>
+                      <span className="admin-muted text-xs">({variants} phiên bản)</span>
+                    </div>
+                  </td>
+                  <td>{new Date(product.created_at).toLocaleDateString("vi-VN")}</td>
+                  <td>{product.category}</td>
+                  <td>{product.brand_tag}</td>
+                  <td>
+                    <span className="rounded-full px-2 py-0.5 text-xs font-semibold bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30">
+                      Đang bán
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="mb-5">
+        <p className="text-sm admin-muted">
+            {noSizeCategory
+              ? "+ Tồn kho"
+              : "Tăng/giảm tồn kho theo từng size"}{" "}
+            — tổng:{" "}
+            <span className="font-medium admin-text">{totalStock}</span>{" "}
+            {noSizeCategory ? "sản phẩm" : "đôi"}
+          </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,280px)_1fr]">

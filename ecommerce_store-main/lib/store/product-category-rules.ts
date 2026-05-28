@@ -5,6 +5,7 @@ import type { ProductSizeStock, StoreProductCategory } from "@/lib/supabase/type
 export const CATEGORIES_WITHOUT_SIZES: StoreProductCategory[] = [
   "watches",
   "sunglasses",
+  "bags",
 ];
 
 export function isCategoryWithoutSizes(
