@@ -1,0 +1,31 @@
+/* Motto design tokens — :root để màu luôn có (kể cả trước khi gắn class motto-page) */
+
+:root,
+.motto-page {
+  --motto-bg: #111111;
+  --motto-surface: #1a1a1a;
+  --motto-surface-2: #1e1e1e;
+  --motto-black: #111111;
+  --motto-white: #ffffff;
+  --motto-accent: #f24e35;
+  --motto-accent-hover: #ff6b52;
+  --motto-charcoal: #f24e35;
+  --motto-cloud: #1a1a1a;
+  --motto-stone: #333333;
+  --motto-stone-light: #2a2a2a;
+  --motto-ash: #cccccc;
+  --motto-silver: #888888;
+  --motto-faint: #777777;
+  --motto-ease: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --motto-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --motto-container: min(100% - 10.66vw, 100%);
+}
+
+.motto-page body {
+  margin: 0;
+  background: var(--motto-bg);
+  color: var(--motto-white);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, var(--font-sans), sans-serif;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+}

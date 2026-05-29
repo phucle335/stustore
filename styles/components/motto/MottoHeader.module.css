@@ -1,0 +1,263 @@
+/* MottoHeader — header, mobile nav, container, buttons */
+
+.container {
+  width: var(--motto-container);
+  margin-inline: auto;
+  padding-inline: 5.33vw;
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding-inline: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: min(100% - 24px, 100%);
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  min-height: 38px;
+  transition: color 0.5s var(--motto-ease), background 0.5s var(--motto-ease);
+}
+
+.btnPill {
+  padding: 0.85rem 1.6rem;
+  border-radius: 9999px;
+  background: var(--motto-accent);
+  color: var(--motto-white);
+}
+
+@media (hover: hover) {
+  .btnPill:hover {
+    background: var(--motto-accent-hover);
+  }
+}
+
+.btnInvert {
+  background: var(--motto-accent);
+  color: var(--motto-white);
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  padding: 2rem 0;
+  color: var(--motto-white);
+  transition: color 0.6s var(--motto-ease), background 0.6s var(--motto-ease);
+}
+
+.isScrolled,
+.isDark {
+  color: var(--motto-white);
+  background: rgba(17, 17, 17, 0.94);
+  backdrop-filter: blur(12px);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--motto-stone-light);
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.headerLogo {
+  color: inherit;
+  text-decoration: none;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  overflow: visible;
+}
+
+.headerLogo :global(.stusport-logo),
+.headerLogo :global(.stusport-logo-link) {
+  overflow: visible;
+}
+
+.nav ul {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 979px) {
+  .nav {
+    display: none;
+  }
+}
+
+.navLink {
+  color: inherit;
+  text-decoration: none;
+  font-size: max(0.95rem, 15px);
+  position: relative;
+  display: inline-block;
+  overflow: clip;
+}
+
+.linkHoverText {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  opacity: 0;
+  transition: transform 0.5s var(--motto-ease), opacity 0.5s var(--motto-ease);
+}
+
+@media (hover: hover) {
+  .navLink:hover .linkLabel {
+    transform: translateY(-100%);
+  }
+
+  .navLink:hover .linkHoverText {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+
+  .linkLabel {
+    display: block;
+    transition: transform 0.5s var(--motto-ease);
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.headerCtaPill {
+  background: rgba(242, 78, 53, 0.9);
+  color: var(--motto-white);
+}
+
+.isScrolled .headerCtaPill,
+.isDark .headerCtaPill {
+  background: var(--motto-accent);
+  color: var(--motto-white);
+}
+
+.burger {
+  display: none;
+  width: 3rem;
+  height: 3rem;
+  min-height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.isScrolled .burger,
+.isDark .burger {
+  background: var(--motto-surface-2);
+  border: 1px solid var(--motto-stone);
+}
+
+.burger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+}
+
+@media (max-width: 979px) {
+  .burger {
+    display: none;
+  }
+
+  .desktopCta {
+    display: none;
+  }
+}
+
+.mobileNav {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: var(--motto-bg);
+  color: var(--motto-white);
+  border-left: 1px solid var(--motto-stone-light);
+  padding: 7rem 1.75rem 2rem;
+  transform: translateX(100%);
+  transition: transform 0.8s var(--motto-ease-in-out);
+  visibility: hidden;
+  border-radius: 12px;
+}
+
+.mobileNavOpen {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.mobileNav ul {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+}
+
+.mobileNavLink {
+  display: block;
+  font-family: var(--font-disp), Oswald, sans-serif;
+  font-size: clamp(2.5rem, 10vw, 4rem);
+  font-weight: 500;
+  line-height: 1.2;
+  color: inherit;
+  text-decoration: none;
+  padding: 0.35em 0;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem 0;
+  }
+  
+  .headerInner {
+    min-height: 68px;
+    gap: 10px;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .desktopCta {
+    display: none;
+  }
+
+  .mobileNav {
+    width: min(88vw, 360px);
+  }
+
+  .burger {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+  }
+
+  .mobileNavLink {
+    padding: 10px 0;
+    font-size: 15px;
+  }
+}

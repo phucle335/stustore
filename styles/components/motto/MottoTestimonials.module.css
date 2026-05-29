@@ -1,0 +1,108 @@
+/* Testimonials */
+.testimonials {
+  padding: clamp(5rem, 10vw, 8rem) 0;
+  background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+  color: var(--motto-white);
+  border-top: 1px solid var(--motto-stone-light);
+}
+
+.testimonialsTitle {
+  font-family: "Segoe UI", Tahoma, var(--font-sans), sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin: 0 0 0.5rem;
+  font-weight: 500;
+}
+
+.testimonialsSub {
+  color: var(--motto-silver);
+  margin: 0 0 3rem;
+}
+
+.testimonialsSlider {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 767px) {
+  .testimonialsSlider {
+    grid-template-columns: 1fr;
+  }
+}
+
+.testimonialsCounter {
+  font-size: 0.9rem;
+  color: var(--motto-silver);
+  padding-top: 0.5rem;
+}
+
+.testimonialQuote {
+  margin: 0;
+  max-width: 52ch;
+  transition: opacity 0.5s var(--motto-ease), transform 0.5s var(--motto-ease);
+}
+
+.testimonialQuote.isChanging {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.testimonialQuote p {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  line-height: 1.35;
+  margin: 0 0 2rem;
+  font-weight: 500;
+}
+
+.testimonialQuote footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-style: normal;
+}
+
+.testimonialQuote cite {
+  font-style: normal;
+  font-weight: 500;
+}
+
+.testimonialQuote span {
+  color: var(--motto-silver);
+  font-size: 0.95rem;
+}
+
+.testimonialsNav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.testimonialsBtn {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: inherit;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background 0.4s var(--motto-ease), border-color 0.4s;
+}
+
+.testimonialsBtn:hover {
+  background: rgba(242, 78, 53, 0.15);
+  border-color: var(--motto-accent);
+  color: var(--motto-accent);
+}
+
+.container {
+  width: var(--motto-container);
+  margin-inline: auto;
+  padding-inline: 5.33vw;
+}
+@media (max-width: 767px) {
+  .container { padding-inline: 1.75rem; }
+}
+@media (max-width: 768px) {
+  .container { width: min(100% - 24px, 100%); }
+}

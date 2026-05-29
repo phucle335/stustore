@@ -1,0 +1,60 @@
+.brandMarquee {
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  padding: 14px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 3%,
+    #000 97%,
+    transparent
+  );
+}
+
+.brandMarquee::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.brandMarqueeTrack {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  align-items: center;
+  gap: 12px;
+  animation: motto-brand-marquee 48s linear infinite;
+  will-change: transform;
+}
+
+.brandMarqueeItem {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 68px;
+  padding: 0 4px;
+}
+
+.brandMarqueeItem img {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: 150px;
+  min-width: 72px;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes motto-brand-marquee {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

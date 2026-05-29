@@ -1,0 +1,41 @@
+/* Marquee — 3 cam kết, căn giữa */
+.marquee {
+  border-block: 1px solid var(--motto-stone-light, #2a2a2a);
+  padding: 1.25rem 5.33vw;
+  background: var(--motto-surface, #1a1a1a);
+  color: var(--motto-ash, #cccccc);
+}
+
+.marqueeTrack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  width: 100%;
+  margin-inline: auto;
+}
+
+.marqueeItem {
+  font-size: max(1rem, 15px);
+  color: var(--motto-ash, #cccccc);
+  white-space: nowrap;
+}
+
+.marqueeDot {
+  color: var(--motto-accent, #f24e35);
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .marqueeTrack {
+    gap: 0.5rem 1rem;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .marqueeItem {
+    white-space: normal;
+  }
+}

@@ -1,8 +1,44 @@
 {
+  "name": "ecommerce_store",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "dev:clean": "kill-port 3000 && next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "generate:products-xlsx": "node scripts/generate-products-import-xlsx.mjs",
+    "generate:orders-xlsx": "node scripts/generate-orders-import-xlsx.mjs"
+  },
   "dependencies": {
+    "@payos/node": "^2.0.5",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.0.8",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.106.2",
+    "framer-motion": "^12.40.0",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.23",
+    "lucide-react": "^1.16.0",
+    "next": "16.2.6",
     "nodemailer": "^8.0.9",
-    "react-confetti": "^6.4.0"
+    "react": "19.2.4",
+    "react-confetti": "^6.4.0",
+    "react-dom": "19.2.4",
+    "recharts": "^3.8.1"
+  },
+  "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.15.11",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "kill-port": "^2.0.1",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "xlsx": "^0.18.5"
   }
 }

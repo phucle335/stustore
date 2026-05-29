@@ -1,0 +1,220 @@
+/* Wordmark STUSPORT — icon căn giữa hàng chữ (không tính gạch chân) */
+
+.stusport-logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  line-height: 1;
+  overflow: visible;
+}
+
+.stusport-logo {
+  --logo-sport: #f24e35;
+  --logo-icon-offset: -0.04em;
+  display: inline-flex;
+  line-height: 1;
+  overflow: visible;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  user-select: none;
+}
+
+.stusport-logo--on-light {
+  --logo-stu: #3a3d45;
+  --logo-rule-stu: #3a3d45;
+}
+
+.stusport-logo--on-dark {
+  --logo-stu: #ffffff;
+  --logo-rule-stu: #ffffff;
+}
+
+/* Grid: icon hàng 1, chữ hàng 1, gạch chân hàng 2 (chỉ dưới chữ) */
+.stusport-logo__main {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 0.45em;
+  row-gap: 0.1em;
+  align-items: center;
+}
+
+.stusport-logo__iconWrap {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  overflow: visible;
+  line-height: 0;
+}
+
+.stusport-logo__icon {
+  display: block;
+  width: auto !important;
+  height: 1.12em !important;
+  max-width: none;
+  object-fit: contain;
+  object-position: center;
+  transform: translateY(var(--logo-icon-offset));
+}
+
+.stusport-logo--on-light .stusport-logo__icon {
+  filter: brightness(0) saturate(100%);
+  opacity: 0.88;
+}
+
+.stusport-logo__word {
+  grid-column: 2;
+  grid-row: 1;
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  font-size: inherit;
+  line-height: 1;
+  align-self: center;
+}
+
+.stusport-logo__stu {
+  color: var(--logo-stu);
+}
+
+.stusport-logo__sport {
+  color: var(--logo-sport, #f24e35);
+}
+
+.stusport-logo__rule {
+  grid-column: 2;
+  grid-row: 2;
+  position: relative;
+  display: block;
+  height: 4px;
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+.stusport-logo__rule::before,
+.stusport-logo__rule::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.stusport-logo__rule::before {
+  left: 0;
+  width: 41%;
+  bottom: 0;
+  background: var(--logo-rule-stu);
+}
+
+.stusport-logo__rule::after {
+  left: 38%;
+  right: 0;
+  bottom: 2px;
+  background: var(--logo-sport, #f24e35);
+}
+
+/* —— Kích thước —— */
+
+.stusport-logo--mark {
+  font-size: 1.125rem;
+}
+
+.stusport-logo--footer {
+  font-size: 1.2rem;
+}
+
+.stusport-logo--hero {
+  font-size: clamp(1.75rem, 5.5vw, 3.75rem);
+  --logo-icon-offset: -0.03em;
+}
+
+.stusport-logo--hero .stusport-logo__main {
+  column-gap: 0.5em;
+}
+
+.stusport-logo--hero .stusport-logo__icon {
+  height: 1.08em !important;
+}
+
+.stusport-logo--hero .stusport-logo__rule {
+  height: 5px;
+  margin-top: 0.08em;
+}
+
+.stusport-logo--hero .stusport-logo__rule::before,
+.stusport-logo--hero .stusport-logo__rule::after {
+  height: 3px;
+}
+
+.stusport-logo--hero .stusport-logo__rule::after {
+  bottom: 3px;
+}
+
+.logo .stusport-logo--mark {
+  font-size: 1.2rem;
+}
+
+.logo h1 {
+  margin: 0;
+  line-height: 1;
+}
+
+.admin-sidebar-brand .stusport-logo--mark {
+  font-size: 1rem;
+}
+
+.admin-sidebar.is-collapsed .admin-sidebar-brand .stusport-logo__word,
+.admin-sidebar.is-collapsed .admin-sidebar-brand .stusport-logo__rule {
+  display: none;
+}
+
+.admin-sidebar.is-collapsed .admin-sidebar-brand .stusport-logo__main {
+  display: inline-flex;
+  justify-content: center;
+}
+
+.admin-sidebar.is-collapsed .admin-sidebar-brand .stusport-logo__icon {
+  height: 1.35em !important;
+}
+
+.stusport-logo--compact {
+  font-size: 1rem;
+}
+
+.stusport-logo--strip {
+  font-size: clamp(1.5rem, 4vw, 2.75rem);
+  opacity: 0.95;
+}
+
+.stusport-logo--marquee {
+  font-size: 1rem;
+  opacity: 0.32;
+}
+
+.stusport-logo--title {
+  font-size: clamp(2rem, 8vw, 4.5rem);
+  --logo-icon-offset: -0.02em;
+}
+
+.stusport-logo--title .stusport-logo__icon {
+  height: 1.06em !important;
+}
+
+.stusport-logo--title .stusport-logo__rule {
+  height: 6px;
+}
+
+.stusport-logo--title .stusport-logo__rule::before,
+.stusport-logo--title .stusport-logo__rule::after {
+  height: 3px;
+}
+
+.stusport-logo--title .stusport-logo__rule::after {
+  bottom: 4px;
+}

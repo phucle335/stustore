@@ -1,0 +1,127 @@
+/* Work */
+.work {
+  padding: clamp(5rem, 10vw, 8rem) 0;
+  background: var(--motto-bg);
+  border-top: 1px solid var(--motto-stone-light);
+}
+
+.workHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.workTitle {
+  font-family: "Segoe UI", Tahoma, var(--font-sans), sans-serif;
+  font-weight: 500;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  line-height: 0.95;
+  margin: 0;
+}
+
+.workTitle em {
+  font-style: normal;
+  font-family: var(--font-sans), Inter, sans-serif;
+  font-weight: 500;
+}
+
+.workList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 767px) {
+  .workList {
+    grid-template-columns: 1fr;
+  }
+}
+
+.workCard {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.workCardMedia {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+  overflow: clip;
+  background: var(--motto-surface);
+  border: 1px solid var(--motto-stone);
+}
+
+.workCardImg {
+  object-fit: cover;
+  transition: transform 1s var(--motto-ease);
+}
+
+@media (hover: hover) {
+  .workCard:hover .workCardImg {
+    transform: scale(1.06);
+  }
+}
+
+.workCardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.6s var(--motto-ease);
+}
+
+.workCard:hover .workCardOverlay {
+  opacity: 1;
+}
+
+.workCardText {
+  padding: 1.25rem 0 0;
+}
+
+.workCardText h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.workCardText p {
+  margin: 0.25rem 0 0;
+  color: var(--motto-ash);
+}
+.btnLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: max(1.05rem, 17px);
+  color: inherit;
+  text-decoration: none;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid currentColor;
+  transition: gap 0.4s var(--motto-ease), opacity 0.4s;
+}
+
+@media (hover: hover) {
+  .btnLink:hover {
+    gap: 1.25rem;
+    color: var(--motto-accent);
+    border-color: var(--motto-accent);
+  }
+}
+
+.container {
+  width: var(--motto-container);
+  margin-inline: auto;
+  padding-inline: 5.33vw;
+}
+@media (max-width: 767px) {
+  .container { padding-inline: 1.75rem; }
+}
+@media (max-width: 768px) {
+  .container { width: min(100% - 24px, 100%); }
+}

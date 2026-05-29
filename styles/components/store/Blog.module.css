@@ -1,0 +1,153 @@
+.blogPage {
+  padding: 48px 40px 80px;
+  background: #0d0d0d;
+  min-height: 50vh;
+}
+
+.blogPageHeader {
+  max-width: 1200px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.blogPageTitle {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.blogPageSubtitle {
+  font-size: 16px;
+  color: #999;
+  line-height: 1.6;
+}
+
+.blogPageGrid {
+  max-width: 1200px;
+}
+
+.blogCardDate {
+  display: block;
+  font-size: 12px;
+  color: #777;
+  padding: 14px 20px 0;
+  letter-spacing: 0.04em;
+}
+
+.homeBlogTitle a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.homeBlogTitle a:hover {
+  color: #f24e35;
+}
+
+.blogPageNotFound {
+  text-align: center;
+}
+
+.blogPageNotFound .productDetailAddBtn {
+  display: inline-flex;
+  margin-top: 24px;
+}
+
+.blogPost {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.blogPostBack {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ccc;
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 24px;
+  transition: color 0.3s;
+}
+
+.blogPostBack:hover {
+  color: #f24e35;
+}
+
+.blogPostDate {
+  display: block;
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 12px;
+}
+
+.blogPostTitle {
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 700;
+  line-height: 1.3;
+  color: #fff;
+  margin-bottom: 28px;
+}
+
+.blogPostImageWrap {
+  margin-bottom: 28px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.blogPostImage {
+  width: 100%;
+  height: auto;
+  max-height: 440px;
+  object-fit: cover;
+}
+
+.blogPostLead {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #ccc;
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.blogPostBody {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #aaa;
+}
+
+.blogPostBody p {
+  margin-bottom: 16px;
+}
+
+.homeBrandShowcase {
+  position: relative;
+  height: min(50vh, 420px);
+  overflow: hidden;
+}
+
+.homeBrandShowcaseImg {
+  object-fit: cover;
+}
+
+.homeBrandShowcaseOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.homeBrandShowcaseText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(64px, 16vw, 200px);
+  font-weight: 900;
+  letter-spacing: -4px;
+  color: #f24e35;
+  opacity: 0.95;
+  pointer-events: none;
+}

@@ -1,0 +1,792 @@
+/* Giao diện khách hàng — đồng bộ với template Stusport (static-page + accent #f24e35) */
+
+.customerPageWrap {
+  flex: 1;
+}
+
+.customerPageWrapDark {
+  background: #0f0f0f;
+}
+
+/* Reinforces StoreStatic.staticPageDark on the same node (beats late-loaded .staticPage if both were ever set). */
+.customerPageSurfaceDark {
+  background: #141414;
+  color: #ffffff;
+  border-color: #2a2a2a;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4);
+}
+
+.customerPageWrapDark .customerPageTitle,
+.customerPageWrapDark .customerAuthTitle {
+  color: #ffffff;
+}
+
+.customerPageWrapDark .customerPageSubtitle,
+.customerPageWrapDark .customerAuthSubtitle {
+  color: #c8c8c8;
+}
+
+.customerPageWrapDark .memberField input,
+.customerPageWrapDark .memberField textarea {
+  background: #1e1e1e;
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.customerPageWrapDark .memberPanel,
+.customerPageWrapDark .memberPanelCard {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.customerPageWrapDark .memberHeading {
+  color: #ffffff;
+}
+
+.customerPageWrapDark .memberMuted {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.customerPageWrapDark .checkoutSecondaryBtn {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.customerPageWrapDark .checkoutSecondaryBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.customerPageWrapDark .memberOrderMeta,
+.customerPageWrapDark .memberOrderStatus {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.customerPageWrapDark .memberOrderItem {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  margin-top: 10px;
+}
+
+.customerPageWrapDark .memberOrderTotal {
+  color: #ffffff;
+}
+
+.customerPageWrapDark .memberOrderItemLine {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.customerPageWrapDark .memberOrderItemsMore {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Member account (tai-khoan) readability overrides */
+.customerPageWrapDark .memberHeader {
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+
+.customerPageWrapDark .memberHeader p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.customerPageWrapDark .memberNav button {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.customerPageWrapDark .memberNav button:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(242, 78, 53, 0.65);
+  color: #fff;
+}
+
+.customerPageWrapDark .memberNav button.isActive {
+  background: rgba(242, 78, 53, 0.95);
+  border-color: rgba(242, 78, 53, 0.95);
+  color: #0b0b0b;
+}
+
+.customerPageWrapDark .memberOrdersPager {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.customerPageWrapDark .memberOrdersPagerActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.customerPageNarrow {
+  max-width: 520px;
+}
+
+@media (max-width: 640px) {
+  .customerPageNarrow {
+    max-width: 100%;
+  }
+
+  .customerPageSurface {
+    padding: 20px 16px 22px;
+  }
+
+  .checkoutItem {
+    gap: 12px;
+  }
+
+  .checkoutItemMedia {
+    width: 60px;
+    height: 60px;
+  }
+
+  .checkoutCouponRow,
+  .checkoutPaymentActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .checkoutPaymentActions .checkoutPrimaryBtn,
+  .checkoutPaymentActions .checkoutSecondaryBtn {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .checkoutCouponBtn {
+    width: 100%;
+  }
+
+  .memberLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .memberNav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .memberNav button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .memberPanel {
+    padding: 18px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .customerPageSurface {
+    padding: 20px 14px 22px;
+  }
+
+  .checkoutCard {
+    padding: 14px;
+  }
+
+  .checkoutItems {
+    gap: 10px;
+  }
+
+  .checkoutItem {
+    padding: 10px 0;
+  }
+
+  .checkoutItemBody {
+    min-width: 0;
+  }
+
+  .checkoutItemName {
+    font-size: 13px;
+  }
+
+  .checkoutItemPrice {
+    font-size: 13px;
+  }
+
+  .checkoutTotal {
+    font-size: 14px;
+  }
+
+  .memberHeader h1 {
+    font-size: 24px;
+  }
+
+  .memberPanel h2 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .customerPageSurface {
+    padding: 16px 12px 18px;
+    border-radius: 10px;
+  }
+
+  .customerPageTitle,
+  .customerAuthTitle {
+    font-size: 22px;
+  }
+
+  .checkoutItem {
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    gap: 10px 12px;
+  }
+
+  .checkoutItemMedia {
+    width: 56px;
+    height: 56px;
+  }
+
+  .storeBtnPrimary,
+  .customerAuthSubmit,
+  .memberBtn,
+  .checkoutPrimaryBtn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
+
+/* Pixel alignment sweep */
+.customerPageSurface,
+.memberPanel,
+.memberPanelCard,
+.checkoutCard,
+.checkoutPaymentPanel {
+  border-radius: 12px;
+}
+
+.customerAuthInput,
+.memberInput,
+.checkoutCouponInput,
+.checkoutInput {
+  min-height: 40px;
+}
+
+.storeBtnPrimary,
+.customerAuthSubmit,
+.memberBtn,
+.checkoutPrimaryBtn,
+.checkoutSecondaryBtn {
+  min-height: 42px;
+}
+
+@media (max-width: 768px) {
+  .customerPageTitle,
+  .customerAuthTitle {
+    line-height: 1.25;
+  }
+
+  .customerPageSubtitle,
+  .customerAuthSubtitle {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .memberOrderItem {
+    padding: 12px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .memberPanel,
+  .memberPanelCard,
+  .checkoutCard,
+  .checkoutPaymentPanel {
+    border-radius: 10px;
+  }
+}
+
+.customerPageEyebrow,
+.customerAuthEyebrow {
+  margin-bottom: 8px;
+  line-height: 0;
+}
+
+.customerPageTitle,
+.customerAuthTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.2;
+}
+
+.customerPageSubtitle,
+.customerAuthSubtitle {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #555;
+}
+
+/* Form fields */
+.customerAuthLabel,
+.memberField,
+.checkoutCouponLabel {
+  display: block;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.customerAuthInput,
+.memberInput,
+.checkoutCouponInput {
+  display: block;
+  margin-top: 6px;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 11px 14px;
+  font-size: 15px;
+  color: #111;
+  background: #fff;
+  caret-color: #111;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.customerAuthInput::placeholder,
+.checkoutCouponInput::placeholder {
+  color: #999;
+}
+
+.customerAuthInput:focus,
+.memberInput:focus,
+.checkoutCouponInput:focus {
+  outline: none;
+  border-color: #f24e35;
+  box-shadow: 0 0 0 3px rgb(242 78 53 / 15%);
+}
+
+.customerAuthInput:-webkit-autofill,
+.customerAuthInput:-webkit-autofill:hover,
+.customerAuthInput:-webkit-autofill:focus {
+  -webkit-text-fill-color: #111;
+  box-shadow: 0 0 0 1000px #fff inset;
+}
+
+.memberTextarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+/* Buttons — giống .productDetailAddBtn */
+.storeBtnPrimary,
+.customerAuthSubmit,
+.memberBtn,
+.checkoutPrimaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 999px;
+  background: #f24e35;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+.storeBtnPrimary:hover:not(:disabled),
+.customerAuthSubmit:hover:not(:disabled),
+.memberBtn:hover:not(:disabled),
+.checkoutPrimaryBtn:hover:not(:disabled) {
+  background: #d9432c;
+  color: #fff;
+}
+
+.storeBtnPrimary:disabled,
+.customerAuthSubmit:disabled,
+.memberBtn:disabled,
+.checkoutPrimaryBtn:disabled {
+  background: #999;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.storeBtnSecondary,
+.checkoutCouponBtn {
+  flex-shrink: 0;
+  padding: 11px 20px;
+  border: 2px solid #111;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.storeBtnSecondary:hover:not(:disabled),
+.checkoutCouponBtn:hover:not(:disabled) {
+  background: #111;
+  color: #fff;
+}
+
+/* Alerts */
+.customerAuthError,
+.memberError,
+.checkoutError {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: #fff5f3;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: 14px;
+}
+
+.customerAuthInfo,
+.memberSuccess,
+.checkoutCouponApplied,
+.checkoutSuccessTitle {
+  color: #047857;
+}
+
+.customerAuthInfo,
+.memberSuccess {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  font-size: 14px;
+}
+
+.customerAuthSwitch {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.customerAuthSwitch a {
+  color: #f24e35;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.customerAuthSwitch a:hover {
+  color: #d9432c;
+}
+
+.customerAuthCardLoading {
+  min-height: 280px;
+  animation: customer-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes customer-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Tài khoản thành viên */
+.memberPage {
+  color: #222;
+}
+
+.memberHeader {
+  margin-bottom: 8px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.memberHeader h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+}
+
+.memberHeader p {
+  margin-top: 6px;
+  font-size: 15px;
+  color: #666;
+}
+
+.memberLayout {
+  display: grid;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+@media (min-width: 900px) {
+  .memberLayout {
+    grid-template-columns: 220px 1fr;
+  }
+}
+
+.memberNav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.memberNav button {
+  text-align: left;
+  border: 1px solid #e8e8e8;
+  background: #fafafa;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #444;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.memberNav button:hover {
+  border-color: #f24e35;
+  color: #111;
+}
+
+.memberNav button.isActive {
+  border-color: #f24e35;
+  background: #f24e35;
+  color: #fff;
+}
+
+.memberPanel {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fafafa;
+  padding: 24px 28px;
+  min-height: 320px;
+}
+
+.memberPanel h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.memberMuted {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.memberSectionIntro {
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #555;
+}
+
+.memberWarning {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: #fff8e6;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.memberPrefList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.memberCheck span {
+  flex: 1;
+}
+
+.memberCheck strong {
+  display: block;
+  color: #111;
+  margin-bottom: 2px;
+}
+
+.memberBtn {
+  width: auto;
+  min-width: 160px;
+}
+
+.memberCheck {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+}
+
+.memberCheck input {
+  margin-top: 3px;
+  accent-color: #f24e35;
+}
+
+.memberOrderList {
+  list-style: none;
+  padding: 0;
+  margin-top: 12px;
+}
+
+.memberOrderItem {
+  border-bottom: 1px solid #eee;
+  padding: 14px 0;
+}
+
+.memberOrderItems {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+}
+
+.memberOrderItemLine {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.memberOrderItemsMore {
+  margin-top: 6px;
+}
+
+.memberOrderDetail {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.memberOrderStatus {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f24e35;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.memberOrderTotal {
+  margin-top: 6px;
+  font-weight: 700;
+  color: #111;
+}
+
+.memberCouponBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  align-items: flex-end;
+}
+
+.memberCouponBox .memberInput {
+  max-width: 200px;
+}
+
+.memberFavGrid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.memberFavCard {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  background: #fff;
+  transition: box-shadow 0.2s;
+}
+
+.memberFavCard:hover {
+  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
+}
+
+.memberFavCard img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.memberFavPrice {
+  color: #f24e35;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.memberLinkBtn {
+  margin-top: 6px;
+  border: none;
+  background: none;
+  color: #888;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.memberLinkBtn:hover {
+  color: #f24e35;
+}
+
+/* Trang cấm */
+.forbiddenPage {
+  text-align: center;
+  padding: 16px 8px 8px;
+}
+
+.forbiddenPage h1 {
+  margin-top: 12px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
+}
+
+.forbiddenPage p {
+  margin-top: 12px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #555;
+}
+
+.forbiddenPageActions {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.forbiddenPageLink {
+  font-size: 14px;
+  color: #666;
+  text-decoration: underline;
+}
+
+.forbiddenPageLink:hover {
+  color: #f24e35;
+}
+
+

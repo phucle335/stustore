@@ -1,0 +1,88 @@
+.bottomNav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 110;
+  background: #111;
+  border-top: 1px solid rgba(242, 78, 53, 0.35);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.list {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  margin: 0;
+  padding: 6px 8px 8px;
+  list-style: none;
+}
+
+.item {
+  flex: 1;
+  min-width: 0;
+}
+
+.button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 52px;
+  padding: 4px 6px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.button:hover,
+.button:focus-visible {
+  color: #f24e35;
+}
+
+.iconWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 18px;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: #f24e35;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .bottomNavStore {
+    display: block;
+  }
+}
+
+@media (max-width: 979px) {
+  .bottomNavMotto {
+    display: block;
+  }
+}

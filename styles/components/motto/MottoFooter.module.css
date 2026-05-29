@@ -1,0 +1,175 @@
+.footer {
+  padding: clamp(4rem, 8vw, 6rem) 0 2rem;
+  background: var(--motto-bg);
+  border-top: 1px solid var(--motto-stone-light);
+}
+
+.footerTop {
+  margin-bottom: 3rem;
+}
+
+.footerLogo {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.footerTagline {
+  color: var(--motto-ash);
+  margin: 0;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 767px) {
+  .footerGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footerLabel {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--motto-silver);
+  margin: 0 0 1rem;
+}
+
+.footerLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footerLinks a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footerLinks li {
+  margin-bottom: 0.5rem;
+}
+
+.footerForm {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.footerForm input {
+  flex: 1;
+  min-width: 12rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--motto-stone);
+  border-radius: 0.5rem;
+  font: inherit;
+  background: var(--motto-surface-2);
+  color: var(--motto-white);
+}
+
+.footerForm input::placeholder {
+  color: var(--motto-faint);
+}
+
+.footerForm input:focus {
+  outline: none;
+  border-color: var(--motto-accent);
+}
+
+.footerBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--motto-stone);
+  font-size: 0.9rem;
+  color: var(--motto-ash);
+}
+
+.footerLegal {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footerLegal a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .footerBottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Pixel alignment sweep */
+.footerGrid > div,
+.footerForm input {
+  border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+  .footerForm input {
+    min-width: 0;
+    width: 100%;
+  }
+}
+/* Shared Motto CTA buttons (header, hero, footer, …) */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  min-height: 38px;
+  transition: color 0.5s var(--motto-ease), background 0.5s var(--motto-ease);
+}
+
+.btnPill {
+  padding: 0.85rem 1.6rem;
+  border-radius: 9999px;
+  background: var(--motto-accent);
+  color: var(--motto-white);
+}
+
+@media (hover: hover) {
+  .btnPill:hover {
+    background: var(--motto-accent-hover);
+  }
+}
+
+.btnLight {
+  background: rgba(242, 78, 53, 0.2);
+  border: 1px solid rgba(242, 78, 53, 0.45);
+  color: var(--motto-white);
+}
+
+.btnInvert {
+  background: var(--motto-accent);
+  color: var(--motto-white);
+}
+
+
+.container {
+  width: var(--motto-container);
+  margin-inline: auto;
+  padding-inline: 5.33vw;
+}
+@media (max-width: 767px) {
+  .container { padding-inline: 1.75rem; }
+}
+@media (max-width: 768px) {
+  .container { width: min(100% - 24px, 100%); }
+}

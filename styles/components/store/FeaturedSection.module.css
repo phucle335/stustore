@@ -1,0 +1,99 @@
+/* Featured Section */
+.featured {
+  padding: 50px 40px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+.sectionTitle {
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+.tabMenu {
+  display: flex;
+  border-bottom: 1px solid #333;
+  margin-bottom: 30px;
+}
+
+.tabMenu button {
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.tabMenu button.active {
+  color: #fff;
+  border-bottom: 2px solid #f24e35;
+  font-weight: bold;
+}
+
+.brandFilter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.brandFilter button {
+  background: none;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  padding: 8px 14px;
+  text-transform: uppercase;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.brandFilter button:hover:not(.active) {
+  border-color: #666;
+  color: #ddd;
+}
+
+.brandFilter button.active {
+  background: rgba(242, 78, 53, 0.12);
+  border-color: #f24e35;
+  color: #fff;
+  font-weight: 600;
+}
+
+.featuredFulfillmentFilter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 18px;
+  color: #d0d0d0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.featuredFulfillmentFilter select {
+  min-width: 180px;
+  border-radius: 999px;
+  border: 1px solid #3a3a3a;
+  background: #151515;
+  color: #fff;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.featuredControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}

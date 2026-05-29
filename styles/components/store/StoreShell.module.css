@@ -1,0 +1,9 @@
+.shellWithBottomNav {
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0));
+}
+
+@media (min-width: 769px) {
+  .shellWithBottomNav {
+    padding-bottom: 0;
+  }
+}

@@ -1,0 +1,28 @@
+/* Full-bleed banner giữa TRENDING now và Gợi ý */
+.betweenBanner {
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  position: relative;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  background: var(--motto-bg);
+  border-top: 1px solid var(--motto-stone-light);
+  border-bottom: 1px solid var(--motto-stone-light);
+}
+
+.betweenBannerLink {
+  display: block;
+  width: 100%;
+  height: clamp(200px, 28vw, 420px);
+  overflow: hidden;
+}
+
+.betweenBannerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}

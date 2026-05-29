@@ -1,0 +1,115 @@
+/* Big idea */
+.bigIdea {
+  padding: clamp(5rem, 12vw, 9rem) 0;
+}
+
+.bigIdeaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+@media (max-width: 767px) {
+  .bigIdeaGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bigIdeaTitle {
+  font-family: "Segoe UI", Tahoma, var(--font-sans), sans-serif;
+  font-weight: 500;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 0.95;
+  margin: 0 0 1.25rem;
+}
+
+.bigIdeaTitleLogo {
+  display: inline-flex;
+  margin-top: 0.2em;
+  vertical-align: middle;
+}
+
+.bigIdeaLead {
+  max-width: 42ch;
+  margin: 0;
+  color: var(--motto-ash);
+}
+
+.bigIdeaWordmark {
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+  overflow: clip;
+}
+
+.bigIdeaWordmarkLogo {
+  font-size: clamp(3.5rem, 14vw, 11rem);
+}
+
+.bigIdeaWordmarkLogo span {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.bigIdeaSub {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  line-height: 1.35;
+  margin: 0 0 1.5rem;
+  font-weight: 500;
+}
+
+.bigIdeaPurpose {
+  margin-top: 2.5rem;
+}
+
+.linkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.eyebrow {
+  font-size: max(0.875rem, 14px);
+  color: var(--motto-silver, #888888);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 1.5rem;
+}
+.body {
+  font-size: max(1.05rem, 17px);
+  line-height: 1.5;
+  color: var(--motto-ash);
+  max-width: 42ch;
+  margin: 0;
+}
+.btnLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: max(1.05rem, 17px);
+  color: inherit;
+  text-decoration: none;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid currentColor;
+  transition: gap 0.4s var(--motto-ease), opacity 0.4s;
+}
+
+@media (hover: hover) {
+  .btnLink:hover {
+    gap: 1.25rem;
+    color: var(--motto-accent);
+    border-color: var(--motto-accent);
+  }
+}
+
+.container {
+  width: var(--motto-container);
+  margin-inline: auto;
+  padding-inline: 5.33vw;
+}
+@media (max-width: 767px) {
+  .container { padding-inline: 1.75rem; }
+}
+@media (max-width: 768px) {
+  .container { width: min(100% - 24px, 100%); }
+}

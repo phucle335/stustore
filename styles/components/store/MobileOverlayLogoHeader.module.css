@@ -1,0 +1,47 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: calc(14px + env(safe-area-inset-top, 0)) 20px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.logo h1 {
+  margin: 0;
+  line-height: 1;
+}
+
+.logo :global(.stusport-logo--mark) {
+  font-size: 22px;
+  letter-spacing: 1px;
+}
+
+.logo :global(.stusport-logo-link) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.closeBtn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #333;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.closeBtn:hover {
+  border-color: #f24e35;
+  color: #f24e35;
+}

@@ -1,0 +1,35 @@
+/* MottoLogo — animated wordmark */
+
+.wordmark {
+  display: flex;
+  font-family: "Segoe UI", Tahoma, var(--font-sans), sans-serif;
+  font-weight: 600;
+  font-size: clamp(4rem, 18vw, 14rem);
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  color: var(--motto-white);
+  overflow: clip;
+}
+
+.wordmarkLetterAccent {
+  color: var(--motto-accent);
+  text-shadow: 0 0 40px rgba(242, 78, 53, 0.55);
+}
+
+.wordmarkLetter {
+  display: inline-block;
+  transform: translateY(48px);
+  opacity: 0;
+  color: #ffffff;
+}
+
+.wordmarkLetterAccent {
+  color: var(--motto-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmarkLetter {
+    transform: none;
+    opacity: 1;
+  }
+}

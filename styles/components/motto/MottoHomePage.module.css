@@ -1,0 +1,35 @@
+/* MottoHomePage — app shell + site footer on homepage */
+
+.app {
+  overflow-x: clip;
+}
+
+.appEntered {
+  animation: mottoAppReveal 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mottoAppReveal {
+  from {
+    opacity: 0.92;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appEntered {
+    animation: none;
+  }
+}
+
+@media (max-width: 979px) {
+  .app {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0));
+  }
+}
+
+.footerOnMotto {
+  margin-top: 0;
+  border-top: 1px solid var(--motto-stone-light);
+}

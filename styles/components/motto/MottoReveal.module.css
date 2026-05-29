@@ -1,0 +1,21 @@
+/* MottoReveal — scroll line animation */
+
+.reveal {
+}
+
+.isVisible {
+}
+
+.lineWrap {
+  display: block;
+  overflow: clip;
+}
+
+.line {
+  display: block;
+  will-change: transform;
+}
+
+.reveal.isVisible .line {
+  transform: translateY(0);
+}

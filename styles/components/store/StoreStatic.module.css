@@ -1,0 +1,470 @@
+/* Static pages (terms, support) */
+.staticPageWrap {
+  padding: 40px 24px 64px;
+  min-height: 50vh;
+}
+
+.staticPage {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #fff;
+  color: #222;
+  border-radius: 8px;
+  padding: 40px 48px 48px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Checkout / account dark surface — same layout as .staticPage, wins over light when used instead of .staticPage */
+.staticPageDark {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #141414;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 40px 48px 48px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4);
+}
+
+.staticPageTitle {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.staticPageIntro {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 32px;
+}
+
+.termsToc {
+  background: #eef4fc;
+  border: 1px solid #c5d9f0;
+  border-radius: 6px;
+  padding: 20px 24px;
+  margin-bottom: 36px;
+}
+
+.termsTocTitle {
+  font-weight: 700;
+  color: #1a3a6e;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+
+.termsToc ol {
+  margin: 0;
+  padding-left: 20px;
+  color: #333;
+  line-height: 1.9;
+}
+
+.termsToc a {
+  color: #1a3a6e;
+  text-decoration: none;
+}
+
+.termsToc a:hover {
+  color: #f24e35;
+  text-decoration: underline;
+}
+
+.termsSection {
+  margin-bottom: 32px;
+  scroll-margin-top: 120px;
+}
+
+.termsSection h2 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a3a6e;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  letter-spacing: 0.03em;
+}
+
+.termsSection p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.supportLayout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.supportSidebarHeading {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #1a3a6e;
+  margin-bottom: 12px;
+}
+
+.supportSidebarList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.supportSidebarList button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 4px;
+  background: #f0f0f0;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.supportSidebarList button i {
+  width: 18px;
+  color: #666;
+}
+
+.supportSidebarList button:hover {
+  background: #e8e8e8;
+}
+
+.supportSidebarList button.active {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.supportSidebarList button.active i {
+  color: #f24e35;
+}
+
+.supportFaq {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.supportFaqItem {
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.supportFaqItemIsOpen {
+}
+
+.supportFaqQuestion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border: none;
+  background: #f3f3f3;
+  color: #222;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.supportFaqQuestion i {
+  color: #888;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.supportFaqItemIsOpen .supportFaqQuestion {
+  background: #eee;
+}
+
+.supportFaqAnswer {
+  padding: 16px 18px 20px;
+  background: #fff;
+  border-top: 1px solid #e8e8e8;
+}
+
+.supportFaqAnswer p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #444;
+}
+
+.searchEmpty {
+  text-align: center;
+  color: #c8c8c8;
+  font-size: 16px;
+  padding: 0 40px 48px;
+  max-width: 560px;
+  margin: -20px auto 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  .homeCategoryGrid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .homeCategoryTileLarge,
+  .homeCategoryTileSmall {
+    grid-column: span 1;
+    grid-row: span 1;
+    min-height: 220px;
+  }
+
+  .homeBlogGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .supportLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .headerSearch {
+    min-width: 160px;
+    max-width: 100%;
+  }
+
+  .commitmentBar {
+    top: auto;
+    position: relative;
+  }
+}
+
+@media (max-width: 640px) {
+  .homeHeroIntro,
+  .homeCategoryGallery,
+  .homeBlog,
+  .featured.homeFeatured {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .homeHeroBannerText {
+    left: 20px;
+    bottom: 20px;
+    letter-spacing: 2px;
+  }
+
+  .homeHeroCarousel {
+    padding: 14px 12px 0;
+  }
+
+  .homeHeroCarouselFrame {
+    width: min(100%, calc(100vw - 24px));
+    aspect-ratio: 16 / 10;
+    border-radius: 10px;
+    background: #0e0e0e;
+  }
+
+  .homeHeroSlide {
+    background: #0e0e0e;
+  }
+
+  .homeHeroBannerImg {
+    object-fit: contain;
+  }
+
+  .homeHeroNav {
+    width: 36px;
+    height: 36px;
+  }
+
+  .homeHeroNavPrev {
+    left: 8px;
+  }
+
+  .homeHeroNavNext {
+    right: 8px;
+  }
+
+  .homeBrandMarqueeTrack {
+    gap: 32px;
+  }
+
+  .homeCategoryGrid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .mainNav {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .mainNav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mainNav a {
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .homeHeroIntro {
+    padding-top: 18px;
+    padding-bottom: 14px;
+  }
+
+  .homeHeroWordCycle {
+    font-size: clamp(30px, 8vw, 54px);
+  }
+
+  .homeHeroTagline {
+    font-size: 13px;
+  }
+
+  .homeCategoryGallery,
+  .homeBlog {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .homeBlogCard {
+    padding: 12px;
+  }
+
+  .productGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .productCard {
+    padding: 10px;
+  }
+
+  .productCard img,
+  .productCardImage {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .productPagination {
+    margin-top: 22px;
+  }
+
+  .blogPage {
+    padding: 16px 14px 28px;
+  }
+
+  .blogPageGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .blogPost {
+    padding: 18px 14px 32px;
+  }
+
+  .supportLayout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .staticPageWrap {
+    padding: 20px 12px 36px;
+  }
+
+  .staticPage,
+  .staticPageDark {
+    padding: 20px 14px 24px;
+  }
+
+  .cartSidebarPanel {
+    width: min(100vw, 440px);
+    padding: 18px 14px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homeHeroCarouselFrame {
+    min-height: 0;
+    width: min(100%, calc(100vw - 16px));
+    aspect-ratio: 4 / 3;
+    background: #0e0e0e;
+  }
+
+  .homeHeroSlide {
+    background: #0e0e0e;
+  }
+
+  .homeHeroBannerImg {
+    object-fit: contain;
+  }
+
+  .homeHeroBannerText {
+    max-width: 80%;
+    font-size: 11px;
+  }
+
+  .productGrid {
+    gap: 8px;
+  }
+
+  .productCard {
+    padding: 8px;
+  }
+
+  .productCard img,
+  .productCardImage {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    margin-bottom: 8px;
+  }
+
+  .productName {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .price {
+    font-size: 13px;
+  }
+
+  .oldPrice {
+    font-size: 11px;
+  }
+
+  .cartSidebarPanel {
+    width: 100vw;
+    border-radius: 0;
+  }
+}
