@@ -19,6 +19,8 @@ import { MottoTestimonials } from "./MottoTestimonials";
 import { MottoTrusted } from "./MottoTrusted";
 import { MottoWork } from "./MottoWork";
 
+const INTRO_FAILSAFE_MS = 4000;
+
 export function MottoHomePage() {
   const [entered, setEntered] = useState(false);
 
@@ -30,6 +32,23 @@ export function MottoHomePage() {
     document.documentElement.classList.add("motto-page");
     return () => document.documentElement.classList.remove("motto-page");
   }, []);
+
+  /** Tránh kẹt loader/hero khi quay lại tab (bfcache) hoặc timer bị hủy */
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        setEntered(true);
+      }
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
+  useEffect(() => {
+    if (entered) return;
+    const id = window.setTimeout(() => setEntered(true), INTRO_FAILSAFE_MS);
+    return () => window.clearTimeout(id);
+  }, [entered]);
 
   const { siteContent } = useSiteContent();
   const motto = siteContent.motto;

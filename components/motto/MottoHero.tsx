@@ -9,6 +9,12 @@ import { MottoHeroIntro } from "@/components/motto/MottoHeroIntro";
 import styles from "@/styles/components/motto/MottoHero.module.css";
 
 const AUTO_MS = 5000;
+const REVEAL_FAILSAFE_MS = 2800;
+
+function readReducedMotion(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
 
 type MottoHeroProps = {
   ready: boolean;
@@ -23,7 +29,7 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [reducedMotion] = useState(readReducedMotion);
   const [appeared, setAppeared] = useState(false);
 
   const goTo = useCallback((next: number) => {
@@ -46,12 +52,6 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
   }, [slideCount]);
 
   useEffect(() => {
-    setReducedMotion(
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    );
-  }, []);
-
-  useEffect(() => {
     const timer = window.setInterval(goNext, AUTO_MS);
     return () => window.clearInterval(timer);
   }, [goNext]);
@@ -64,16 +64,19 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
   }, [slidesToUse]);
 
   useEffect(() => {
-    if (!ready || !sectionRef.current) return;
+    if (!ready) return;
 
     if (reducedMotion) {
-      gsap.set(
-        [mediaRef.current, `.${styles.intro}`, `.${styles.cta}`].filter(Boolean),
-        { opacity: 1, y: 0, scale: 1 },
-      );
       setAppeared(true);
       return;
     }
+
+    if (!sectionRef.current) {
+      setAppeared(true);
+      return;
+    }
+
+    const failSafe = window.setTimeout(() => setAppeared(true), REVEAL_FAILSAFE_MS);
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -105,13 +108,17 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
       );
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      window.clearTimeout(failSafe);
+      ctx.revert();
+    };
   }, [ready, reducedMotion]);
 
   return (
     <section
       ref={sectionRef}
       className={`${styles.hero}${appeared ? ` ${styles.heroAppear}` : ""}`}
+      data-ready={ready ? "true" : "false"}
       data-theme="light"
       aria-label="Stusport banner"
     >

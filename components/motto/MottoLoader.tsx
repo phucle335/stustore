@@ -1,50 +1,72 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { StusportLogo } from "@/components/brand/StusportLogo";
 import styles from "@/styles/components/motto/MottoLoader.module.css";
 
-const REVEAL_MS = 60;
-const HOLD_MS = 1050;
-const EXIT_MS = 950;
+const HOLD_MS = 1100;
+const EXIT_MS = 900;
+/** Desktop paint nhanh — đảm bảo loader luôn hiện đủ lâu */
+const MIN_VISIBLE_MS = 1900;
+const REDUCED_MIN_MS = 550;
 
 type MottoLoaderProps = {
   onComplete: () => void;
 };
 
 export function MottoLoader({ onComplete }: MottoLoaderProps) {
-  const [phase, setPhase] = useState<"idle" | "in" | "out" | "done">("idle");
+  const [phase, setPhase] = useState<"in" | "out" | "done">("in");
+  const completedRef = useRef(false);
 
-  useEffect(() => {
-    const prefersReduced = window.matchMedia(
+  const finish = useCallback(() => {
+    if (completedRef.current) return;
+    completedRef.current = true;
+    setPhase("done");
+    onComplete();
+  }, [onComplete]);
+
+  useLayoutEffect(() => {
+    completedRef.current = false;
+    const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    const startedAt = performance.now();
 
-    if (prefersReduced) {
-      onComplete();
-      setPhase("done");
-      return;
+    const scheduleFinish = () => {
+      const minTotal = reduced ? REDUCED_MIN_MS : MIN_VISIBLE_MS;
+      const wait = Math.max(0, minTotal - (performance.now() - startedAt));
+      const id = window.setTimeout(() => finish(), wait);
+      return id;
+    };
+
+    if (reduced) {
+      setPhase("in");
+      const outId = window.setTimeout(() => setPhase("out"), 220);
+      const doneId = scheduleFinish();
+      return () => {
+        window.clearTimeout(outId);
+        window.clearTimeout(doneId);
+      };
     }
 
-    const t1 = window.setTimeout(() => setPhase("in"), REVEAL_MS);
-    const t2 = window.setTimeout(() => setPhase("out"), REVEAL_MS + HOLD_MS);
-    const t3 = window.setTimeout(() => {
-      setPhase("done");
-      onComplete();
-    }, REVEAL_MS + HOLD_MS + EXIT_MS);
+    setPhase("in");
+    const outId = window.setTimeout(() => setPhase("out"), HOLD_MS);
+    const doneId = window.setTimeout(
+      () => scheduleFinish(),
+      HOLD_MS + EXIT_MS,
+    );
 
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
+      window.clearTimeout(outId);
+      window.clearTimeout(doneId);
     };
-  }, [onComplete]);
+  }, [finish]);
 
   if (phase === "done") return null;
 
   return (
     <div
-      className={`${styles.loader} ${phase === "in" || phase === "out" ? styles.isIn : ""} ${phase === "out" ? styles.isOut : ""}`}
+      className={`${styles.loader} ${styles.isIn} ${phase === "out" ? styles.isOut : ""}`}
       aria-hidden
     >
       <div className={styles.loaderInner}>

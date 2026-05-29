@@ -9,7 +9,25 @@
   background: var(--motto-black, #111);
 }
 
-/* Marker class: enables .heroAppear .intro when GSAP / reduced-motion runs */
+/* Fallback khi GSAP chậm / không chạy — tránh hero trống trên desktop */
+.hero[data-ready="true"] .media,
+.hero.heroAppear .media {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hero[data-ready="true"] .intro,
+.hero.heroAppear .intro {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero[data-ready="true"] .cta,
+.hero.heroAppear .cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .heroAppear {
 }
 
