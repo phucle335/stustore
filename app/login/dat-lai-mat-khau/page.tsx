@@ -2,19 +2,19 @@ import "@/styles/pages/admin-login.css";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { AdminAuthShell } from "@/components/admin/AdminAuthShell";
-import { LoginForm } from "@/components/admin/LoginForm";
+import { ResetPasswordForm } from "@/components/auth/ResetPasswordForm";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Đăng nhập Admin | Stusport",
+  title: "Đặt lại mật khẩu Admin | Stusport",
 };
 
-export default function LoginPage() {
+export default function AdminResetPasswordPage() {
   return (
     <AdminAuthShell>
       <Suspense fallback={<div className="admin-auth-skeleton" aria-hidden />}>
-        <LoginForm />
+        <ResetPasswordForm audience="admin" />
       </Suspense>
     </AdminAuthShell>
   );

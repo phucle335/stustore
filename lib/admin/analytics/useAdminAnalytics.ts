@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { AnalyticsDashboard } from "@/lib/admin/analytics/types";
 
-const POLL_MS = 15_000;
+const POLL_MS = 5_000;
 
 export function useAdminAnalytics() {
   const [data, setData] = useState<AnalyticsDashboard | null>(null);

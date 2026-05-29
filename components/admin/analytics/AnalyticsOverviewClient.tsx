@@ -4,9 +4,12 @@ import { ExternalLink, RefreshCw } from "lucide-react";
 import { useAdminAnalytics } from "@/lib/admin/analytics/useAdminAnalytics";
 import { ButtonClicksList } from "./ButtonClicksList";
 import { EngagementMetricCards } from "./EngagementMetricCards";
+import { LiveVisitorsDetail } from "./LiveVisitorsDetail";
 import { RealtimeVisitorsCard } from "./RealtimeVisitorsCard";
+import { RecentInteractionsTable } from "./RecentInteractionsTable";
 import { SessionsLineChart } from "./SessionsLineChart";
 import { TopPagesTable } from "./TopPagesTable";
+import { TopProductsTable } from "./TopProductsTable";
 import { TrafficSourcesChart } from "./TrafficSourcesChart";
 
 export function AnalyticsOverviewClient() {
@@ -34,8 +37,8 @@ export function AnalyticsOverviewClient() {
             {data.vercel.note}
           </p>
           <p className="mt-2 text-xs admin-muted">
-            Sau khi chạy SQL, deploy site và duyệt vài trang — số liệu sẽ cập nhật
-            mỗi 15 giây.
+            Chạy <code className="text-xs">analytics.sql</code> và{" "}
+            <code className="text-xs">analytics-v2.sql</code> trong Supabase.
           </p>
         </div>
       ) : null}
@@ -44,7 +47,7 @@ export function AnalyticsOverviewClient() {
         <p className="text-xs admin-muted">
           Cập nhật:{" "}
           {new Date(data.lastUpdated).toLocaleTimeString("vi-VN")}
-          {data.configured ? " · realtime ~15s" : ""}
+          {data.configured ? " · realtime ~5s" : ""}
         </p>
         <button type="button" className="admin-btn" onClick={() => void refresh()}>
           <RefreshCw className="h-4 w-4" />
@@ -56,10 +59,7 @@ export function AnalyticsOverviewClient() {
         <div className="admin-card flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold admin-text">Vercel Web Analytics</p>
-            <p className="mt-1 text-xs admin-muted">
-              Xem heatmap, funnel và traffic chi tiết trên dashboard Vercel (khi
-              deploy production).
-            </p>
+            <p className="mt-1 text-xs admin-muted">{data.vercel.note}</p>
           </div>
           <a
             href={data.vercel.dashboardUrl}
@@ -80,6 +80,24 @@ export function AnalyticsOverviewClient() {
         />
       </div>
 
+      <LiveVisitorsDetail
+        visitors={data.liveVisitorsList}
+        deviceBreakdown={data.liveDeviceBreakdown}
+        countryBreakdown={data.liveCountryBreakdown}
+      />
+
+      <RecentInteractionsTable rows={data.recentInteractions} />
+
+      <div>
+        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide admin-muted">
+          Sản phẩm & tương tác
+        </h3>
+        <div className="admin-grid-2">
+          <TopProductsTable products={data.topProducts} />
+          <ButtonClicksList clicks={data.buttonClicks} />
+        </div>
+      </div>
+
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide admin-muted">
           Tìm hiểu về khách truy cập
@@ -96,10 +114,7 @@ export function AnalyticsOverviewClient() {
         </h3>
         <div className="space-y-4">
           <EngagementMetricCards metrics={data.engagement} />
-          <div className="admin-grid-2">
-            <TopPagesTable pages={data.topPages} />
-            <ButtonClicksList clicks={data.buttonClicks} />
-          </div>
+          <TopPagesTable pages={data.topPages} />
         </div>
       </div>
     </div>

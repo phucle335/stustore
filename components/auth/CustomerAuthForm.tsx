@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { getForgotPasswordPath } from "@/lib/auth/password-reset";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { StusportLogo } from "@/components/brand/StusportLogo";
 import styles from "@/styles/components/store/Customer.module.css";
@@ -18,6 +19,8 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") ?? "/";
+  const resetSuccess = searchParams.get("reset") === "success";
+  const resetLinkInvalid = searchParams.get("error") === "reset_link_invalid";
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -191,6 +194,16 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
         />
       </label>
 
+      {!isRegister ? (
+        <p className={styles.customerAuthForgot}>
+          <Link
+            href={`${getForgotPasswordPath("customer")}?redirect=${encodeURIComponent(redirect)}`}
+          >
+            Quên mật khẩu?
+          </Link>
+        </p>
+      ) : null}
+
       {isRegister ? (
         <label className={styles.customerAuthLabel}>
           Xác nhận mật khẩu
@@ -207,6 +220,17 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
         </label>
       ) : null}
 
+      {resetSuccess ? (
+        <p className={styles.customerAuthInfo}>
+          Đặt lại mật khẩu thành công. Đăng nhập bằng mật khẩu mới.
+        </p>
+      ) : null}
+      {resetLinkInvalid ? (
+        <p className={styles.customerAuthError}>
+          Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.{" "}
+          <Link href={getForgotPasswordPath("customer")}>Gửi lại email</Link>.
+        </p>
+      ) : null}
       {error ? <p className={styles.customerAuthError}>{error}</p> : null}
       {info ? <p className={styles.customerAuthInfo}>{info}</p> : null}
 

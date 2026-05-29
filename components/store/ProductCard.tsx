@@ -52,6 +52,8 @@ export function ProductCard({
     <Link
       ref={cardRef}
       href={`/products/${product.id}`}
+      data-product-name={product.name}
+      data-track={`Xem sản phẩm: ${product.name}`}
       className={`${catalogStyles.productCard}${lightSurface ? ` ${catalogStyles.productCardLight} ${catalogStyles.show}` : ""}${showRating ? ` ${homeStyles.productCardHome}` : ""}`}
     >
       <div className={homeStyles.productCardMedia}>

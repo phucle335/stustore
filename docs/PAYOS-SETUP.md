@@ -109,6 +109,15 @@ Sau khi thanh toán thành công trên PayOS:
 - Webhook bị chặn/không public (local).
 - Sai key `PAYOS_CHECKSUM_KEY` → verify webhook fail.
 
+### C) Thanh toán xong nhưng không nhận email xác nhận
+
+Email gửi qua Gmail (`GMAIL_USER`, `GMAIL_APP_PASSWORD`) khi đơn chuyển sang `deposit_paid`:
+
+1. **Vercel → Settings → Environment Variables** (Production): thêm `GMAIL_USER` và `GMAIL_APP_PASSWORD` (App Password 16 ký tự, không phải mật khẩu đăng nhập thường).
+2. Chạy SQL `supabase/orders-confirmation-email.sql` (cột `confirmation_email_sent_at`).
+3. Trang success gọi `/api/orders/[id]/confirm-payment` — nếu webhook PayOS chưa chạy, endpoint này vẫn finalize + gửi mail.
+4. Kiểm tra spam / Promotions. Người nhận = email tài khoản đăng nhập (`public.users` / Supabase Auth).
+
 ---
 
 Nếu bạn muốn mình hỗ trợ debug nhanh: gửi **Vercel Function Logs** của `/api/create-payment-link` và `/api/webhook/payos`.

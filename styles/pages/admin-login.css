@@ -1,1 +1,244 @@
-/* /login — admin sign-in */
+/* Admin auth — /login, quên MK, đặt lại MK (đồng bộ Stusport store) */
+
+.admin-auth-page {
+  --admin-auth-bg: #0f0f0f;
+  --admin-auth-surface: #1a1a1a;
+  --admin-auth-surface-2: #141414;
+  --admin-auth-border: rgba(255, 255, 255, 0.1);
+  --admin-auth-text: #ffffff;
+  --admin-auth-muted: rgba(255, 255, 255, 0.65);
+  --admin-auth-accent: #f24e35;
+  --admin-auth-accent-hover: #ff6b52;
+  --admin-auth-accent-glow: rgba(242, 78, 53, 0.35);
+
+  position: relative;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow: hidden;
+  background: var(--admin-auth-bg);
+  color: var(--admin-auth-text);
+}
+
+.admin-auth-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 80% 50% at 50% -20%,
+      var(--admin-auth-accent-glow),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 100% 100%,
+      rgba(242, 78, 53, 0.08),
+      transparent 50%
+    );
+  pointer-events: none;
+}
+
+.admin-auth-page__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+}
+
+.admin-auth-card {
+  width: 100%;
+  padding: 32px 28px 28px;
+  border-radius: 16px;
+  border: 1px solid var(--admin-auth-border);
+  background: linear-gradient(
+    165deg,
+    rgba(30, 30, 30, 0.95) 0%,
+    var(--admin-auth-surface) 45%,
+    var(--admin-auth-surface-2) 100%
+  );
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+.admin-auth-card__logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.admin-auth-card__title {
+  margin: 0;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--admin-auth-text);
+}
+
+.admin-auth-card__subtitle {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--admin-auth-muted);
+}
+
+.admin-auth-field {
+  display: block;
+  margin-top: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.admin-auth-field:first-of-type {
+  margin-top: 24px;
+}
+
+.admin-auth-input {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--admin-auth-border);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--admin-auth-text);
+  font-size: 0.9375rem;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.admin-auth-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.admin-auth-input:focus {
+  border-color: rgba(242, 78, 53, 0.55);
+  box-shadow: 0 0 0 3px rgba(242, 78, 53, 0.2);
+}
+
+.admin-auth-forgot {
+  margin: 10px 0 0;
+  text-align: right;
+  font-size: 0.875rem;
+}
+
+.admin-auth-forgot a {
+  color: var(--admin-auth-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.admin-auth-forgot a:hover {
+  color: var(--admin-auth-accent-hover);
+  text-decoration: underline;
+}
+
+.admin-auth-alert {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.admin-auth-alert--error {
+  border: 1px solid rgba(242, 78, 53, 0.35);
+  background: rgba(242, 78, 53, 0.12);
+  color: #ffb4a8;
+}
+
+.admin-auth-alert--error a {
+  color: #ff8f7a;
+  font-weight: 600;
+}
+
+.admin-auth-alert--info {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.admin-auth-submit {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--admin-auth-accent);
+  color: #ffffff;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 4px 20px var(--admin-auth-accent-glow);
+}
+
+.admin-auth-submit:hover:not(:disabled) {
+  background: var(--admin-auth-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px var(--admin-auth-accent-glow);
+}
+
+.admin-auth-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.admin-auth-back {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.admin-auth-back a {
+  color: var(--admin-auth-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.admin-auth-back a:hover {
+  color: var(--admin-auth-accent);
+}
+
+.admin-auth-skeleton {
+  height: 280px;
+  width: 100%;
+  border-radius: 16px;
+  background: linear-gradient(
+    90deg,
+    var(--admin-auth-surface) 0%,
+    #252525 50%,
+    var(--admin-auth-surface) 100%
+  );
+  background-size: 200% 100%;
+  animation: admin-auth-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes admin-auth-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-auth-card {
+    padding: 28px 20px 24px;
+  }
+}

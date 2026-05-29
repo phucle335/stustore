@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { StusportLogo } from "@/components/brand/StusportLogo";
+import { getForgotPasswordPath } from "@/lib/auth/password-reset";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
 const NOT_ADMIN_MESSAGE =
@@ -12,11 +14,19 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") ?? "/admin";
   const queryError = searchParams.get("error");
+  const resetSuccess = searchParams.get("reset") === "success";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(
-    queryError === "not_admin" ? NOT_ADMIN_MESSAGE : null,
+  const [error, setError] = useState<string | null>(() => {
+    if (queryError === "not_admin") return NOT_ADMIN_MESSAGE;
+    if (queryError === "reset_link_invalid") {
+      return "Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.";
+    }
+    return null;
+  });
+  const [info, setInfo] = useState<string | null>(
+    resetSuccess ? "Đặt lại mật khẩu thành công. Đăng nhập bằng mật khẩu mới." : null,
   );
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +43,7 @@ export function LoginForm() {
       setError(
         err instanceof Error
           ? err.message
-          : "Thiếu cấu hình Supabase. Điền NEXT_PUBLIC_SUPABASE_URL và NEXT_PUBLIC_SUPABASE_ANON_KEY trong ecommerce_store-main/.env.local rồi khởi động lại npm run dev.",
+          : "Thiếu cấu hình Supabase. Kiểm tra NEXT_PUBLIC_SUPABASE_URL và ANON_KEY trong .env.",
       );
       return;
     }
@@ -80,60 +90,77 @@ export function LoginForm() {
       return;
     }
 
-    // Full navigation so middleware nhận cookie session ngay lập tức
     window.location.assign(redirect);
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl"
-    >
-      <div className="flex justify-center">
-        <StusportLogo variant="mark" href="/" className="stusport-logo--compact" />
+    <form onSubmit={handleSubmit} className="admin-auth-card">
+      <div className="admin-auth-card__logo">
+        <StusportLogo
+          variant="mark"
+          tone="on-dark"
+          href="/"
+          className="stusport-logo--compact"
+        />
       </div>
-      <h1 className="mt-2 text-2xl font-semibold text-white">Đăng nhập</h1>
-      <p className="mt-1 text-sm text-slate-400">
-        Chỉ tài khoản có quyền admin mới truy cập được dashboard.
+      <h1 className="admin-auth-card__title">Đăng nhập Admin</h1>
+      <p className="admin-auth-card__subtitle">
+        Chỉ tài khoản có quyền admin mới truy cập được dashboard Stusport.
       </p>
 
-      <label className="mt-6 block text-sm font-medium text-slate-300">
+      <label className="admin-auth-field">
         Email
         <input
           type="email"
           required
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none ring-emerald-500/0 transition focus:ring-2"
-          placeholder="admin@example.com"
+          className="admin-auth-input"
+          placeholder="admin@stusport.vn"
         />
       </label>
 
-      <label className="mt-4 block text-sm font-medium text-slate-300">
+      <label className="admin-auth-field">
         Mật khẩu
         <input
           type="password"
           required
+          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1.5 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-white outline-none transition focus:ring-2 focus:ring-emerald-500/40"
+          className="admin-auth-input"
           placeholder="••••••••"
         />
       </label>
 
+      <p className="admin-auth-forgot">
+        <Link href={getForgotPasswordPath("admin")}>Quên mật khẩu?</Link>
+      </p>
+
+      {info ? (
+        <p className="admin-auth-alert admin-auth-alert--info">{info}</p>
+      ) : null}
+
       {error ? (
-        <p className="mt-4 rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-400">
+        <p className="admin-auth-alert admin-auth-alert--error">
           {error}
+          {queryError === "reset_link_invalid" ? (
+            <>
+              {" "}
+              <Link href={getForgotPasswordPath("admin")}>Gửi lại email</Link>
+            </>
+          ) : null}
         </p>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="mt-6 w-full rounded-lg bg-emerald-500 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:opacity-60"
-      >
+      <button type="submit" disabled={loading} className="admin-auth-submit">
         {loading ? "Đang đăng nhập…" : "Vào Dashboard"}
       </button>
+
+      <p className="admin-auth-back">
+        <Link href="/">← Về cửa hàng</Link>
+      </p>
     </form>
   );
 }

@@ -10,8 +10,8 @@ export function ButtonClicksList({ clicks }: ButtonClicksListProps) {
 
   return (
     <AnalyticsCard
-      title="Theo dõi lượt click nút"
-      subtitle='Thêm data-track="Tên nút" vào nút cần đếm'
+      title="Tổng hợp click nút"
+      subtitle="Mua ngay, thêm giỏ, CTA… — chi tiết từng khách ở bảng realtime phía trên"
     >
       {rows.length === 0 ? (
         <p className="text-sm admin-muted">

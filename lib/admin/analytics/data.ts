@@ -1,7 +1,16 @@
+import { countryLabel } from "@/lib/analytics/country-labels";
+import {
+  deviceLabel,
+  shortSessionId,
+} from "@/lib/analytics/parse-request";
 import { createAdminSupabaseClient } from "@/lib/supabase/server";
 import {
   TRAFFIC_SOURCE_COLORS,
   type AnalyticsDashboard,
+  type BreakdownItem,
+  type InteractionRow,
+  type LiveVisitorRow,
+  type TopProductRow,
 } from "@/lib/admin/analytics/types";
 
 const PRESENCE_WINDOW_MS = 2 * 60 * 1000;
@@ -11,6 +20,9 @@ function emptyDashboard(note: string): AnalyticsDashboard {
   return {
     configured: false,
     liveVisitors: 0,
+    liveVisitorsList: [],
+    liveDeviceBreakdown: [],
+    liveCountryBreakdown: [],
     sessionsOverTime: [],
     trafficSources: [],
     engagement: {
@@ -19,7 +31,9 @@ function emptyDashboard(note: string): AnalyticsDashboard {
       bounceRate: "—",
     },
     topPages: [],
+    topProducts: [],
     buttonClicks: [],
+    recentInteractions: [],
     vercel: {
       enabled: Boolean(process.env.NEXT_PUBLIC_VERCEL_URL),
       dashboardUrl: buildVercelAnalyticsUrl(),
@@ -70,8 +84,40 @@ function isMissingTableError(error: unknown): boolean {
   return (
     msg.includes("does not exist") ||
     msg.includes("analytics_page_views") ||
-    msg.includes("schema cache")
+    msg.includes("schema cache") ||
+    msg.includes("column")
   );
+}
+
+function countBreakdown(
+  rows: { key: string; label: string }[],
+): BreakdownItem[] {
+  const map = new Map<string, number>();
+  for (const row of rows) {
+    map.set(row.label, (map.get(row.label) ?? 0) + 1);
+  }
+  return Array.from(map.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+async function loadProductNames(
+  supabase: ReturnType<typeof createAdminSupabaseClient>,
+  ids: string[],
+): Promise<Map<string, string>> {
+  const unique = [...new Set(ids.filter(Boolean))];
+  const map = new Map<string, string>();
+  if (unique.length === 0) return map;
+
+  const { data } = await supabase
+    .from("products")
+    .select("id, name")
+    .in("id", unique.slice(0, 100));
+
+  for (const row of data ?? []) {
+    if (row.id && row.name) map.set(String(row.id), String(row.name));
+  }
+  return map;
 }
 
 export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
@@ -88,44 +134,80 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
   const presenceCutoff = new Date(Date.now() - PRESENCE_WINDOW_MS).toISOString();
 
   try {
-    const [
-      presenceRes,
-      viewsRes,
-      eventsRes,
-    ] = await Promise.all([
+    const [presenceRes, viewsRes, eventsRes] = await Promise.all([
       supabase
         .from("analytics_presence")
-        .select("session_id, last_seen_at")
-        .gte("last_seen_at", presenceCutoff),
+        .select(
+          "session_id, path, device_type, country_code, last_seen_at, first_seen_at",
+        )
+        .gte("last_seen_at", presenceCutoff)
+        .order("last_seen_at", { ascending: false })
+        .limit(80),
       supabase
         .from("analytics_page_views")
-        .select("session_id, path, title, referrer, created_at")
+        .select(
+          "session_id, path, title, referrer, product_id, device_type, country_code, created_at",
+        )
         .gte("created_at", since)
         .order("created_at", { ascending: false })
         .limit(8000),
       supabase
         .from("analytics_events")
-        .select("event_name, label, created_at")
-        .eq("event_name", "click")
+        .select(
+          "session_id, event_name, label, path, product_id, device_type, country_code, created_at",
+        )
         .gte("created_at", since)
         .order("created_at", { ascending: false })
-        .limit(2000),
+        .limit(3000),
     ]);
 
     if (presenceRes.error && isMissingTableError(presenceRes.error)) {
       return emptyDashboard(
-        "Chạy file supabase/analytics.sql trong Supabase để bật theo dõi.",
+        "Chạy supabase/analytics.sql và analytics-v2.sql trong Supabase.",
+      );
+    }
+    if (viewsRes.error && isMissingTableError(viewsRes.error)) {
+      return emptyDashboard(
+        "Chạy supabase/analytics-v2.sql để bật thiết bị, quốc gia và sản phẩm.",
       );
     }
     if (viewsRes.error) throw viewsRes.error;
 
+    const presenceRows = presenceRes.data ?? [];
     const views = viewsRes.data ?? [];
-    const liveVisitors = (presenceRes.data ?? []).length;
+    const events = eventsRes.data ?? [];
+    const liveVisitors = presenceRows.length;
+
+    const liveVisitorsList: LiveVisitorRow[] = presenceRows.map((row) => ({
+      sessionShort: shortSessionId(row.session_id),
+      path: row.path || "/",
+      device: deviceLabel(row.device_type),
+      country: countryLabel(row.country_code),
+      lastSeen: row.last_seen_at,
+    }));
+
+    const liveDeviceBreakdown = countBreakdown(
+      presenceRows.map((r) => ({
+        key: r.session_id,
+        label: deviceLabel(r.device_type),
+      })),
+    );
+    const liveCountryBreakdown = countBreakdown(
+      presenceRows.map((r) => ({
+        key: r.session_id,
+        label: countryLabel(r.country_code),
+      })),
+    );
 
     const sessionsByDay = new Map<string, Set<string>>();
     const referrerCounts = new Map<string, number>();
     const pathCounts = new Map<string, { title: string; views: number }>();
-    const viewsBySession = new Map<string, { count: number; first: number; last: number }>();
+    const viewsBySession = new Map<
+      string,
+      { count: number; first: number; last: number }
+    >();
+    const productViews = new Map<string, number>();
+    const productClicks = new Map<string, number>();
 
     for (const row of views) {
       const created = new Date(row.created_at).getTime();
@@ -145,6 +227,13 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
         views: (prev?.views ?? 0) + 1,
       });
 
+      if (row.product_id) {
+        productViews.set(
+          row.product_id,
+          (productViews.get(row.product_id) ?? 0) + 1,
+        );
+      }
+
       const sess = viewsBySession.get(row.session_id) ?? {
         count: 0,
         first: created,
@@ -156,11 +245,103 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
       viewsBySession.set(row.session_id, sess);
     }
 
+    const clickMap = new Map<string, number>();
+    const recentRaw: {
+      at: string;
+      kind: "click" | "product_view";
+      sessionId: string;
+      label: string;
+      path: string;
+      productId: string | null;
+      device: string;
+      country: string;
+    }[] = [];
+
+    for (const ev of events) {
+      const kind =
+        ev.event_name === "product_view"
+          ? ("product_view" as const)
+          : ev.event_name === "click"
+            ? ("click" as const)
+            : null;
+      if (!kind) continue;
+
+      if (kind === "click") {
+        const label = ev.label || "Khác";
+        clickMap.set(label, (clickMap.get(label) ?? 0) + 1);
+        if (ev.product_id) {
+          productClicks.set(
+            ev.product_id,
+            (productClicks.get(ev.product_id) ?? 0) + 1,
+          );
+        }
+      }
+
+      if (kind === "product_view" && ev.product_id) {
+        productViews.set(
+          ev.product_id,
+          (productViews.get(ev.product_id) ?? 0) + 1,
+        );
+      }
+
+      recentRaw.push({
+        at: ev.created_at,
+        kind,
+        sessionId: ev.session_id,
+        label: ev.label || (kind === "product_view" ? "Xem SP" : "Click"),
+        path: ev.path || "/",
+        productId: ev.product_id ?? null,
+        device: deviceLabel(ev.device_type),
+        country: countryLabel(ev.country_code),
+      });
+    }
+
+    recentRaw.sort(
+      (a, b) => new Date(b.at).getTime() - new Date(a.at).getTime(),
+    );
+
+    const productIds = [
+      ...new Set([
+        ...productViews.keys(),
+        ...productClicks.keys(),
+        ...recentRaw.map((r) => r.productId).filter(Boolean) as string[],
+      ]),
+    ];
+    const productNames = await loadProductNames(supabase, productIds);
+
+    const topProducts: TopProductRow[] = productIds
+      .map((productId) => ({
+        productId,
+        name: productNames.get(productId) ?? productId,
+        views: productViews.get(productId) ?? 0,
+        clicks: productClicks.get(productId) ?? 0,
+      }))
+      .filter((p) => p.views > 0 || p.clicks > 0)
+      .sort((a, b) => b.views + b.clicks - (a.views + a.clicks))
+      .slice(0, 12);
+
+    const recentInteractions: InteractionRow[] = recentRaw
+      .slice(0, 40)
+      .map((row) => ({
+        at: row.at,
+        kind: row.kind,
+        sessionShort: shortSessionId(row.sessionId),
+        label: row.label,
+        path: row.path,
+        productId: row.productId,
+        productName: row.productId
+          ? (productNames.get(row.productId) ?? null)
+          : null,
+        device: row.device,
+        country: row.country,
+      }));
+
     const sessionsOverTime = Array.from(sessionsByDay.entries()).map(
       ([label, set]) => ({ label, sessions: set.size }),
     );
 
-    const refTotal = Array.from(referrerCounts.values()).reduce((a, b) => a + b, 0) || 1;
+    const refTotal =
+      Array.from(referrerCounts.values()).reduce((a, b) => a + b, 0) || 1;
     const trafficSources = Array.from(referrerCounts.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, 6)
@@ -184,19 +365,17 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
       .sort((a, b) => b.views - a.views)
       .slice(0, 8);
 
-    const clickMap = new Map<string, number>();
-    for (const ev of eventsRes.data ?? []) {
-      const label = ev.label || "Khác";
-      clickMap.set(label, (clickMap.get(label) ?? 0) + 1);
-    }
     const buttonClicks = Array.from(clickMap.entries())
       .map(([label, clicks]) => ({ label, clicks }))
       .sort((a, b) => b.clicks - a.clicks)
-      .slice(0, 8);
+      .slice(0, 12);
 
     return {
       configured: true,
       liveVisitors,
+      liveVisitorsList,
+      liveDeviceBreakdown,
+      liveCountryBreakdown,
       sessionsOverTime,
       trafficSources,
       engagement: {
@@ -205,18 +384,20 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
         bounceRate: `${((bounces / sessionCount) * 100).toFixed(1)}%`,
       },
       topPages,
+      topProducts,
       buttonClicks,
+      recentInteractions,
       vercel: {
         enabled: true,
         dashboardUrl: buildVercelAnalyticsUrl(),
-        note: "Bật Web Analytics trên Vercel Dashboard → Project → Analytics để xem thêm chi tiết.",
+        note: "Quốc gia lấy từ IP khi deploy Vercel (header x-vercel-ip-country). Local thường hiển thị Không xác định.",
       },
       lastUpdated: new Date().toISOString(),
     };
   } catch (error) {
     if (isMissingTableError(error)) {
       return emptyDashboard(
-        "Chạy file supabase/analytics.sql trong Supabase để bật theo dõi.",
+        "Chạy supabase/analytics.sql và analytics-v2.sql trong Supabase.",
       );
     }
     return emptyDashboard("Không tải được dữ liệu analytics.");

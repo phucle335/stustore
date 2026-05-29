@@ -3,6 +3,8 @@ import { PayOS } from "@payos/node";
 import { requireAuthUser } from "@/lib/account/require-user";
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
 import { finalizePaidOrder } from "@/lib/orders/finalize-paid-order";
+import { maybeSendOrderConfirmationEmail } from "@/lib/orders/send-order-confirmation-email";
+import { createClient } from "@supabase/supabase-js";
 
 function getPayOS() {
   const clientId = process.env.PAYOS_CLIENT_ID;
@@ -14,6 +16,17 @@ function getPayOS() {
   }
 
   return new PayOS({ clientId, apiKey, checksumKey });
+}
+
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceRole) {
+    throw new Error("Missing Supabase server env vars");
+  }
+  return createClient(url, serviceRole, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 }
 
 export async function POST(_request, context) {
@@ -49,8 +62,16 @@ export async function POST(_request, context) {
       );
     }
 
+    const supabaseAdmin = getSupabaseAdmin();
+
     if (order.status === "deposit_paid" || order.status === "payment_verified") {
-      return NextResponse.json({ ok: true, status: order.status, orderId: order.id });
+      const mail = await maybeSendOrderConfirmationEmail(order.id, supabaseAdmin);
+      return NextResponse.json({
+        ok: true,
+        status: order.status,
+        orderId: order.id,
+        emailSent: mail.sent,
+      });
     }
 
     if (order.status !== "pending_payment") {
@@ -91,10 +112,16 @@ export async function POST(_request, context) {
       );
     }
 
+    const mail = await maybeSendOrderConfirmationEmail(
+      finalizeResult.order?.id ?? order.id,
+      supabaseAdmin,
+    );
+
     return NextResponse.json({
       ok: true,
       status: finalizeResult.order?.status ?? "deposit_paid",
       orderId: finalizeResult.order?.id ?? order.id,
+      emailSent: mail.sent,
     });
   } catch (error) {
     console.error("[confirm-payment]", error);
@@ -104,4 +131,3 @@ export async function POST(_request, context) {
     );
   }
 }
-

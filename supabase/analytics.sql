@@ -6,6 +6,8 @@ create table if not exists public.analytics_presence (
   path text not null default '/',
   referrer text,
   user_agent text,
+  device_type text,
+  country_code text,
   first_seen_at timestamptz not null default now(),
   last_seen_at timestamptz not null default now()
 );
@@ -16,6 +18,9 @@ create table if not exists public.analytics_page_views (
   path text not null,
   title text,
   referrer text,
+  product_id text,
+  device_type text,
+  country_code text,
   created_at timestamptz not null default now()
 );
 
@@ -25,6 +30,9 @@ create table if not exists public.analytics_events (
   event_name text not null,
   label text,
   path text,
+  product_id text,
+  device_type text,
+  country_code text,
   created_at timestamptz not null default now()
 );
 

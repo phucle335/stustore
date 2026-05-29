@@ -33,7 +33,7 @@ export function RealtimeVisitorsCard({
             {count}
           </p>
           <p className="mt-2 text-sm admin-muted">
-            người dùng online (2 phút gần nhất)
+            đang online · làm mới mỗi 5 giây
           </p>
         </div>
         <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-500">
@@ -42,8 +42,8 @@ export function RealtimeVisitorsCard({
       </div>
       <p className="mt-5 border-t border-[var(--admin-border)] pt-4 text-sm leading-relaxed admin-muted">
         {configured
-          ? "Tự động cập nhật mỗi 15 giây từ lượt truy cập cửa hàng."
-          : "Chạy supabase/analytics.sql và cho khách vào web để bắt đầu đếm."}
+          ? "Xem chi tiết thiết bị, quốc gia và trang đang xem bên dưới."
+          : "Chạy supabase/analytics.sql + analytics-v2.sql rồi mở cửa hàng."}
       </p>
     </AnalyticsCard>
   );

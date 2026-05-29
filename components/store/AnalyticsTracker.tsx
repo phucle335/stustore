@@ -2,9 +2,10 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { parseProductIdFromPath } from "@/lib/analytics/parse-request";
 
 const SESSION_KEY = "stusport_analytics_sid";
-const HEARTBEAT_MS = 25_000;
+const HEARTBEAT_MS = 20_000;
 
 function getSessionId(): string {
   if (typeof window === "undefined") return "";
@@ -19,8 +20,16 @@ function getSessionId(): string {
   return sid;
 }
 
+function getDeviceHint(): string {
+  if (typeof window === "undefined") return "desktop";
+  const w = window.innerWidth;
+  if (w < 768) return "mobile";
+  if (w < 1024) return "tablet";
+  return "desktop";
+}
+
 function send(payload: Record<string, unknown>) {
-  const body = JSON.stringify(payload);
+  const body = JSON.stringify({ ...payload, deviceHint: getDeviceHint() });
   if (typeof navigator !== "undefined" && navigator.sendBeacon) {
     const blob = new Blob([body], { type: "application/json" });
     navigator.sendBeacon("/api/analytics/collect", blob);
@@ -45,6 +54,7 @@ export function AnalyticsTracker() {
     const title = typeof document !== "undefined" ? document.title : "";
     const referrer =
       lastPath.current === null ? document.referrer || "" : "";
+    const productId = parseProductIdFromPath(pathname);
 
     send({
       type: "pageview",
@@ -52,6 +62,7 @@ export function AnalyticsTracker() {
       path: pathname,
       title,
       referrer,
+      productId: productId ?? undefined,
     });
     lastPath.current = pathname;
   }, [pathname]);
@@ -79,16 +90,46 @@ export function AnalyticsTracker() {
 
     const onClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
-      const el = target?.closest<HTMLElement>("[data-track]");
-      if (!el) return;
-      const label = el.getAttribute("data-track");
-      if (!label) return;
-      send({
-        type: "click",
-        sessionId: getSessionId(),
-        path: pathname,
-        label,
-      });
+      const sessionId = getSessionId();
+
+      const trackEl = target?.closest<HTMLElement>("[data-track]");
+      if (trackEl) {
+        const label = trackEl.getAttribute("data-track");
+        if (label) {
+          const href = trackEl.getAttribute("href");
+          const productFromHref = href ? parseProductIdFromPath(href) : null;
+          send({
+            type: "click",
+            sessionId,
+            path: pathname,
+            label,
+            productId:
+              productFromHref ||
+              parseProductIdFromPath(pathname) ||
+              undefined,
+          });
+        }
+      }
+
+      const productLink = target?.closest<HTMLElement>("a[href*='/products/']");
+      if (productLink && !trackEl) {
+        const href = productLink.getAttribute("href") ?? "";
+        const productId = parseProductIdFromPath(href);
+        if (productId) {
+          const name =
+            productLink.getAttribute("data-product-name") ||
+            productLink.getAttribute("aria-label") ||
+            productLink.textContent?.trim()?.slice(0, 80) ||
+            productId;
+          send({
+            type: "click",
+            sessionId,
+            path: pathname,
+            label: `Mở sản phẩm: ${name}`,
+            productId,
+          });
+        }
+      }
     };
 
     document.addEventListener("click", onClick, true);

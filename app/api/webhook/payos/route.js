@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 import { PayOS } from "@payos/node";
 import { createClient } from "@supabase/supabase-js";
-import nodemailer from "nodemailer";
-import { render } from "@react-email/render";
-import OrderConfirmationEmail from "@/emails/OrderConfirmationEmail";
 import {
   finalizePaidOrder,
   finalizePaidOrderByReference,
 } from "@/lib/orders/finalize-paid-order";
+import { maybeSendOrderConfirmationEmail } from "@/lib/orders/send-order-confirmation-email";
 
 function getPayOS() {
   const clientId = process.env.PAYOS_CLIENT_ID;
@@ -34,91 +32,6 @@ function getSupabaseAdmin() {
   });
 }
 
-function getMailTransporter() {
-  const user = process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_APP_PASSWORD;
-  if (!user || !pass) {
-    return null;
-  }
-
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: { user, pass },
-  });
-}
-
-function formatVnd(amount) {
-  return `${Math.round(Number(amount) || 0).toLocaleString("vi-VN")}đ`;
-}
-
-// Stock + status update được xử lý tập trung ở lib/orders/finalize-paid-order
-
-async function sendConfirmationEmail({
-  to,
-  customerName,
-  orderId,
-  totalAmount,
-  paidAmount,
-  remainingAmount,
-  items,
-}) {
-  const transporter = getMailTransporter();
-  if (!transporter) {
-    console.warn("[payos-webhook][mail-skip] Missing Gmail transporter config.");
-    return;
-  }
-  if (!to) {
-    console.warn("[payos-webhook][mail-skip] Missing recipient email.");
-    return;
-  }
-
-  const historyUrl = `${(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-  ).replace(/\/+$/, "")}/tai-khoan`;
-
-  const html = await render(
-    OrderConfirmationEmail({
-      customerName,
-      orderId,
-      totalAmount: formatVnd(totalAmount),
-      paidAmount: formatVnd(paidAmount),
-      remainingAmount: formatVnd(remainingAmount),
-      items: Array.isArray(items) ? items : [],
-      historyUrl,
-    }),
-  );
-
-  await transporter.sendMail({
-    from: `"STUSPORT" <${process.env.GMAIL_USER}>`,
-    to,
-    subject: "Xác nhận đặt hàng & Thanh toán thành công",
-    html,
-  });
-}
-
-async function resolveCustomerEmail(supabase, userId) {
-  if (!userId) return null;
-
-  const { data: userRow } = await supabase
-    .from("users")
-    .select("email")
-    .eq("id", userId)
-    .maybeSingle();
-
-  if (userRow?.email) {
-    return userRow.email;
-  }
-
-  const { data: authData, error: authError } =
-    await supabase.auth.admin.getUserById(userId);
-  if (authError) {
-    console.error("[payos-webhook][auth-user-error]", authError);
-    return null;
-  }
-
-  return authData?.user?.email ?? null;
-}
-
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -138,6 +51,7 @@ export async function POST(request) {
     if (webhookCode === "00" || body?.success === true) {
       const orderCodeText = String(orderCode);
       const paymentPaidAt = new Date().toISOString();
+      const supabase = getSupabaseAdmin();
 
       let finalizeResult = await finalizePaidOrderByReference({
         paymentReference: orderCodeText,
@@ -152,29 +66,15 @@ export async function POST(request) {
         });
       }
 
-      if (finalizeResult.ok && finalizeResult.order?.user_id) {
-        const supabase = getSupabaseAdmin();
-        const order = finalizeResult.order;
-        const { data: userRow } = await supabase
-          .from("users")
-          .select("full_name")
-          .eq("id", order.user_id)
-          .maybeSingle();
-        const email = await resolveCustomerEmail(supabase, order.user_id);
+      const orderId =
+        finalizeResult.ok && finalizeResult.order?.id
+          ? finalizeResult.order.id
+          : null;
 
-        try {
-          await sendConfirmationEmail({
-            to: email,
-            customerName:
-              order.shipping_full_name || userRow?.full_name || "Bạn",
-            orderId: order.id,
-            totalAmount: Number(order.total_price) || 0,
-            paidAmount: Number(order.deposit_amount) || 0,
-            remainingAmount: Number(order.remaining_amount) || 0,
-            items: Array.isArray(order.order_items) ? order.order_items : [],
-          });
-        } catch (mailError) {
-          console.error("[payos-webhook][send-mail-error]", mailError);
+      if (orderId) {
+        const mail = await maybeSendOrderConfirmationEmail(orderId, supabase);
+        if (!mail.sent && mail.reason !== "already_sent") {
+          console.warn("[payos-webhook][order-email]", mail);
         }
       }
     }

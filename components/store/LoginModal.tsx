@@ -72,6 +72,22 @@ export function LoginModal({
           Đăng ký tài khoản
         </Link>
         <Link
+          href="/quen-mat-khau?redirect=%2Fcheckout"
+          className={customerStyles.storeBtnSecondary}
+          style={{
+            display: "inline-flex",
+            width: "100%",
+            justifyContent: "center",
+            textDecoration: "none",
+            marginTop: "8px",
+            boxSizing: "border-box",
+            fontSize: "0.9rem",
+          }}
+          onClick={onClose}
+        >
+          Quên mật khẩu?
+        </Link>
+        <Link
           href="/dang-nhap?redirect=%2Fcheckout"
           className={customerStyles.storeBtnSecondary}
           style={{
