@@ -11,50 +11,42 @@ type StatCardsProps = {
 
 const cards = [
   {
-    key: "revenue",
+    key: "revenue" as const,
     label: "Doanh thu",
     icon: DollarSign,
     iconBg: "#dbeafe",
     iconColor: "#2563eb",
     stroke: "#3b82f6",
-    trend: "+12.5%",
-    up: true,
     spark: [12, 18, 14, 22, 20, 28, 24, 32],
   },
   {
-    key: "orders",
+    key: "orders" as const,
     label: "Đơn hàng",
     icon: ShoppingBag,
     iconBg: "#d1fae5",
     iconColor: "#059669",
     stroke: "#10b981",
-    trend: "-3.2%",
-    up: false,
     spark: [20, 18, 22, 16, 19, 15, 17, 14],
   },
   {
-    key: "products",
+    key: "products" as const,
     label: "Sản phẩm",
     icon: Package,
     iconBg: "#ede9fe",
     iconColor: "#7c3aed",
     stroke: "#8b5cf6",
-    trend: "+5.8%",
-    up: true,
     spark: [8, 10, 12, 11, 14, 16, 15, 18],
   },
   {
-    key: "customers",
+    key: "customers" as const,
     label: "Khách hàng",
     icon: Users,
     iconBg: "#ffedd5",
     iconColor: "#ea580c",
     stroke: "#f97316",
-    trend: "+0.4%",
-    up: true,
     spark: [10, 12, 11, 15, 14, 18, 20, 22],
   },
-] as const;
+];
 
 export function StatCards({ stats }: StatCardsProps) {
   const values: Record<(typeof cards)[number]["key"], string> = {
@@ -69,7 +61,8 @@ export function StatCards({ stats }: StatCardsProps) {
       {cards.map((card) => {
         const Icon = card.icon;
         const sparkData = card.spark.map((v, i) => ({ i, v }));
-        const TrendIcon = card.up ? TrendingUp : TrendingDown;
+        const trend = stats.trends[card.key];
+        const TrendIcon = trend.up ? TrendingUp : TrendingDown;
 
         return (
           <article key={card.key} className="admin-card admin-stat-card">
@@ -80,10 +73,10 @@ export function StatCards({ stats }: StatCardsProps) {
                   {values[card.key]}
                 </p>
                 <span
-                  className={`admin-stat-trend ${card.up ? "admin-stat-trend--up" : "admin-stat-trend--down"}`}
+                  className={`admin-stat-trend ${trend.up ? "admin-stat-trend--up" : "admin-stat-trend--down"}`}
                 >
                   <TrendIcon className="inline h-3.5 w-3.5" aria-hidden />
-                  {card.trend} so với 30 ngày
+                  {trend.value} so với 30 ngày trước
                 </span>
               </div>
               <div

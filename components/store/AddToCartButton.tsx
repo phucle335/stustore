@@ -56,9 +56,14 @@ export function AddToCartButton({
     }
   };
 
+  const trackLabel =
+    label ??
+    (isOutOfStock ? "Hết hàng" : size === undefined && disabled ? "Chọn size" : "Thêm vào giỏ");
+
   return (
     <button
       type="button"
+      data-track={trackLabel}
       className={className ?? styles.productDetailAddBtn}
       onClick={handleClick}
       disabled={isDisabled}

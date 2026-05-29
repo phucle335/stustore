@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import { CartProvider } from "@/components/store/CartProvider";
 import { CustomerAuthProvider } from "@/components/store/CustomerAuthProvider";
 import { ScrollToTop } from "@/components/store/ScrollToTop";
+import { VercelAnalytics } from "@/components/analytics/VercelAnalytics";
+import { AnalyticsTracker } from "@/components/store/AnalyticsTracker";
 import { ToastProvider } from "@/components/store/ToastProvider";
 import "@/styles/globals.css";
 
@@ -40,6 +42,8 @@ export default function RootLayout({
         <ToastProvider>
           <CustomerAuthProvider>
             <CartProvider>
+              <AnalyticsTracker />
+              <VercelAnalytics />
               <ScrollToTop />
               {children}
             </CartProvider>

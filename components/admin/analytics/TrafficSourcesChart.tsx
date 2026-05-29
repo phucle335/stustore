@@ -8,20 +8,28 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { MOCK_TRAFFIC_SOURCES } from "@/lib/admin/analytics/mock-data";
 import { AnalyticsCard } from "./AnalyticsCard";
 
-export function TrafficSourcesChart() {
+type TrafficSourcesChartProps = {
+  data: { name: string; value: number; fill: string }[];
+};
+
+export function TrafficSourcesChart({ data }: TrafficSourcesChartProps) {
+  const chartData =
+    data.length > 0
+      ? data
+      : [{ name: "Chưa có dữ liệu", value: 100, fill: "#94a3b8" }];
+
   return (
     <AnalyticsCard
       title="Nguồn lưu lượng hàng đầu"
-      subtitle="Top traffic sources — tỷ lệ % (dữ liệu mẫu)"
+      subtitle="Theo referrer — 14 ngày gần nhất"
     >
       <div className="h-64 w-full sm:h-72">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
-              data={MOCK_TRAFFIC_SOURCES}
+              data={chartData}
               dataKey="value"
               nameKey="name"
               cx="50%"
@@ -30,7 +38,7 @@ export function TrafficSourcesChart() {
               outerRadius={88}
               paddingAngle={2}
             >
-              {MOCK_TRAFFIC_SOURCES.map((entry) => (
+              {chartData.map((entry) => (
                 <Cell key={entry.name} fill={entry.fill} />
               ))}
             </Pie>

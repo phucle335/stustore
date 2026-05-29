@@ -9,19 +9,24 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { MOCK_SESSIONS_OVER_TIME } from "@/lib/admin/analytics/mock-data";
 import { AnalyticsCard } from "./AnalyticsCard";
 
-export function SessionsLineChart() {
+type SessionsLineChartProps = {
+  data: { label: string; sessions: number }[];
+};
+
+export function SessionsLineChart({ data }: SessionsLineChartProps) {
+  const chartData = data.length > 0 ? data : [{ label: "—", sessions: 0 }];
+
   return (
     <AnalyticsCard
       title="Phiên theo thời gian"
-      subtitle="Sessions over time — theo ngày trong tuần (dữ liệu mẫu)"
+      subtitle="Số phiên duy nhất — 14 ngày gần nhất"
     >
       <div className="h-64 w-full sm:h-72">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={MOCK_SESSIONS_OVER_TIME}
+            data={chartData}
             margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
           >
             <CartesianGrid stroke="#e2e8f0" strokeDasharray="4 4" vertical={false} />
@@ -35,6 +40,7 @@ export function SessionsLineChart() {
               tick={{ fill: "#64748b", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
+              allowDecimals={false}
             />
             <Tooltip
               contentStyle={{

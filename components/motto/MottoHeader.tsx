@@ -139,6 +139,7 @@ export function MottoHeader({ theme = "light" }: { theme?: "light" | "dark" }) {
           <div className={styles.actions}>
             <Link
               href="/sneakers"
+              data-track="Mua ngay (header)"
               className={`${styles.btn} ${styles.btnPill} ${styles.headerCtaPill} ${styles.desktopCta}`}
             >
               Mua ngay

@@ -94,6 +94,7 @@ export function ProductPurchaseBlock({ product }: ProductPurchaseBlockProps) {
       <div className={styles.productCtaStack}>
       <button
         type="button"
+        data-track="Mua ngay"
         className={`${styles.productDetailAddBtn} ${styles.productDetailAddBtnPrimary}`}
         onClick={() => {
           let added = false;
