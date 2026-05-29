@@ -627,6 +627,35 @@
   border-bottom: none;
 }
 
+.admin-analytics-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--admin-border);
+}
+
+.admin-analytics-pagination__meta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--admin-muted);
+}
+
+.admin-analytics-pagination__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-analytics-pagination__actions .admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .admin-order-table th:first-child,
 .admin-order-table td:first-child {
   width: 40px;

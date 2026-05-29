@@ -2,7 +2,11 @@
 
 import { Globe, Monitor, Smartphone } from "lucide-react";
 import type { BreakdownItem, LiveVisitorRow } from "@/lib/admin/analytics/types";
+import { AnalyticsTablePagination } from "./AnalyticsTablePagination";
 import { AnalyticsCard } from "./AnalyticsCard";
+import { useTablePagination } from "./useTablePagination";
+
+const VISITOR_PAGE_SIZE = 5;
 
 type LiveVisitorsDetailProps = {
   visitors: LiveVisitorRow[];
@@ -40,7 +44,7 @@ function BreakdownList({
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-[var(--admin-border)]">
                 <div
-                  className="h-full rounded-full bg-emerald-500"
+                  className="h-full rounded-full bg-[#f24e35]"
                   style={{ width: `${Math.round((item.count / total) * 100)}%` }}
                 />
               </div>
@@ -57,6 +61,9 @@ export function LiveVisitorsDetail({
   deviceBreakdown,
   countryBreakdown,
 }: LiveVisitorsDetailProps) {
+  const pagination = useTablePagination(visitors, VISITOR_PAGE_SIZE);
+  const pageRows = pagination.slice;
+
   return (
     <AnalyticsCard
       title="Khách đang online (realtime)"
@@ -78,43 +85,60 @@ export function LiveVisitorsDetail({
       {visitors.length === 0 ? (
         <p className="text-sm admin-muted">Chưa có ai online trong 2 phút gần nhất.</p>
       ) : (
-        <div className="admin-table-wrap max-h-80 overflow-y-auto">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Khách</th>
-                <th>Trang</th>
-                <th>Thiết bị</th>
-                <th>Quốc gia</th>
-                <th style={{ textAlign: "right" }}>Hoạt động</th>
-              </tr>
-            </thead>
-            <tbody>
-              {visitors.map((row) => (
-                <tr key={`${row.sessionShort}-${row.lastSeen}`}>
-                  <td className="font-mono text-xs admin-text">#{row.sessionShort}</td>
-                  <td className="max-w-[140px] truncate text-sm" title={row.path}>
-                    {row.path}
-                  </td>
-                  <td>
-                    <span className="inline-flex items-center gap-1 text-sm">
-                      {row.device === "Mobile" ? (
-                        <Smartphone className="h-3.5 w-3.5 admin-muted" />
-                      ) : (
-                        <Monitor className="h-3.5 w-3.5 admin-muted" />
-                      )}
-                      {row.device}
-                    </span>
-                  </td>
-                  <td className="text-sm">{row.country}</td>
-                  <td className="text-right text-xs tabular-nums admin-muted">
-                    {new Date(row.lastSeen).toLocaleTimeString("vi-VN")}
-                  </td>
+        <>
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Khách</th>
+                  <th>Trang</th>
+                  <th>Thiết bị</th>
+                  <th>Quốc gia</th>
+                  <th style={{ textAlign: "right" }}>Hoạt động</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {pageRows.map((row) => (
+                  <tr key={`${row.sessionShort}-${row.lastSeen}`}>
+                    <td className="font-mono text-xs admin-text">
+                      #{row.sessionShort}
+                    </td>
+                    <td className="max-w-[140px] truncate text-sm" title={row.path}>
+                      {row.path}
+                    </td>
+                    <td>
+                      <span className="inline-flex items-center gap-1 text-sm">
+                        {row.device === "Mobile" ? (
+                          <Smartphone className="h-3.5 w-3.5 admin-muted" />
+                        ) : (
+                          <Monitor className="h-3.5 w-3.5 admin-muted" />
+                        )}
+                        {row.device}
+                      </span>
+                    </td>
+                    <td className="text-sm">{row.country}</td>
+                    <td className="text-right text-xs tabular-nums admin-muted">
+                      {new Date(row.lastSeen).toLocaleTimeString("vi-VN")}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {pagination.showPagination ? (
+            <AnalyticsTablePagination
+              page={pagination.page}
+              totalPages={pagination.totalPages}
+              from={pagination.from}
+              to={pagination.to}
+              total={pagination.total}
+              hasPrev={pagination.hasPrev}
+              hasNext={pagination.hasNext}
+              onPrev={pagination.goPrev}
+              onNext={pagination.goNext}
+            />
+          ) : null}
+        </>
       )}
     </AnalyticsCard>
   );
