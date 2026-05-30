@@ -2,6 +2,11 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { Save, Upload } from "lucide-react";
+import {
+  BLOG_CATEGORIES,
+  getPostCategory,
+  type BlogCategoryId,
+} from "@/lib/store/blog-categories";
 import type { BlogPost } from "@/lib/store/blog-content";
 
 type ApiListResponse = { data?: BlogPost[]; error?: string };
@@ -88,6 +93,7 @@ export function BlogPostManager() {
       image: "",
       date: now,
       body: "",
+      category: "tips",
     };
     setPosts((prev) => (prev ? [next, ...prev] : [next]));
     setSelectedId(id);
@@ -113,6 +119,7 @@ export function BlogPostManager() {
           image: draft.image,
           date: draft.date || null,
           body: draft.body,
+          category: draft.category ?? "tips",
         }),
       });
 
@@ -144,7 +151,7 @@ export function BlogPostManager() {
         <div>
           <h2 className="text-lg font-semibold admin-text">CMS Blog</h2>
           <p className="mt-1 text-sm admin-muted">
-            Chỉnh sửa bài viết — title / excerpt / image / body.
+            Chỉnh sửa bài viết — phân mục, title, excerpt, image, body.
           </p>
         </div>
 
@@ -167,11 +174,14 @@ export function BlogPostManager() {
             value={selectedId}
             onChange={(e) => setSelectedId(e.target.value)}
           >
-            {posts.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.title}
-              </option>
-            ))}
+            {posts.map((p) => {
+              const cat = BLOG_CATEGORIES.find((c) => c.id === getPostCategory(p));
+              return (
+                <option key={p.id} value={p.id}>
+                  [{cat?.label ?? "Tips hay"}] {p.title}
+                </option>
+              );
+            })}
           </select>
         </label>
       </div>
@@ -181,6 +191,25 @@ export function BlogPostManager() {
           <h3 className="text-base font-semibold admin-text">Nội dung</h3>
 
           <div className="mt-4 space-y-3">
+            <label className="block text-sm admin-text">
+              Phân mục
+              <select
+                className="admin-input mt-1"
+                value={draft.category ?? "tips"}
+                onChange={(e) =>
+                  setDraft((d) =>
+                    d ? { ...d, category: e.target.value as BlogCategoryId } : d,
+                  )
+                }
+              >
+                {BLOG_CATEGORIES.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
             <label className="block text-sm admin-text">
               Title
               <input

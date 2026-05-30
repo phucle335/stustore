@@ -1,3 +1,5 @@
+import type { BlogCategoryId } from "@/lib/store/blog-categories";
+
 export type BlogPost = {
   id: string;
   title: string;
@@ -6,11 +8,14 @@ export type BlogPost = {
   date: string;
   /** Chuỗi nội dung (chia đoạn bằng \\n\\n) */
   body: string;
+  /** Nhóm hiển thị trên trang blog (Tips, Sneaker, …) */
+  category?: BlogCategoryId;
 };
 
 export const BLOG_POSTS: BlogPost[] = [
   {
     id: "blog-1",
+    category: "sneakers",
     title: "Cách chọn sneaker phù hợp phong cách streetwear",
     excerpt:
       "Streetwear không có công thức cố định — nhưng bạn vẫn có thể chọn sneaker đúng phom dáng, tông màu và chất liệu để outfit “khớp gu” hơn mỗi ngày.",
@@ -28,6 +33,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     id: "blog-2",
+    category: "accessories",
     title: "Xu hướng kính mát thể thao 2026",
     excerpt:
       "2026 chứng kiến sự giao thoa giữa hiệu năng và thời trang: kính ôm sát khuôn mặt, tròng phân cực, và các tùy chọn thích ứng ánh sáng để dùng từ tập luyện đến dạo phố.",
@@ -45,6 +51,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     id: "blog-3",
+    category: "tips",
     title: "Chăm sóc giày da và vải đúng cách",
     excerpt:
       "Da và vải cần “đúng cách” mới bền màu. Bài viết này tóm tắt quy trình làm sạch – làm khô – dưỡng và bảo quản theo từng chất liệu.",
@@ -62,6 +69,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     id: "blog-4",
+    category: "clothing",
     title: "5 outfit với áo hoodie basic cho nam",
     excerpt:
       "Hoodie basic dễ phối nhưng muốn đẹp “đúng chất streetwear” thì bạn cần chọn phom quần phù hợp và cân bằng màu sắc. Dưới đây là 5 công thức dễ áp dụng.",
@@ -80,6 +88,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     id: "blog-5",
+    category: "tips",
     title: "Dép slide: chọn đôi nào cho mùa hè?",
     excerpt:
       "Dép slide hợp hè vì tiện và nhẹ. Nhưng để đi lâu mà không đau chân, bạn cần để ý chất liệu, độ êm và độ hỗ trợ vòm bàn chân.",
@@ -96,6 +105,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     id: "blog-6",
+    category: "accessories",
     title: "Túi backpack: size và chất liệu cần biết",
     excerpt:
       "Chọn backpack không chỉ là mua theo “20L/30L”. Bạn cần hiểu dung tích thực dùng, ngăn laptop, và chất liệu chống nước để balo đi bền trong điều kiện Việt Nam.",

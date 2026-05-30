@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { getForgotPasswordPath } from "@/lib/auth/password-reset";
+import { getForgotPasswordPath, mapAuthErrorMessage } from "@/lib/auth/password-reset";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { StusportLogo } from "@/components/brand/StusportLogo";
 import styles from "@/styles/components/store/Customer.module.css";
@@ -72,25 +72,31 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
     const trimmedName = fullName.trim();
 
     if (isRegister) {
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { full_name: trimmedName },
-        },
+      const signupRes = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          password,
+          full_name: trimmedName,
+        }),
       });
+      const signupBody = (await signupRes.json()) as { error?: string };
 
-      if (signUpError) {
+      if (!signupRes.ok) {
         setLoading(false);
-        setError(signUpError.message);
+        setError(signupBody.error ?? "Đăng ký thất bại.");
         return;
       }
 
-      if (!data.session) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password,
+      });
+
+      if (signInError) {
         setLoading(false);
-        setInfo(
-          "Đăng ký thành công. Kiểm tra email để xác nhận tài khoản, sau đó đăng nhập.",
-        );
+        setError(mapAuthErrorMessage(signInError.message));
         return;
       }
     } else {
@@ -101,7 +107,7 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
 
       if (signInError) {
         setLoading(false);
-        setError(signInError.message);
+        setError(mapAuthErrorMessage(signInError.message));
         return;
       }
     }
