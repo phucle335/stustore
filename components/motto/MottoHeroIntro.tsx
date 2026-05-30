@@ -12,7 +12,7 @@ export function MottoHeroIntro({
       <HomeRotatingWord words={rotatingWords} />
       <div className={styles.tagline}>
         <p className={styles.taglinePrefix}>Inspired From</p>
-        <StusportLogo variant="hero" tone="on-dark" />
+        <StusportLogo variant="hero" tone="on-dark" size="L" />
       </div>
     </div>
   );

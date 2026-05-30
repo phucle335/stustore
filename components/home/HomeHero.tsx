@@ -13,7 +13,7 @@ export function HomeHero() {
         <HomeRotatingWord />
         <div className={styles.homeHeroTagline}>
           <p className={styles.homeHeroTaglinePrefix}>Inspired From</p>
-          <StusportLogo variant="hero" />
+          <StusportLogo variant="hero" size="L" />
         </div>
       </div>
 

@@ -236,6 +236,7 @@
   .headerInner {
     min-height: 68px;
     gap: 10px;
+    justify-content: center;
   }
 
   .nav {

@@ -16,6 +16,7 @@ export function MottoLogo({
       className={className}
       variant={variant === "mark" ? "mark" : "hero"}
       tone={tone}
+      size="L"
     />
   );
 }

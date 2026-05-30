@@ -119,6 +119,7 @@ export function MottoHeader({ theme = "light" }: { theme?: "light" | "dark" }) {
             href="/"
             variant="mark"
             className={styles.headerLogo}
+            size="M"
           />
 
           <nav className={styles.nav} aria-label="Main">
