@@ -6,7 +6,7 @@ import styles from "@/styles/components/store/StoreStatic.module.css";
 
 export function TermsContent() {
   return (
-    <article className={styles.staticPage}>
+    <>
       <h1 className={styles.staticPageTitle}>Điều khoản và Điều kiện</h1>
       <p className={styles.staticPageIntro}>
         Vui lòng đọc kỹ các điều khoản dưới đây trước khi sử dụng website{" "}
@@ -34,6 +34,6 @@ export function TermsContent() {
           </section>
         ))}
       </div>
-    </article>
+    </>
   );
 }

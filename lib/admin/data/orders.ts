@@ -2,6 +2,7 @@ import { createAdminSupabaseClient } from "@/lib/supabase/server";
 import type {
   CreateOrderInput,
   DbOrder,
+  OrderStatus,
   UpdateOrderInput,
 } from "@/lib/supabase/types";
 import { failure, success, type ActionResult } from "@/lib/admin/result";
@@ -165,4 +166,38 @@ export async function deleteOrder(id: string): Promise<ActionResult<{ id: string
 
   if (error) return failure(error.message);
   return success({ id });
+}
+
+export async function deleteOrders(
+  ids: string[],
+): Promise<ActionResult<{ ids: string[]; count: number }>> {
+  const uniqueIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))];
+  if (uniqueIds.length === 0) {
+    return failure("Không có đơn hàng nào được chọn.");
+  }
+
+  const supabase = createAdminSupabaseClient();
+  const { error } = await supabase.from("orders").delete().in("id", uniqueIds);
+
+  if (error) return failure(error.message);
+  return success({ ids: uniqueIds, count: uniqueIds.length });
+}
+
+export async function updateOrderStatus(
+  ids: string[],
+  status: OrderStatus,
+): Promise<ActionResult<{ ids: string[]; count: number }>> {
+  const uniqueIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))];
+  if (uniqueIds.length === 0) {
+    return failure("Không có đơn hàng nào được chọn.");
+  }
+
+  const supabase = createAdminSupabaseClient();
+  const { error } = await supabase
+    .from("orders")
+    .update({ status })
+    .in("id", uniqueIds);
+
+  if (error) return failure(error.message);
+  return success({ ids: uniqueIds, count: uniqueIds.length });
 }

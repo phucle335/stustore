@@ -1,10 +1,10 @@
-import "@/styles/pages/blog-post.css";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StoreShell } from "@/components/store/StoreShell";
 import { BLOG_POSTS } from "@/lib/store/blog-content";
 import { ProductImage } from "@/components/store/ProductImage";
 import { getBlogPostByIdMerged } from "@/lib/blog/blog-cms";
+import styles from "@/styles/components/store/Blog.module.css";
 
 type BlogPostPageProps = {
   params: Promise<{ id: string }>;
@@ -37,34 +37,36 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <StoreShell activeNav="blog">
-      <article className="blog-post">
-        <Link href="/blog" className="blog-post-back">
-          <i className="fas fa-arrow-left" aria-hidden="true" />
-          Quay lại Blog
-        </Link>
-        <time className="blog-post-date">{post.date}</time>
-        <h1 className="blog-post-title">{post.title}</h1>
-        <div className="blog-post-image-wrap">
-          <ProductImage
-            src={post.image}
-            alt={post.title}
-            width={1200}
-            height={640}
-            priority
-            className="blog-post-image"
-          />
-        </div>
-        <p className="blog-post-lead">{post.excerpt}</p>
-        <div className="blog-post-body">
-          {post.body
-            .split(/\n\n/)
-            .map((p, idx) => p.trim())
-            .filter(Boolean)
-            .map((paragraph, paragraphIdx) => (
-              <p key={paragraphIdx}>{paragraph}</p>
-            ))}
-        </div>
-      </article>
+      <div className={styles.blogPage}>
+        <article className={styles.blogPost}>
+          <Link href="/blog" className={styles.blogPostBack}>
+            <i className="fas fa-arrow-left" aria-hidden="true" />
+            Quay lại Blog
+          </Link>
+          <time className={styles.blogPostDate}>{post.date}</time>
+          <h1 className={styles.blogPostTitle}>{post.title}</h1>
+          <div className={styles.blogPostImageWrap}>
+            <ProductImage
+              src={post.image}
+              alt={post.title}
+              width={1200}
+              height={640}
+              priority
+              className={styles.blogPostImage}
+            />
+          </div>
+          <p className={styles.blogPostLead}>{post.excerpt}</p>
+          <div className={styles.blogPostBody}>
+            {post.body
+              .split(/\n\n/)
+              .map((p) => p.trim())
+              .filter(Boolean)
+              .map((paragraph, paragraphIdx) => (
+                <p key={paragraphIdx}>{paragraph}</p>
+              ))}
+          </div>
+        </article>
+      </div>
     </StoreShell>
   );
 }

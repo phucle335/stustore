@@ -1245,6 +1245,91 @@
   margin-bottom: 0;
 }
 
+.admin-mobile-select-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  background: var(--admin-surface);
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--admin-text);
+}
+
+.admin-mobile-select-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+}
+
+.admin-mobile-select-all input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.admin-mobile-select-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  background: var(--admin-surface);
+  padding: 12px;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.admin-mobile-select-card.is-selected {
+  border-color: rgba(242, 78, 53, 0.4);
+  background: rgba(242, 78, 53, 0.06);
+}
+
+.admin-mobile-select-card.is-active {
+  border-color: rgba(242, 78, 53, 0.55);
+  background: rgba(242, 78, 53, 0.14);
+}
+
+.admin-mobile-select-card__check {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+
+.admin-mobile-select-card__check input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.admin-mobile-select-card__body {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.admin-bulk-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
 .admin-mobile-card__products {
   display: flex;
   flex-wrap: wrap;
@@ -1433,6 +1518,23 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+  }
+
+  .admin-only-mobile.admin-product-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .admin-bulk-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-bulk-bar .admin-input,
+  .admin-bulk-bar .admin-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .admin-only-mobile.admin-log-list {

@@ -4,7 +4,9 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import {
   createOrderAction,
   deleteOrderAction,
+  deleteOrdersBulkAction,
   updateOrderAction,
+  updateOrdersStatusBulkAction,
 } from "@/lib/admin/actions/orders";
 import { OrderImportPanel } from "@/components/admin/OrderImportPanel";
 import { formatCurrency } from "@/components/admin/format";
@@ -167,6 +169,8 @@ export function OrderManager({
   const [keyword, setKeyword] = useState("");
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
   const [page, setPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+  const [bulkStatus, setBulkStatus] = useState<OrderStatus>("pending");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -227,11 +231,96 @@ export function OrderManager({
 
   useEffect(() => {
     setPage(1);
+    setSelectedIds(new Set());
   }, [keyword, statusFilter]);
 
   useEffect(() => {
     if (page > totalPages) setPage(totalPages);
   }, [page, totalPages]);
+
+  const pageIds = useMemo(
+    () => pagedFilteredOrders.map((o) => o.id),
+    [pagedFilteredOrders],
+  );
+  const allPageSelected =
+    pageIds.length > 0 && pageIds.every((id) => selectedIds.has(id));
+  const somePageSelected =
+    pageIds.some((id) => selectedIds.has(id)) && !allPageSelected;
+
+  function toggleSelectAllOnPage() {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (allPageSelected) {
+        for (const id of pageIds) next.delete(id);
+      } else {
+        for (const id of pageIds) next.add(id);
+      }
+      return next;
+    });
+  }
+
+  function toggleSelectId(id: string) {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function handleBulkDelete() {
+    const ids = [...selectedIds];
+    if (ids.length === 0) return;
+    if (!window.confirm(`Xóa ${ids.length} đơn hàng đã chọn?`)) return;
+
+    startTransition(async () => {
+      setError(null);
+      setMessage(null);
+
+      const result = await deleteOrdersBulkAction(ids);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+
+      setOrders((current) => current.filter((item) => !selectedIds.has(item.id)));
+      if (form.id && selectedIds.has(form.id)) {
+        resetForm();
+        setScreen("list");
+      }
+      setSelectedIds(new Set());
+      setMessage(`Đã xóa ${result.data.count} đơn hàng.`);
+    });
+  }
+
+  function handleBulkStatusApply() {
+    const ids = [...selectedIds];
+    if (ids.length === 0) return;
+
+    startTransition(async () => {
+      setError(null);
+      setMessage(null);
+
+      const result = await updateOrdersStatusBulkAction(ids, bulkStatus);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+
+      setOrders((current) =>
+        current.map((item) =>
+          selectedIds.has(item.id) ? { ...item, status: bulkStatus } : item,
+        ),
+      );
+      if (form.id && selectedIds.has(form.id)) {
+        setForm((current) => ({ ...current, status: bulkStatus }));
+      }
+      setSelectedIds(new Set());
+      setMessage(
+        `Đã cập nhật trạng thái ${result.data.count} đơn → ${ORDER_STATUS_LABELS[bulkStatus]}.`,
+      );
+    });
+  }
 
   function paidDepositForStatus(status: OrderStatus, depositAmount: number) {
     if (status === "deposit_paid") return depositAmount;
@@ -491,12 +580,64 @@ export function OrderManager({
             </div>
           </div>
 
+          {selectedIds.size > 0 ? (
+            <div className="admin-card admin-bulk-bar">
+              <span className="text-sm admin-text">
+                Đã chọn <strong>{selectedIds.size}</strong> đơn hàng
+              </span>
+              <select
+                className="admin-input"
+                value={bulkStatus}
+                onChange={(e) => setBulkStatus(e.target.value as OrderStatus)}
+                disabled={isPending}
+              >
+                {ORDER_STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {ORDER_STATUS_LABELS[status]}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="admin-btn admin-btn--primary"
+                onClick={handleBulkStatusApply}
+                disabled={isPending}
+              >
+                Áp dụng trạng thái
+              </button>
+              <button
+                type="button"
+                className="admin-btn"
+                onClick={handleBulkDelete}
+                disabled={isPending}
+              >
+                Xóa đã chọn
+              </button>
+              <button
+                type="button"
+                className="admin-btn"
+                onClick={() => setSelectedIds(new Set())}
+                disabled={isPending}
+              >
+                Bỏ chọn
+              </button>
+            </div>
+          ) : null}
+
           <div className="admin-table-wrap admin-only-desktop">
             <table className="admin-table admin-order-table">
               <thead>
                 <tr>
                   <th style={{ width: 40 }}>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      checked={allPageSelected}
+                      ref={(el) => {
+                        if (el) el.indeterminate = somePageSelected;
+                      }}
+                      onChange={toggleSelectAllOnPage}
+                      aria-label="Chọn tất cả trên trang"
+                    />
                   </th>
                   <th>Mã đơn</th>
                   <th>Khách hàng</th>
@@ -519,7 +660,13 @@ export function OrderManager({
                       onClick={() => selectOrder(order)}
                     >
                       <td>
-                        <input type="checkbox" onClick={(e) => e.stopPropagation()} />
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(order.id)}
+                          onChange={() => toggleSelectId(order.id)}
+                          onClick={(e) => e.stopPropagation()}
+                          aria-label={`Chọn đơn ${order.id}`}
+                        />
                       </td>
                       <td>
                         <span style={{ color: "#60a5fa", fontWeight: 600 }}>
@@ -598,42 +745,69 @@ export function OrderManager({
             </table>
           </div>
 
+          <div className="admin-mobile-select-bar admin-only-mobile">
+            <label className="admin-mobile-select-all">
+              <input
+                type="checkbox"
+                checked={allPageSelected}
+                ref={(el) => {
+                  if (el) el.indeterminate = somePageSelected;
+                }}
+                onChange={toggleSelectAllOnPage}
+              />
+              Chọn tất cả trên trang ({pageIds.length})
+            </label>
+          </div>
+
           <div className="admin-order-mobile-list admin-only-mobile">
             {pagedFilteredOrders.map((order) => {
               const meta = parseOrderMeta(order);
               const note = String(meta.note ?? "");
+              const isSelected = selectedIds.has(order.id);
               return (
-                <button
+                <div
                   key={order.id}
-                  type="button"
-                  className="admin-mobile-card"
-                  onClick={() => selectOrder(order)}
+                  className={`admin-mobile-select-card${isSelected ? " is-selected" : ""}`}
                 >
-                  <div className="admin-mobile-card__head">
-                    <p className="admin-mobile-card__id">{order.id}</p>
-                    <span className={orderStatusChipClass(order.status)}>
-                      {ORDER_STATUS_LABELS[order.status]}
-                    </span>
+                  <div className="admin-mobile-select-card__check">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleSelectId(order.id)}
+                      aria-label={`Chọn đơn ${order.id}`}
+                    />
                   </div>
-                  <div className="admin-mobile-card__body">
-                  <p className="admin-text" style={{ marginBottom: 6 }}>
-                    {order.shipping_full_name || "Khách lẻ"} · {order.shipping_phone || "—"}
-                  </p>
-                    {productLines(order).slice(0, 2).map((line, idx) => (
-                      <p key={idx}>{line}</p>
-                    ))}
-                    <p>
-                      {new Date(order.created_at).toLocaleDateString("vi-VN")}{" "}
-                      {new Date(order.created_at).toLocaleTimeString("vi-VN", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                    <p>Tổng: <span className="admin-text">{formatCurrency(order.total_price)}</span></p>
-                    <p>Thanh toán: {paymentStatusText(order)}</p>
-                    {note ? <p>Ghi chú: {note}</p> : null}
-                  </div>
-                </button>
+                  <button
+                    type="button"
+                    className="admin-mobile-select-card__body"
+                    onClick={() => selectOrder(order)}
+                  >
+                    <div className="admin-mobile-card__head">
+                      <p className="admin-mobile-card__id">{order.id}</p>
+                      <span className={orderStatusChipClass(order.status)}>
+                        {ORDER_STATUS_LABELS[order.status]}
+                      </span>
+                    </div>
+                    <div className="admin-mobile-card__body">
+                      <p className="admin-text" style={{ marginBottom: 6 }}>
+                        {order.shipping_full_name || "Khách lẻ"} · {order.shipping_phone || "—"}
+                      </p>
+                      {productLines(order).slice(0, 2).map((line, idx) => (
+                        <p key={idx}>{line}</p>
+                      ))}
+                      <p>
+                        {new Date(order.created_at).toLocaleDateString("vi-VN")}{" "}
+                        {new Date(order.created_at).toLocaleTimeString("vi-VN", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                      <p>Tổng: <span className="admin-text">{formatCurrency(order.total_price)}</span></p>
+                      <p>Thanh toán: {paymentStatusText(order)}</p>
+                      {note ? <p>Ghi chú: {note}</p> : null}
+                    </div>
+                  </button>
+                </div>
               );
             })}
           </div>

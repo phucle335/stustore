@@ -2,11 +2,12 @@ import "@/styles/pages/tai-khoan.css";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { MemberAccountPage } from "@/components/account/MemberAccountPage";
-import { CustomerPageWrap } from "@/components/store/CustomerPageWrap";
 import { StoreShell } from "@/components/store/StoreShell";
+import { StaticPageShell } from "@/components/store/StaticPageShell";
 import { getSiteContentServer } from "@/lib/site-content/get-site-content-server";
 import { getAllProducts } from "@/lib/store/catalog";
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
+import customerStyles from "@/styles/components/store/Customer.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -33,24 +34,11 @@ export default async function MemberAccountRoute() {
 
   return (
     <StoreShell activeNav="home">
-      <CustomerPageWrap>
-        <div
-          className="static-page-wrap"
-          style={
-            bg
-              ? {
-                  backgroundImage: `linear-gradient(rgba(0,0,0,0.38), rgba(0,0,0,0.38)), url(${bg})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }
-              : undefined
-          }
-        >
-          <article className="static-page">
-            <MemberAccountPage productsById={productsById} />
-          </article>
+      <StaticPageShell backgroundImage={bg}>
+        <div className={customerStyles.customerPageWrapDark}>
+          <MemberAccountPage productsById={productsById} />
         </div>
-      </CustomerPageWrap>
+      </StaticPageShell>
     </StoreShell>
   );
 }

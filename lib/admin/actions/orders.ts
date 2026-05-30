@@ -6,7 +6,11 @@ import * as orders from "@/lib/admin/data/orders";
 import * as users from "@/lib/admin/data/users";
 import { parseOrdersCsv } from "@/lib/admin/parse-orders-import";
 import { failure } from "@/lib/admin/result";
-import type { CreateOrderInput, UpdateOrderInput } from "@/lib/supabase/types";
+import type {
+  CreateOrderInput,
+  OrderStatus,
+  UpdateOrderInput,
+} from "@/lib/supabase/types";
 import { logAdminAuditAndNotification } from "@/lib/admin/audit/log";
 
 const ADMIN_PATH = "/admin";
@@ -103,6 +107,67 @@ export async function deleteOrderAction(id: string) {
             body: `Xóa đơn ${id}`,
             entityType: "order",
             entityId: id,
+          },
+        );
+      }
+    }
+    return result;
+  });
+}
+
+export async function deleteOrdersBulkAction(ids: string[]) {
+  return withAdminAction(async () => {
+    const result = await orders.deleteOrders(ids);
+    if (result.ok) {
+      revalidateOrders();
+      const auth = await guardAdmin();
+      if (auth.ok) {
+        await logAdminAuditAndNotification(
+          {
+            adminUserId: auth.data.userId,
+            action: "orders_bulk_deleted",
+            entityType: "order",
+            entityId: result.data.ids[0] ?? "bulk",
+            diff: { ids: result.data.ids, count: result.data.count },
+          },
+          {
+            type: "admin_action",
+            title: "Admin xóa đơn hàng hàng loạt",
+            body: `Xóa ${result.data.count} đơn hàng`,
+            entityType: "order",
+            entityId: result.data.ids[0] ?? "bulk",
+          },
+        );
+      }
+    }
+    return result;
+  });
+}
+
+export async function updateOrdersStatusBulkAction(
+  ids: string[],
+  status: OrderStatus,
+) {
+  return withAdminAction(async () => {
+    const result = await orders.updateOrderStatus(ids, status);
+    if (result.ok) {
+      revalidateOrders();
+      const auth = await guardAdmin();
+      if (auth.ok) {
+        await logAdminAuditAndNotification(
+          {
+            adminUserId: auth.data.userId,
+            action: "orders_bulk_status_updated",
+            entityType: "order",
+            entityId: result.data.ids[0] ?? "bulk",
+            diff: { ids: result.data.ids, count: result.data.count, status },
+          },
+          {
+            type: "admin_action",
+            title: "Admin cập nhật trạng thái đơn hàng hàng loạt",
+            body: `Cập nhật ${result.data.count} đơn → ${status}`,
+            entityType: "order",
+            entityId: result.data.ids[0] ?? "bulk",
           },
         );
       }

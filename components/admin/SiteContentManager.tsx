@@ -49,7 +49,6 @@ export function SiteContentManager() {
   const rotatingWords = draft.motto.homeRotatingWords;
   const marqueeItems = draft.motto.mottoMarqueeItems;
   const insights = draft.motto.mottoInsights;
-  const pageBackgrounds = draft.pages;
 
   const banner: BannerState = insights.banner;
 
@@ -156,22 +155,6 @@ export function SiteContentManager() {
     });
   }
 
-  function updatePageBackground(
-    key: keyof SiteContent["pages"],
-    value: string,
-  ) {
-    setDraft((d) => ({
-      ...d,
-      pages: {
-        ...d.pages,
-        [key]: {
-          ...d.pages[key],
-          backgroundImage: value,
-        },
-      },
-    }));
-  }
-
   async function handlePickFile(key: string, file: File | undefined) {
     if (!file) return;
     setUploadingKey(key);
@@ -184,9 +167,6 @@ export function SiteContentManager() {
         updateHeroSlide(index, { image: url });
       } else if (key === "banner") {
         updateBanner({ imageUrl: url });
-      } else if (key.startsWith("page-bg:")) {
-        const pageKey = key.split(":")[1] as keyof SiteContent["pages"];
-        updatePageBackground(pageKey, url);
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload ảnh thất bại.");
@@ -477,62 +457,6 @@ export function SiteContentManager() {
               ))}
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="admin-card">
-        <h3 className="text-base font-semibold admin-text">Background các trang static</h3>
-        <p className="mt-1 text-sm admin-muted">
-          Chỉnh background ảnh cho Tài khoản, Điều khoản và Hỗ trợ.
-        </p>
-
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
-          {(
-            [
-              ["account", "Trang tài khoản"],
-              ["terms", "Trang điều khoản"],
-              ["support", "Trang hỗ trợ"],
-            ] as const
-          ).map(([pageKey, label]) => (
-            <div key={pageKey} className="rounded-lg border border-slate-800 p-3">
-              <p className="text-sm font-semibold admin-text">{label}</p>
-              <label className="mt-3 block text-sm admin-text">
-                Image URL
-                <input
-                  className="admin-input mt-1"
-                  value={pageBackgrounds[pageKey].backgroundImage}
-                  onChange={(e) => updatePageBackground(pageKey, e.target.value)}
-                  placeholder="https://..."
-                />
-              </label>
-              <div className="mt-3">
-                {pageBackgrounds[pageKey].backgroundImage ? (
-                  <img
-                    src={pageBackgrounds[pageKey].backgroundImage}
-                    alt=""
-                    className="h-24 w-full rounded object-cover"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="h-24 w-full rounded border border-slate-800" />
-                )}
-              </div>
-              <label className="mt-3 inline-flex items-center gap-2 admin-btn">
-                <Upload className="h-4 w-4" />
-                {uploadingKey === `page-bg:${pageKey}` ? "Đang tải…" : "Chọn ảnh"}
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif"
-                  className="sr-only"
-                  disabled={uploadingKey === `page-bg:${pageKey}`}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    void handlePickFile(`page-bg:${pageKey}`, file);
-                  }}
-                />
-              </label>
-            </div>
-          ))}
         </div>
       </div>
 

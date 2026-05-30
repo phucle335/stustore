@@ -247,3 +247,42 @@ export async function deleteProduct(id: string): Promise<ActionResult<{ id: stri
   if (error) return failure(error.message);
   return success({ id });
 }
+
+export async function deleteProducts(
+  ids: string[],
+): Promise<ActionResult<{ ids: string[]; count: number }>> {
+  const uniqueIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))];
+  if (uniqueIds.length === 0) {
+    return failure("Không có sản phẩm nào được chọn.");
+  }
+
+  const supabase = createAdminSupabaseClient();
+  const { error } = await supabase.from("products").delete().in("id", uniqueIds);
+
+  if (error) return failure(error.message);
+  return success({ ids: uniqueIds, count: uniqueIds.length });
+}
+
+export async function updateProductStatus(
+  ids: string[],
+  product_status: ProductStatus,
+): Promise<ActionResult<{ ids: string[]; count: number }>> {
+  const uniqueIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))];
+  if (uniqueIds.length === 0) {
+    return failure("Không có sản phẩm nào được chọn.");
+  }
+
+  const supabase = createAdminSupabaseClient();
+  const initialUpdate = await supabase
+    .from("products")
+    .update({ product_status })
+    .in("id", uniqueIds)
+    .select("id");
+
+  if (initialUpdate.error && isMissingProductStatusError(initialUpdate.error.message)) {
+    return failure("Cột product_status chưa có trên database.");
+  }
+
+  if (initialUpdate.error) return failure(initialUpdate.error.message);
+  return success({ ids: uniqueIds, count: uniqueIds.length });
+}

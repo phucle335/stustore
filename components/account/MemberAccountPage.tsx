@@ -281,7 +281,7 @@ export function MemberAccountPage({
         <div className={styles.customerPageEyebrow}>
           <StusportLogo
             variant="mark"
-            tone="on-light"
+            tone="on-dark"
             href="/"
             className="stusport-logo--compact"
           />

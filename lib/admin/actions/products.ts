@@ -7,6 +7,7 @@ import { STORE_PRODUCTS_TAG } from "@/lib/store/catalog";
 import { logAdminAuditAndNotification } from "@/lib/admin/audit/log";
 import type {
   CreateProductInput,
+  ProductStatus,
   UpdateProductInput,
 } from "@/lib/supabase/types";
 
@@ -120,6 +121,67 @@ export async function deleteProductAction(id: string) {
             body: `Xóa sản phẩm ${id}`,
             entityType: "product",
             entityId: id,
+          },
+        );
+      }
+    }
+    return result;
+  });
+}
+
+export async function deleteProductsBulkAction(ids: string[]) {
+  return withAdminAction(async () => {
+    const result = await products.deleteProducts(ids);
+    if (result.ok) {
+      revalidateProducts();
+      const auth = await guardAdmin();
+      if (auth.ok) {
+        await logAdminAuditAndNotification(
+          {
+            adminUserId: auth.data.userId,
+            action: "products_bulk_deleted",
+            entityType: "product",
+            entityId: result.data.ids[0] ?? "bulk",
+            diff: { ids: result.data.ids, count: result.data.count },
+          },
+          {
+            type: "admin_action",
+            title: "Admin xóa sản phẩm hàng loạt",
+            body: `Xóa ${result.data.count} sản phẩm`,
+            entityType: "product",
+            entityId: result.data.ids[0] ?? "bulk",
+          },
+        );
+      }
+    }
+    return result;
+  });
+}
+
+export async function updateProductsStatusBulkAction(
+  ids: string[],
+  status: ProductStatus,
+) {
+  return withAdminAction(async () => {
+    const result = await products.updateProductStatus(ids, status);
+    if (result.ok) {
+      revalidateProducts();
+      const auth = await guardAdmin();
+      if (auth.ok) {
+        await logAdminAuditAndNotification(
+          {
+            adminUserId: auth.data.userId,
+            action: "products_bulk_status_updated",
+            entityType: "product",
+            entityId: result.data.ids[0] ?? "bulk",
+            diff: { ids: result.data.ids, count: result.data.count, status },
+          },
+          {
+            type: "admin_action",
+            title: "Admin cập nhật trạng thái sản phẩm hàng loạt",
+            body: `Cập nhật ${result.data.count} sản phẩm → ${status}`,
+            entityType: "product",
+            entityId: result.data.ids[0] ?? "bulk",
           },
         );
       }

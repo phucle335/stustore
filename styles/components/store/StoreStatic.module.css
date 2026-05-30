@@ -26,6 +26,96 @@
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4);
 }
 
+.staticPageDark .staticPageTitle {
+  color: #ffffff;
+}
+
+.staticPageDark .staticPageIntro {
+  color: #aaaaaa;
+}
+
+.staticPageDark .termsToc {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+}
+
+.staticPageDark .termsTocTitle {
+  color: #ffffff;
+}
+
+.staticPageDark .termsToc ol {
+  color: #cccccc;
+}
+
+.staticPageDark .termsToc a {
+  color: #cccccc;
+}
+
+.staticPageDark .termsToc a:hover {
+  color: #f24e35;
+}
+
+.staticPageDark .termsSection h2 {
+  color: #ffffff;
+}
+
+.staticPageDark .termsSection p {
+  color: #aaaaaa;
+}
+
+.staticPageDark .supportSidebarHeading {
+  color: #999999;
+}
+
+.staticPageDark .supportSidebarList button {
+  background: #1a1a1a;
+  color: #cccccc;
+}
+
+.staticPageDark .supportSidebarList button i {
+  color: #888888;
+}
+
+.staticPageDark .supportSidebarList button:hover {
+  background: #222222;
+}
+
+.staticPageDark .supportSidebarList button.active {
+  background: #0d0d0d;
+  color: #ffffff;
+}
+
+.staticPageDark .supportSidebarList button.active i {
+  color: #f24e35;
+}
+
+.staticPageDark .supportFaqItem {
+  border: 1px solid #2a2a2a;
+  background: #141414;
+}
+
+.staticPageDark .supportFaqQuestion {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.staticPageDark .supportFaqQuestion i {
+  color: #888888;
+}
+
+.staticPageDark .supportFaqItemIsOpen .supportFaqQuestion {
+  background: #222222;
+}
+
+.staticPageDark .supportFaqAnswer {
+  background: #141414;
+  border-top: 1px solid #2a2a2a;
+}
+
+.staticPageDark .supportFaqAnswer p {
+  color: #aaaaaa;
+}
+
 .staticPageTitle {
   font-size: 32px;
   font-weight: 700;
@@ -396,6 +486,17 @@
     gap: 16px;
   }
 
+  .staticPageDark .supportSidebarList {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .staticPageDark .supportSidebarList button {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
   .staticPageWrap {
     padding: 20px 12px 36px;
   }
@@ -412,6 +513,10 @@
 }
 
 @media (max-width: 480px) {
+  .staticPageDark .supportSidebarList {
+    grid-template-columns: 1fr;
+  }
+
   .homeHeroCarouselFrame {
     min-height: 0;
     width: min(100%, calc(100vw - 16px));

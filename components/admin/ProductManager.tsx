@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { Minus, Plus, Settings, Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import {
   createProductAction,
   deleteProductAction,
+  deleteProductsBulkAction,
   updateProductAction,
+  updateProductsStatusBulkAction,
 } from "@/lib/admin/actions/products";
 import type {
   DbProduct,
@@ -149,6 +151,8 @@ export function ProductManager({
     "all" | "in_stock" | "out_stock" | "low_stock"
   >("all");
   const [page, setPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+  const [bulkStatus, setBulkStatus] = useState<ProductStatus>("selling");
   const [form, setForm] = useState<ProductFormState>(() =>
     initialProducts.length > 0 ? productToForm(initialProducts[0]) : emptyForm(),
   );
@@ -278,6 +282,7 @@ export function ProductManager({
 
   useEffect(() => {
     setPage(1);
+    setSelectedIds(new Set());
   }, [tab, query, categoryFilter, brandFilter, stockFilter, sortBy, dateSort]);
 
   useEffect(() => {
@@ -285,6 +290,91 @@ export function ProductManager({
       setPage(totalPages);
     }
   }, [page, totalPages]);
+
+  const pageIds = useMemo(
+    () => pagedProductRows.map((p) => p.id),
+    [pagedProductRows],
+  );
+  const allPageSelected =
+    pageIds.length > 0 && pageIds.every((id) => selectedIds.has(id));
+  const somePageSelected =
+    pageIds.some((id) => selectedIds.has(id)) && !allPageSelected;
+
+  function toggleSelectAllOnPage() {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (allPageSelected) {
+        for (const id of pageIds) next.delete(id);
+      } else {
+        for (const id of pageIds) next.add(id);
+      }
+      return next;
+    });
+  }
+
+  function toggleSelectId(id: string) {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function handleBulkDelete() {
+    const ids = [...selectedIds];
+    if (ids.length === 0) return;
+    if (!window.confirm(`Xóa ${ids.length} sản phẩm đã chọn?`)) return;
+
+    startTransition(async () => {
+      setError(null);
+      setMessage(null);
+
+      const result = await deleteProductsBulkAction(ids);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+
+      setProducts((current) => current.filter((item) => !selectedIds.has(item.id)));
+      if (form.id && selectedIds.has(form.id)) {
+        resetForm();
+      }
+      setSelectedIds(new Set());
+      setMessage(`Đã xóa ${result.data.count} sản phẩm.`);
+    });
+  }
+
+  function handleBulkStatusApply() {
+    const ids = [...selectedIds];
+    if (ids.length === 0) return;
+
+    startTransition(async () => {
+      setError(null);
+      setMessage(null);
+
+      const result = await updateProductsStatusBulkAction(ids, bulkStatus);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+
+      setProducts((current) =>
+        current.map((item) =>
+          selectedIds.has(item.id)
+            ? { ...item, product_status: bulkStatus }
+            : item,
+        ),
+      );
+      if (form.id && selectedIds.has(form.id)) {
+        setForm((current) => ({ ...current, product_status: bulkStatus }));
+      }
+      setSelectedIds(new Set());
+      setMessage(
+        `Đã cập nhật trạng thái ${result.data.count} sản phẩm → ${PRODUCT_STATUS_LABELS[bulkStatus]}.`,
+      );
+    });
+  }
 
   function handleCategoryChange(category: StoreProductCategory) {
     setForm((current) => {
@@ -642,16 +732,65 @@ export function ProductManager({
         </div>
       </div>
 
-      <div className="admin-table-wrap mb-6 hidden md:block">
+      {selectedIds.size > 0 ? (
+        <div className="admin-card admin-bulk-bar mb-4">
+          <span className="text-sm admin-text">
+            Đã chọn <strong>{selectedIds.size}</strong> sản phẩm
+          </span>
+          <select
+            className="admin-input"
+            value={bulkStatus}
+            onChange={(e) => setBulkStatus(e.target.value as ProductStatus)}
+            disabled={isPending}
+          >
+            {(Object.keys(PRODUCT_STATUS_LABELS) as ProductStatus[]).map((status) => (
+              <option key={status} value={status}>
+                {PRODUCT_STATUS_LABELS[status]}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="admin-btn admin-btn--primary"
+            onClick={handleBulkStatusApply}
+            disabled={isPending}
+          >
+            Áp dụng trạng thái
+          </button>
+          <button
+            type="button"
+            className="admin-btn"
+            onClick={handleBulkDelete}
+            disabled={isPending}
+          >
+            <Trash2 className="mr-1 inline h-4 w-4" />
+            Xóa đã chọn
+          </button>
+          <button
+            type="button"
+            className="admin-btn"
+            onClick={() => setSelectedIds(new Set())}
+            disabled={isPending}
+          >
+            Bỏ chọn
+          </button>
+        </div>
+      ) : null}
+
+      <div className="admin-table-wrap mb-6 admin-only-desktop">
         <table className="admin-table admin-product-table">
           <thead>
             <tr>
-              <th>
-                <div className="flex items-center gap-2">
-                  <Settings className="h-4 w-4" />
-                  <input type="checkbox" />
-                  <span>&gt;&gt;</span>
-                </div>
+              <th style={{ width: 40 }}>
+                <input
+                  type="checkbox"
+                  checked={allPageSelected}
+                  ref={(el) => {
+                    if (el) el.indeterminate = somePageSelected;
+                  }}
+                  onChange={toggleSelectAllOnPage}
+                  aria-label="Chọn tất cả trên trang"
+                />
               </th>
               <th>Ảnh</th>
               <th>Sản phẩm</th>
@@ -675,7 +814,13 @@ export function ProductManager({
                   style={{ cursor: "pointer" }}
                 >
                   <td>
-                    <input type="checkbox" onClick={(e) => e.stopPropagation()} />
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(product.id)}
+                      onChange={() => toggleSelectId(product.id)}
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={`Chọn ${product.name}`}
+                    />
                   </td>
                   <td>
                     <div className="admin-product-thumb">
@@ -720,45 +865,70 @@ export function ProductManager({
         </table>
       </div>
 
-      <div className="mb-6 space-y-3 md:hidden">
+      <div className="admin-mobile-select-bar admin-only-mobile">
+        <label className="admin-mobile-select-all">
+          <input
+            type="checkbox"
+            checked={allPageSelected}
+            ref={(el) => {
+              if (el) el.indeterminate = somePageSelected;
+            }}
+            onChange={toggleSelectAllOnPage}
+          />
+          Chọn tất cả trên trang ({pageIds.length})
+        </label>
+      </div>
+
+      <div className="admin-product-mobile-list admin-only-mobile mb-6">
         {pagedProductRows.map((product) => {
           const { stock, variants } = getProductStock(product);
           const displayStatus = resolveDisplayStatus(product);
           const active = form.id === product.id;
+          const isSelected = selectedIds.has(product.id);
           return (
-            <button
+            <div
               key={product.id}
-              type="button"
-              onClick={() => selectProduct(product)}
-              className={`w-full rounded-xl border border-[var(--admin-border)] p-3 text-left ${
-                active ? "bg-[rgba(242,78,53,0.16)]" : "bg-[var(--admin-surface)]"
-              }`}
+              className={`admin-mobile-select-card${isSelected ? " is-selected" : ""}${active ? " is-active" : ""}`}
             >
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <p className="admin-text text-sm font-semibold">{product.name}</p>
-                  <p className="admin-muted text-xs">ID: {product.id}</p>
-                </div>
-                <span
-                  className={`rounded-full px-2 py-0.5 text-xs ${statusBadgeClass(displayStatus)}`}
-                >
-                  {PRODUCT_STATUS_LABELS[displayStatus]}
-                </span>
+              <div className="admin-mobile-select-card__check">
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={() => toggleSelectId(product.id)}
+                  aria-label={`Chọn ${product.name}`}
+                />
               </div>
-              <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
-                <p className="admin-muted">Loại: <span className="admin-text">{product.category}</span></p>
-                <p className="admin-muted">Nhãn hiệu: <span className="admin-text">{product.brand_tag}</span></p>
-                <p className="admin-muted">Tồn kho: <span className="admin-text">{stock}</span></p>
-                <p className="admin-muted">Biến thể: <span className="admin-text">{variants}</span></p>
-                <p className="admin-muted">Giá: <span className="admin-text">{formatCurrency(product.price)}</span></p>
-                <p className="admin-muted">
-                  Ngày tạo:{" "}
-                  <span className="admin-text">
-                    {new Date(product.created_at).toLocaleDateString("vi-VN")}
+              <button
+                type="button"
+                className="admin-mobile-select-card__body"
+                onClick={() => selectProduct(product)}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="admin-text text-sm font-semibold">{product.name}</p>
+                    <p className="admin-muted text-xs">ID: {product.id}</p>
+                  </div>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs ${statusBadgeClass(displayStatus)}`}
+                  >
+                    {PRODUCT_STATUS_LABELS[displayStatus]}
                   </span>
-                </p>
-              </div>
-            </button>
+                </div>
+                <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
+                  <p className="admin-muted">Loại: <span className="admin-text">{product.category}</span></p>
+                  <p className="admin-muted">Nhãn hiệu: <span className="admin-text">{product.brand_tag}</span></p>
+                  <p className="admin-muted">Tồn kho: <span className="admin-text">{stock}</span></p>
+                  <p className="admin-muted">Biến thể: <span className="admin-text">{variants}</span></p>
+                  <p className="admin-muted">Giá: <span className="admin-text">{formatCurrency(product.price)}</span></p>
+                  <p className="admin-muted">
+                    Ngày tạo:{" "}
+                    <span className="admin-text">
+                      {new Date(product.created_at).toLocaleDateString("vi-VN")}
+                    </span>
+                  </p>
+                </div>
+              </button>
+            </div>
           );
         })}
       </div>

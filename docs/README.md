@@ -10,6 +10,8 @@ Central docs for humans and Cursor agents. All repository `.md` files (except th
 | [CONTEXT.md](./CONTEXT.md) | Full project context (Supabase, checkout, admin, history) — Vietnamese + English mix |
 | [PAYOS-SETUP.md](./PAYOS-SETUP.md) | PayOS + Supabase integration setup |
 | [PAYMENT-CHANGES.md](./PAYMENT-CHANGES.md) | Payment / order flow change log |
+| [AUTH-PASSWORD-RESET.md](./AUTH-PASSWORD-RESET.md) | Quên / đặt lại mật khẩu (Supabase redirect URLs) |
+| [2026/05/29-admin-analytics-and-related.md](./2026/05/29-admin-analytics-and-related.md) | Admin Analytics (tracking + phân trang), email đơn, login admin, animation Motto, quên MK |
 | [2026/05/29.md](./2026/05/29.md) | Short session log (2026-05-29) |
 | [2026/05/29-styling-css-modules.md](./2026/05/29-styling-css-modules.md) | CSS Modules migration (Motto + store + footer) |
 
@@ -18,7 +20,8 @@ Central docs for humans and Cursor agents. All repository `.md` files (except th
 1. **New to the repo** — read [PROJECT.md](./PROJECT.md), then [CONTEXT.md](./CONTEXT.md) for backend and checkout.
 2. **Styling work** — read [2026/05/29-styling-css-modules.md](./2026/05/29-styling-css-modules.md) (`styles.*`, one module per component).
 3. **Payments** — [PAYOS-SETUP.md](./PAYOS-SETUP.md) and [PAYMENT-CHANGES.md](./PAYMENT-CHANGES.md).
-4. **After a meaningful change** — append to the relevant doc or add `docs/YYYY/MM/DD-<topic>.md`.
+4. **Admin analytics & related** — [2026/05/29-admin-analytics-and-related.md](./2026/05/29-admin-analytics-and-related.md).
+5. **After a meaningful change** — append to the relevant doc or add `docs/YYYY/MM/DD-<topic>.md`.
 
 ## Quick reference (styling)
 
