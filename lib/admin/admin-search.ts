@@ -1,4 +1,5 @@
 import { ADMIN_VIEW_LABELS, type AdminView } from "@/components/admin/layout/admin-views";
+import { getProductManageCode } from "@/lib/store/product-id";
 import type { DbCoupon, DbOrder, DbProduct, DbUser } from "@/lib/supabase/types";
 
 export type AdminSearchResultKind =
@@ -89,7 +90,7 @@ export function buildAdminSearchResults(
   }
 
   for (const product of data.products) {
-    const haystack = [product.id, product.name, product.brand_tag]
+    const haystack = [product.product_code, product.id, product.name, product.brand_tag]
       .join(" ")
       .toLowerCase();
     if (includesQuery(haystack, q)) {
@@ -97,8 +98,8 @@ export function buildAdminSearchResults(
         id: `product-${product.id}`,
         view: "products",
         kind: "product",
-        label: product.name || `SP #${product.id}`,
-        subtitle: `Mã ${product.id}`,
+        label: product.name || `SP #${getProductManageCode(product)}`,
+        subtitle: `Mã ${getProductManageCode(product)}`,
         focusId: String(product.id),
       });
     }

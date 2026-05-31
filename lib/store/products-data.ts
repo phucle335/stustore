@@ -1,7 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { mapDbProductToDetail } from "@/lib/store/map-product";
-import { canQueryProductIdInDatabase } from "@/lib/store/product-id";
-import { queryAllProducts, queryProductById } from "@/lib/store/product-query";
+import { canQueryProductIdInDatabase, normalizeProductCode } from "@/lib/store/product-id";
+import { queryAllProducts, queryProductByCode, queryProductById } from "@/lib/store/product-query";
 import type { ProductCategory, ProductDetail } from "@/lib/store/types";
 import { createStoreSupabaseClient } from "@/lib/supabase/store-server";
 
@@ -53,6 +53,19 @@ async function fetchProductByIdFromDb(
   return mapRow(data) ?? undefined;
 }
 
+async function fetchProductByCodeFromDb(
+  code: string,
+): Promise<ProductDetail | undefined> {
+  const productCode = normalizeProductCode(code);
+  if (!productCode) return undefined;
+
+  const supabase = createStoreSupabaseClient();
+  const { data, error } = await queryProductByCode(supabase, productCode);
+
+  if (error || !data) return undefined;
+  return mapRow(data) ?? undefined;
+}
+
 /** Đọc trực tiếp từ DB — không phụ thuộc cache danh sách */
 export async function getProductById(
   id: string,
@@ -60,9 +73,17 @@ export async function getProductById(
   const direct = await fetchProductByIdFromDb(id);
   if (direct) return direct;
 
+  const byCode = await fetchProductByCodeFromDb(id);
+  if (byCode) return byCode;
+
   const productId = normalizeProductId(id);
   const products = await getAllProducts();
-  return products.find((product) => String(product.id) === productId);
+  const codeNeedle = normalizeProductCode(productId)?.toLowerCase();
+  return products.find((product) => {
+    if (String(product.id) === productId) return true;
+    if (!codeNeedle || !product.productCode) return false;
+    return product.productCode.toLowerCase() === codeNeedle;
+  });
 }
 
 export async function getAllProductIds(): Promise<string[]> {

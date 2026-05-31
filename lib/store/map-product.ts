@@ -74,6 +74,10 @@ export function mapDbProductToDetail(row: Record<string, unknown>): ProductDetai
 
   return {
     id,
+    productCode:
+      row.product_code == null || String(row.product_code).trim() === ""
+        ? null
+        : String(row.product_code).trim(),
     images,
     imageAlt: name,
     brand: brandTagToDisplay(brandTag),

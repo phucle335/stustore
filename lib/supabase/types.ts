@@ -67,6 +67,8 @@ export type ProductStatus = "selling" | "out_of_stock" | "paused";
 
 export type DbProduct = {
   id: string;
+  /** Mã tự đặt trong admin — dùng tra cứu, URL /products/[code] */
+  product_code?: string | null;
   name: string;
   brand_tag: string;
   category?: StoreProductCategory;
@@ -187,7 +189,7 @@ export type DbFavorite = {
 };
 
 export type CreateProductInput = {
-  id?: string;
+  product_code?: string | null;
   name: string;
   brand_tag: string;
   category: StoreProductCategory;

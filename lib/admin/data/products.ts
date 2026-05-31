@@ -2,6 +2,10 @@ import {
   imageFieldsToDbPayload,
   readImageFieldsFromRow,
 } from "@/lib/admin/product-images";
+import {
+  normalizeProductCode,
+  productCodeValidationMessage,
+} from "@/lib/store/product-id";
 import { isStoreCategory } from "@/lib/store/map-product";
 import { createAdminSupabaseClient } from "@/lib/supabase/server";
 import type {
@@ -14,12 +18,30 @@ import type {
 import {
   PRIMARY_PRODUCT_SELECT,
   queryAllProducts,
+  queryProductByCode,
   queryProductById,
 } from "@/lib/store/product-query";
 import { failure, success, type ActionResult } from "@/lib/admin/result";
 
 const LEGACY_PRODUCT_SELECT =
   "id, name, brand_tag, category, fulfillment_type, price, sale_percent, description, sizes, image_url_1, image_url_2, image_url_3, image_url_4, image_url_5, created_at, updated_at";
+
+function isMissingProductCodeError(message: string): boolean {
+  return (
+    message.includes("product_code") &&
+    (message.includes("column") ||
+      message.includes("schema cache") ||
+      message.includes("does not exist"))
+  );
+}
+
+function isDuplicateProductCodeError(message: string, code?: string): boolean {
+  if (message.includes("products_product_code_unique_idx")) return true;
+  if (message.includes("23505") && code && message.toLowerCase().includes("product_code")) {
+    return true;
+  }
+  return /duplicate key|already exists/i.test(message) && /product_code/i.test(message);
+}
 
 function isMissingProductStatusError(message: string): boolean {
   return (
@@ -66,6 +88,10 @@ function mapProduct(row: Record<string, unknown>): DbProduct | null {
   const images = readImageFieldsFromRow(row);
   return {
     id,
+    product_code:
+      row.product_code == null || String(row.product_code).trim() === ""
+        ? null
+        : String(row.product_code).trim(),
     name: String(row.name ?? ""),
     brand_tag: String(row.brand_tag ?? row.brand ?? "stusport"),
     category: normalizeCategory(row.category),
@@ -92,6 +118,9 @@ function mapProduct(row: Record<string, unknown>): DbProduct | null {
 
 function buildDbRow(input: CreateProductInput | UpdateProductInput) {
   const row: Record<string, unknown> = {};
+  if ("product_code" in input) {
+    row.product_code = normalizeProductCode(input.product_code) ?? null;
+  }
   if ("name" in input && input.name !== undefined) row.name = input.name;
   if ("brand_tag" in input && input.brand_tag !== undefined) {
     row.brand_tag = input.brand_tag;
@@ -160,8 +189,25 @@ export async function createProduct(
   input: CreateProductInput,
 ): Promise<ActionResult<DbProduct>> {
   const supabase = createAdminSupabaseClient();
-  const payload = {
-    ...(input.id ? { id: input.id } : {}),
+  const productCode = normalizeProductCode(input.product_code);
+
+  if (input.product_code?.trim() && !productCode) {
+    return failure(productCodeValidationMessage());
+  }
+
+  if (productCode) {
+    const existing = await queryProductByCode(supabase, productCode);
+    if (existing.error && isMissingProductCodeError(existing.error)) {
+      return failure(
+        "Database chưa có cột product_code. Chạy file supabase/add-product-code.sql trong Supabase SQL Editor.",
+      );
+    }
+    if (existing.data) {
+      return failure(`Mã sản phẩm "${productCode}" đã tồn tại. Vui lòng chọn mã khác.`);
+    }
+  }
+
+  const payload: Record<string, unknown> = {
     name: input.name,
     brand_tag: input.brand_tag,
     category: input.category,
@@ -173,6 +219,11 @@ export async function createProduct(
     sizes: input.sizes ?? [],
     ...imageFieldsToDbPayload(input),
   };
+
+  if (productCode) {
+    payload.product_code = productCode;
+  }
+
   const initialCreate = await supabase
     .from("products")
     .insert(payload)
@@ -193,11 +244,13 @@ export async function createProduct(
   }
 
   if (error) {
-    if (
-      error.code === "23505" ||
-      /duplicate key|already exists|products_pkey/i.test(error.message)
-    ) {
-      return failure("Product ID đã tồn tại. Vui lòng nhập ID khác.");
+    if (productCode && isDuplicateProductCodeError(error.message, productCode)) {
+      return failure(`Mã sản phẩm "${productCode}" đã tồn tại. Vui lòng chọn mã khác.`);
+    }
+    if (productCode && isMissingProductCodeError(error.message)) {
+      return failure(
+        "Database chưa có cột product_code. Chạy file supabase/add-product-code.sql trong Supabase SQL Editor.",
+      );
     }
     return failure(error.message);
   }
@@ -211,6 +264,24 @@ export async function updateProduct(
   input: UpdateProductInput,
 ): Promise<ActionResult<DbProduct>> {
   const supabase = createAdminSupabaseClient();
+
+  if (input.product_code?.trim()) {
+    const productCode = normalizeProductCode(input.product_code);
+    if (!productCode) {
+      return failure(productCodeValidationMessage());
+    }
+
+    const existing = await queryProductByCode(supabase, productCode);
+    if (existing.error && isMissingProductCodeError(existing.error)) {
+      return failure(
+        "Database chưa có cột product_code. Chạy file supabase/add-product-code.sql trong Supabase SQL Editor.",
+      );
+    }
+    if (existing.data && String(existing.data.id) !== id) {
+      return failure(`Mã sản phẩm "${productCode}" đã tồn tại. Vui lòng chọn mã khác.`);
+    }
+  }
+
   const row = buildDbRow(input);
   const initialUpdate = await supabase
     .from("products")
@@ -234,7 +305,18 @@ export async function updateProduct(
     error = retry.error;
   }
 
-  if (error) return failure(error.message);
+  if (error) {
+    const productCode = normalizeProductCode(input.product_code);
+    if (productCode && isDuplicateProductCodeError(error.message, productCode)) {
+      return failure(`Mã sản phẩm "${productCode}" đã tồn tại. Vui lòng chọn mã khác.`);
+    }
+    if (productCode && isMissingProductCodeError(error.message)) {
+      return failure(
+        "Database chưa có cột product_code. Chạy file supabase/add-product-code.sql trong Supabase SQL Editor.",
+      );
+    }
+    return failure(error.message);
+  }
   const product = mapProduct(data as Record<string, unknown>);
   if (!product) return failure("Không đọc được sản phẩm sau cập nhật.");
   return success(product);

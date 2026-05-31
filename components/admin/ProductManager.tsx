@@ -22,8 +22,13 @@ import {
   imageFieldsToArray,
   imageFieldsToDbPayload,
   productToImageFields,
+  type ProductImageFormState,
 } from "@/lib/admin/product-images";
-import type { ProductImageFormState } from "@/lib/admin/product-images";
+import {
+  getProductManageCode,
+  normalizeProductCode,
+  productCodeValidationMessage,
+} from "@/lib/store/product-id";
 import {
   isCategoryWithoutSizes,
   sizesToDbPayload,
@@ -77,7 +82,7 @@ const emptyForm = (): ProductFormState => ({
 function productToForm(product: DbProduct): ProductFormState {
   const category = product.category ?? "sneakers";
   return {
-    product_id: product.id,
+    product_id: product.product_code ?? "",
     id: product.id,
     name: product.name ?? "",
     brand_tag: product.brand_tag ?? "",
@@ -249,8 +254,10 @@ export function ProductManager({
         if (stockFilter === "low_stock" && !(stock > 0 && stock <= 5)) return false;
 
         if (!q) return true;
+        const manageCode = getProductManageCode(p).toLowerCase();
         return (
           p.name.toLowerCase().includes(q) ||
+          manageCode.includes(q) ||
           p.id.toLowerCase().includes(q) ||
           p.brand_tag.toLowerCase().includes(q)
         );
@@ -444,7 +451,7 @@ export function ProductManager({
     | { error: string }
     | {
         payload: {
-          id?: string;
+          product_code?: string | null;
           name: string;
           brand_tag: string;
           category: StoreProductCategory;
@@ -467,14 +474,21 @@ export function ProductManager({
       return { error: "Vui lòng nhập tên, thương hiệu, giá hợp lệ và % sale." };
     }
     const sale_percent = Math.max(0, Math.min(50, salePercentRaw));
-    const customId = form.product_id.trim();
+    const rawCode = form.product_id.trim();
+    const productCode = normalizeProductCode(rawCode);
 
-    if (!form.id && customId) {
-      const duplicated = products.some(
-        (p) => p.id.trim().toLowerCase() === customId.toLowerCase(),
-      );
+    if (rawCode && !productCode) {
+      return { error: productCodeValidationMessage() };
+    }
+
+    if (productCode) {
+      const duplicated = products.some((p) => {
+        if (form.id && p.id === form.id) return false;
+        const existing = p.product_code?.trim().toLowerCase();
+        return existing === productCode.toLowerCase();
+      });
       if (duplicated) {
-        return { error: "Product ID đã tồn tại. Vui lòng nhập ID khác." };
+        return { error: `Mã sản phẩm "${productCode}" đã tồn tại. Vui lòng chọn mã khác.` };
       }
     }
 
@@ -493,7 +507,7 @@ export function ProductManager({
 
     return {
       payload: {
-        id: form.id ? undefined : customId || undefined,
+        product_code: productCode ?? null,
         name: form.name.trim(),
         brand_tag: form.brand_tag.trim().toLowerCase(),
         category: form.category,
@@ -833,7 +847,9 @@ export function ProductManager({
                   <td>
                     <div className="flex flex-col">
                       <strong className="admin-text">{product.name}</strong>
-                      <span className="admin-muted text-xs">ID: {product.id}</span>
+                      <span className="admin-muted text-xs">
+                        Mã: {getProductManageCode(product)}
+                      </span>
                     </div>
                   </td>
                   <td>
@@ -906,7 +922,9 @@ export function ProductManager({
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <p className="admin-text text-sm font-semibold">{product.name}</p>
-                    <p className="admin-muted text-xs">ID: {product.id}</p>
+                    <p className="admin-muted text-xs">
+                      Mã: {getProductManageCode(product)}
+                    </p>
                   </div>
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs ${statusBadgeClass(displayStatus)}`}
@@ -971,16 +989,18 @@ export function ProductManager({
       <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block text-sm admin-text">
-              Product ID (tracking)
+              Mã sản phẩm (Product ID)
               <input
                 value={form.product_id}
                 onChange={(e) =>
                   setForm((current) => ({ ...current, product_id: e.target.value }))
                 }
-                disabled={Boolean(form.id)}
                 className="admin-input mt-1.5"
-                placeholder="ví dụ: f2b2b4b2-...."
+                placeholder="VD: SP001, air-max-01"
               />
+              <span className="mt-1 block text-xs admin-muted">
+                {productCodeValidationMessage()} Có thể để trống — hệ thống vẫn tạo UUID nội bộ.
+              </span>
             </label>
             <label className="block text-sm admin-text">
               Tên sản phẩm
