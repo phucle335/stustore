@@ -19,11 +19,10 @@ export function SiteFooter({ className = "" }: SiteFooterProps) {
             <StusportLogo variant="footer" />
           </p>
           <p className={styles.text}>
-            {STORE_NAME} — Cửa hàng sneaker, streetwear, kính mát và đồng hồ
-            chính hãng.
+            {STORE_NAME} — phân phối Sneaker, Sportswear và phụ kiện chính hãng
           </p>
           <p className={styles.text}>
-            123 Nguyễn Huệ, Quận 1, TP.HCM
+           Online store
             <br />
             0901 234 567
             <br />

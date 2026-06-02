@@ -11,7 +11,7 @@ export function MottoBigIdea() {
           <div>
             <p className={styles.eyebrow}>(Về chúng tôi)</p>
             <MottoReveal as="h2" className={styles.bigIdeaTitle}>
-              <MottoLine>Inspired From</MottoLine>
+              <MottoLine>The Authentic Culture</MottoLine>
               <MottoLine>
                 <MottoLogo
                   className={`${styles.bigIdeaTitleLogo} stusport-logo--title`}
@@ -24,22 +24,20 @@ export function MottoBigIdea() {
               className={`${styles.body} ${styles.bigIdeaLead}`}
               splitLines={false}
             >
-              Sneaker, streetwear, nước hoa và đồng hồ chính hãng — cam kết hàng
-              thật, giao nhanh, đổi trả linh hoạt cho mọi phong cách thể thao.
+              Được vận hành bởi những người trẻ đam mê Street-culture, STUSPORT không chỉ bán hàng chính hãng, chúng tôi mang đến một phong cách sống.
             </MottoReveal>
           </div>
 
           <div>
             <MottoReveal as="h3" className={styles.bigIdeaSub}>
               <MottoLine>
-                Stusport — điểm đến cho sneaker, streetwear và phụ kiện
+              Nền tảng chuyên phân phối Sneaker, Sportswear và phụ kiện chính hãng. Cam kết 100% Authentic, đổi trả linh hoạt 7 ngày.
               </MottoLine>
-              <MottoLine>thể thao chính hãng tại Việt Nam.</MottoLine>
+          
             </MottoReveal>
             <MottoReveal as="p" className={styles.body} splitLines={false}>
-              Từ giày limited đến quần áo training, nước hoa và đồng hồ — mọi
-              sản phẩm đều được tuyển chọn kỹ, cam kết authentic và trải nghiệm
-              mua sắm trọn vẹn.
+            Trải nghiệm giải pháp mua sắm thông minh
+            Đặt trước (Preorder) để tối ưu chi phí, hoặc sở hữu ngay (Hot Stock) các items "on-trend" nhất với cam kết minh bạch và mức giá dễ tiếp cận.
             </MottoReveal>
 
             <p className={`${styles.eyebrow} ${styles.bigIdeaPurpose}`}>

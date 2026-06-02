@@ -12,10 +12,8 @@ import { MottoHero } from "./MottoHero";
 import { MottoInsights } from "./MottoInsights";
 import { MottoLoader } from "./MottoLoader";
 import { MottoMarquee } from "./MottoMarquee";
-import { MottoMethod } from "./MottoMethod";
 import { MottoBetweenBanner } from "./MottoBetweenBanner";
 import { MottoSmoothScroll } from "./MottoSmoothScroll";
-import { MottoTestimonials } from "./MottoTestimonials";
 import { MottoTrusted } from "./MottoTrusted";
 import { MottoWork } from "./MottoWork";
 
@@ -73,8 +71,6 @@ export function MottoHomePage() {
             introText={motto.mottoInsights.introText}
             cards={motto.mottoInsights.cards}
           />
-          <MottoTestimonials />
-          <MottoMethod />
           <MottoAbout />
         </main>
         <SiteFooter className={styles.footerOnMotto} />
