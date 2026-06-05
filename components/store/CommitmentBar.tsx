@@ -2,7 +2,7 @@ import styles from "@/styles/components/store/Header.module.css";
 const COMMITMENTS = [
   { icon: "fa-shield-alt", text: "Cam kết hàng chính hãng" },
   { icon: "fa-truck", text: "Miễn phí giao hàng đơn từ 799k" },
-  { icon: "fa-undo", text: "Miễn phí đổi trả đến 14 ngày" },
+  { icon: "fa-undo", text: "Miễn phí đổi trả đến 7 ngày" },
 ] as const;
 
 export function CommitmentBar() {

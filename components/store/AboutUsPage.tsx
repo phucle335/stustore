@@ -166,7 +166,7 @@ export function AboutUsPage() {
                 <p className={styles.cardLabel}>Tầm nhìn</p>
                 <p className={styles.infoCardText}>
                   <span className={styles.yearHighlight}>2028</span> Trở thành nền
-                  tảng phân phối đồ thể thao chính hãng độc lập hàng đầu tại Việt
+                  tảng phân phối đồ thể thao chính hãng Top 5 tại Việt
                   Nam.
                 </p>
               </div>

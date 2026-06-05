@@ -2,6 +2,8 @@
 export const STATIC_IMAGE_HOSTS = [
   "images.unsplash.com",
   "cdn.coverr.co",
+  "cdn.phototourl.com",
+  "minhshop.vn",
   "assets.storims.com",
   "cdn.storims.com",
   "storage.googleapis.com",

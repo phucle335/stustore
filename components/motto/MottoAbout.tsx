@@ -15,18 +15,18 @@ export function MottoAbout() {
           <div className={styles.aboutCard}>
             <div className={styles.aboutCardMedia}>
               <Image
-                src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80"
-                alt="Showroom Stusport"
+                src="https://cdn.phototourl.com/free/2026-06-05-6255950b-a8fb-43f0-897a-6475a6eb7bae.png"
+                alt="Studio Stusport"
                 fill
                 sizes="(max-width: 767px) 100vw, 50vw"
               />
             </div>
-            <p className={styles.aboutCardLabel}>Showroom TP.HCM</p>
+            <p className={styles.aboutCardLabel}>Studio Stusport</p>
           </div>
           <div className={styles.aboutCard}>
             <div className={styles.aboutCardMedia}>
               <Image
-                src="https://images.unsplash.com/photo-1472851294608-062f824d0981?w=800&q=80"
+                src="https://minhshop.vn/_next/static/media/about-2.fb51b4e0.jpg"
                 alt="Cửa hàng trực tuyến Stusport"
                 fill
                 sizes="(max-width: 767px) 100vw, 50vw"

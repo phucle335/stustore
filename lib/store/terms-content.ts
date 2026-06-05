@@ -46,7 +46,7 @@ export const TERMS_SECTIONS: TermsSection[] = [
     id: "doi-tra",
     title: "5. Đổi trả",
     paragraphs: [
-      "Miễn phí đổi trả trong vòng 14 ngày kể từ ngày nhận hàng đối với sản phẩm còn nguyên tem, chưa qua sử dụng và đủ điều kiện theo chính sách đổi trả.",
+      "Miễn phí đổi trả trong vòng 7 ngày kể từ ngày nhận hàng đối với sản phẩm còn nguyên tem, chưa qua sử dụng và đủ điều kiện theo chính sách đổi trả.",
       "Một số danh mục (nước hoa đã mở seal, sản phẩm giảm giá đặc biệt) có thể không áp dụng đổi trả — sẽ được ghi rõ trên trang sản phẩm.",
       "Chi phí vận chuyển đổi trả do lỗi từ phía chúng tôi sẽ do Stusport chi trả; trường hợp đổi size/mẫu theo nhu cầu cá nhân có thể phát sinh phí ship theo biểu phí hiện hành.",
     ],

@@ -26,7 +26,7 @@ export function SiteFooter({ className = "" }: SiteFooterProps) {
             <br />
             0901 234 567
             <br />
-            support@stusport.vn
+            stusport22@gmail.com
           </p>
         </div>
 
