@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { CartProvider } from "@/components/store/CartProvider";
 import { CustomerAuthProvider } from "@/components/store/CustomerAuthProvider";
 import { ScrollToTop } from "@/components/store/ScrollToTop";
@@ -49,6 +50,7 @@ export default function RootLayout({
             </CartProvider>
           </CustomerAuthProvider>
         </ToastProvider>
+        <Analytics />
       </body>
     </html>
   );
