@@ -55,7 +55,7 @@ const FAQS: Faq[] = [
   {
     question: "How do I earn STU Points?",
     answer:
-      "Earn 1 STU Point for every 60,000 VND spent on eligible purchases. Points are added automatically after order completion.",
+      "Earn 1 STU Point for every 10,000 VND spent on eligible purchases. Points are added automatically after order completion.",
   },
   {
     question: "When do I move up a membership level?",
@@ -111,7 +111,7 @@ export function StuclubMembership() {
           <div>
             <p className={styles.pointLabel}>Point System</p>
             <p className={styles.pointValue}>
-              Earn <strong>1 STU Point</strong> for every <strong>60,000 VND</strong> spent.
+              Earn <strong>1 STU Point</strong> for every <strong>10,000 VND</strong> spent.
             </p>
           </div>
         </div>

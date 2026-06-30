@@ -107,12 +107,11 @@ export function StuclubManager() {
           setMembers(membersResult.data);
           setCouponStats(couponResult.data);
         } else {
-          setError(
-            statsResult.error ??
-              membersResult.error ??
-              couponResult.error ??
-              "Failed to load STUClub data.",
-          );
+          const errors: string[] = [];
+          if (!statsResult.ok) errors.push(statsResult.error);
+          if (!membersResult.ok) errors.push(membersResult.error);
+          if (!couponResult.ok) errors.push(couponResult.error);
+          setError(errors[0] ?? "Failed to load STUClub data.");
         }
       } catch (err) {
         if (!cancelled) {
