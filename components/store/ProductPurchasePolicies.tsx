@@ -20,12 +20,12 @@ const BASE_POLICIES: PolicyItem[] = [
   {
     icon: "fa-truck",
     text: "Free shipping on orders from 799k",
-    detailHref: "#product-policies",
+    detailHref: "/dieu-khoan",
   },
   {
     icon: "fa-undo",
     text: "Free returns within 7 days",
-    detailHref: "#product-description",
+    detailHref: "/chinh-sach-doi-tra",
   },
   {
     icon: "fa-credit-card",
@@ -52,12 +52,12 @@ export function ProductPurchasePolicies({
       {
         icon: "fa-truck",
         text: "Free shipping on orders from 799k",
-        detailHref: "#product-policies",
+        detailHref: "/dieu-khoan",
       },
       {
         icon: "fa-undo",
         text: "Free returns within 7 days",
-        detailHref: "#product-description",
+        detailHref: "/chinh-sach-doi-tra",
       },
       {
         icon: "fa-ruler",
