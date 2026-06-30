@@ -6,6 +6,7 @@ import type { CheckoutPaymentMethod } from "@/lib/store/checkout";
 import { validateCouponForOrder } from "@/lib/store/apply-coupon";
 import { canQueryProductIdInDatabase } from "@/lib/store/product-id";
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
+import { markMemberCouponUsedAction } from "@/lib/stuclub/points-actions";
 
 type CheckoutBody = {
   total_price?: number;
@@ -366,6 +367,34 @@ export async function POST(request: Request) {
   } catch (e) {
     // best-effort; notification doesn't block checkout
     console.warn("[checkout][notification]", e);
+  }
+
+  if (couponCode && orderId) {
+    try {
+      const couponRow = await couponData.getCouponByCode(couponCode);
+      if (couponRow.ok) {
+        const userCouponRes = await supabase
+          .from("user_coupons")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("coupon_id", couponRow.data.id)
+          .eq("status", "available")
+          .maybeSingle();
+
+        const userCoupon = userCouponRes.data;
+        if (userCoupon?.id) {
+          await supabase
+            .from("user_coupons")
+            .update({
+              status: "used",
+              used_at: new Date().toISOString(),
+            })
+            .eq("id", userCoupon.id);
+        }
+      }
+    } catch (e) {
+      console.warn("[checkout][user_coupon]", e);
+    }
   }
 
   return NextResponse.json({

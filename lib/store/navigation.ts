@@ -12,5 +12,6 @@ export const NAV_LINKS: NavLink[] = [
   { id: "clothing", href: "/clothing", label: "Clothing" },
   { id: "sunglasses", href: "/sunglasses", label: "Sunglasses" },
   { id: "watches", href: "/watches", label: "Watches" },
+  { id: "stuclub", href: "/stuclub", label: "STUClub" },
   { id: "blog", href: "/blog", label: "Blog" },
 ];

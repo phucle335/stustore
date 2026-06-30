@@ -18,6 +18,7 @@ import { OrderManager } from "@/components/admin/OrderManager";
 import { ProductManager } from "@/components/admin/ProductManager";
 import { RevenueChart } from "@/components/admin/RevenueChart";
 import { StatCards } from "@/components/admin/StatCards";
+import { StuclubManager } from "@/components/admin/StuclubManager";
 import type { DashboardStats } from "@/lib/admin/stats";
 import type {
   DbCoupon,
@@ -67,6 +68,7 @@ export function AdminDashboardClient({
     "orders",
     "customers",
     "coupons",
+    "stuclub",
     "site_content",
     "blog_cms",
   ];
@@ -275,6 +277,9 @@ export function AdminDashboardClient({
               initialCoupons={coupons}
               filterQuery={searchQuery}
             />
+          ) : null}
+          {view === "stuclub" ? (
+            <StuclubManager />
           ) : null}
           {view === "site_content" ? <SiteContentManager /> : null}
           {view === "blog_cms" ? <BlogPostManager /> : null}

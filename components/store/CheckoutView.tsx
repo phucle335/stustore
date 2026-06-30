@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import Confetti from "react-confetti";
 import { ProductImage } from "@/components/store/ProductImage";
+import { UserCouponModal } from "@/components/store/UserCouponModal";
 import {
   formatPriceVnd,
   getCartTotalVnd,
@@ -69,6 +70,7 @@ export function CheckoutView() {
     orderCode: number | null;
   } | null>(null);
   const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [couponModalOpen, setCouponModalOpen] = useState(false);
   const [expiresAt, setExpiresAt] = useState(0);
   const [nowTs, setNowTs] = useState(() => Math.floor(Date.now() / 1000));
   const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -323,6 +325,12 @@ export function CheckoutView() {
     if (body.data) setAppliedCoupon(body.data);
   }
 
+  function handleApplyCouponFromModal(code: string) {
+    setCouponCode(code);
+    setCouponModalOpen(false);
+    void applyCoupon();
+  }
+
   async function handleConfirmOrder() {
     if (items.length === 0) return;
 
@@ -542,6 +550,13 @@ export function CheckoutView() {
             onClick={() => void applyCoupon()}
           >
             {couponLoading ? "…" : "Apply"}
+          </button>
+          <button
+            type="button"
+            className={styles.checkoutCouponBtn}
+            onClick={() => setCouponModalOpen(true)}
+          >
+            Available Coupons
           </button>
         </div>
         {appliedCoupon ? (
@@ -908,6 +923,11 @@ export function CheckoutView() {
           </div>
         </div>
       ) : null}
+      <UserCouponModal
+        open={couponModalOpen}
+        onClose={() => setCouponModalOpen(false)}
+        onApply={handleApplyCouponFromModal}
+      />
     </div>
     </div>
   );

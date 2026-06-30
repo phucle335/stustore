@@ -5,6 +5,7 @@ export type AdminView =
   | "orders"
   | "customers"
   | "coupons"
+  | "stuclub"
   | "site_content"
   | "blog_cms";
 
@@ -15,6 +16,7 @@ export const ADMIN_VIEW_LABELS: Record<AdminView, string> = {
   orders: "Orders",
   customers: "Customers",
   coupons: "Coupons",
+  stuclub: "STUClub",
   site_content: "Site Content",
   blog_cms: "Blog CMS",
 };

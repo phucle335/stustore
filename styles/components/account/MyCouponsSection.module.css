@@ -1,0 +1,161 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header h2 {
+  margin: 8px 0 0;
+  font-family: "Segoe UI", Tahoma, var(--font-sans), sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--motto-silver);
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tabs button {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--motto-stone-light);
+  background: transparent;
+  color: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.activeTab {
+  background: var(--motto-accent);
+  color: var(--motto-bg);
+  border-color: transparent;
+}
+
+.error {
+  color: #ff9d9d;
+}
+
+.muted {
+  color: var(--motto-ash);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 1.25rem;
+  background: var(--motto-surface);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.code {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.description {
+  margin: 6px 0 0;
+  font-size: 0.95rem;
+  color: var(--motto-ash);
+}
+
+.statusPill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.available {
+  background: color-mix(in srgb, var(--motto-accent) 18%, transparent);
+  color: var(--motto-accent);
+}
+
+.used {
+  background: color-mix(in srgb, var(--motto-silver) 18%, transparent);
+  color: var(--motto-silver);
+}
+
+.expired {
+  background: color-mix(in srgb, #ff9d9d 18%, transparent);
+  color: #ff9d9d;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.details p {
+  margin: 0;
+}
+
+.value {
+  margin: 4px 0 0;
+  font-weight: 700;
+}
+
+.applyButton {
+  margin-top: auto;
+  padding: 12px 16px;
+  border-radius: 0.85rem;
+  border: none;
+  background: var(--motto-accent);
+  color: var(--motto-bg);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.applyButton:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}

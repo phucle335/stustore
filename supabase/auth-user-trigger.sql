@@ -35,6 +35,7 @@ as $$
 declare
   v_email text;
   v_role public.user_role;
+  v_welcome_coupon_id uuid;
 begin
   v_email := lower(trim(coalesce(new.email, new.raw_user_meta_data ->> 'email', '')));
 
@@ -52,11 +53,25 @@ begin
     set
       email = v_email,
       role = v_role,
+      stu_points = coalesce(public.users.stu_points, 0),
+      membership_tier = coalesce(public.users.membership_tier, 'Starter'),
       updated_at = now()
     where id = new.id;
   else
-    insert into public.users (id, email, role)
-    values (new.id, v_email, v_role);
+    insert into public.users (id, email, role, stu_points, membership_tier)
+    values (new.id, v_email, v_role, 0, 'Starter');
+  end if;
+
+  -- Issue WELCOME100 coupon once per user
+  select id into v_welcome_coupon_id
+  from public.coupons
+  where code = 'WELCOME100'
+  limit 1;
+
+  if v_welcome_coupon_id is not null then
+    insert into public.user_coupons (user_id, coupon_id, status)
+    values (new.id, v_welcome_coupon_id, 'available')
+    on conflict (user_id, coupon_id) do nothing;
   end if;
 
   return new;

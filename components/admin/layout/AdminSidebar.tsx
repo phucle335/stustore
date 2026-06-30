@@ -11,6 +11,7 @@ import {
   Users,
   Globe,
   FileText,
+  Crown,
 } from "lucide-react";
 import type { AdminView } from "./admin-views";
 
@@ -69,6 +70,7 @@ const navItems: {
     countKey: "coupons",
     href: "/admin/coupons",
   },
+  { id: "stuclub", label: "STUClub", icon: Crown, href: "/admin/stuclub" },
   { id: "site_content", label: "Site Content", icon: Globe, href: "/admin/site_content" },
   { id: "blog_cms", label: "Blog CMS", icon: FileText, href: "/admin/blog_cms" },
 ];

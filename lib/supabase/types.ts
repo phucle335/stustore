@@ -20,6 +20,12 @@ export type SupportRequestStatus = "open" | "resolved";
 
 export type UserGender = "male" | "female" | "other" | "";
 
+export type MemberTier = "Starter" | "Member" | "Elite";
+
+export type PointsHistoryType = "earned" | "bonus" | "manual_add" | "manual_deduct";
+
+export type UserCouponStatus = "available" | "used" | "expired";
+
 export type DbUser = {
   id: string;
   email: string;
@@ -32,6 +38,8 @@ export type DbUser = {
   personalized_recommendations?: boolean;
   personalized_ads?: boolean;
   role: UserRole;
+  stu_points: number;
+  membership_tier: MemberTier;
   created_at: string;
   updated_at: string;
 };

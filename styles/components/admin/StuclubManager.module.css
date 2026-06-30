@@ -1,0 +1,270 @@
+.admin-stuclub {
+  padding: 20px;
+}
+
+.admin-stuclub-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-stuclub-section {
+  background: var(--motto-surface);
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 1rem;
+  padding: 20px;
+}
+
+.admin-stuclub-section h2 {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.admin-stuclub-section h3,
+.admin-stuclub-section h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.admin-stuclub-error {
+  color: #ff9d9d;
+  font-size: 0.9rem;
+}
+
+.admin-stuclub-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.admin-stat-card {
+  background: color-mix(in srgb, var(--motto-white) 5%, transparent);
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 0.85rem;
+  padding: 16px;
+}
+
+.admin-stat-label {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  color: var(--motto-ash);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.admin-stat-value {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.admin-stuclub-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.admin-stuclub-filters input,
+.admin-stuclub-filters select {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 0.7rem;
+  border: 1px solid var(--motto-stone-light);
+  background: var(--motto-bg);
+  color: var(--motto-white);
+  font-size: 0.9rem;
+}
+
+.admin-stuclub-table-wrap {
+  overflow-x: auto;
+  border-radius: 0.7rem;
+  border: 1px solid var(--motto-stone-light);
+}
+
+.admin-stuclub-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.admin-stuclub-table th {
+  text-align: left;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--motto-white) 6%, transparent);
+  color: var(--motto-ash);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.admin-stuclub-table td {
+  padding: 10px 14px;
+  border-top: 1px solid var(--motto-stone-light);
+  color: var(--motto-white);
+}
+
+.admin-stuclub-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--motto-white) 3%, transparent);
+}
+
+.admin-member-name {
+  margin: 0;
+  font-weight: 600;
+}
+
+.admin-member-email {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--motto-ash);
+}
+
+.admin-tier-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.tier-starter {
+  background: color-mix(in srgb, var(--motto-stone) 30%, transparent);
+  color: var(--motto-stone);
+}
+
+.tier-member {
+  background: color-mix(in srgb, var(--motto-accent) 20%, transparent);
+  color: var(--motto-accent);
+}
+
+.tier-elite {
+  background: linear-gradient(135deg, #ffd700, #ff8c00);
+  color: #1a1a1a;
+}
+
+.admin-stuclub-table button {
+  padding: 5px 12px;
+  border-radius: 0.6rem;
+  border: 1px solid var(--motto-stone-light);
+  background: transparent;
+  color: var(--motto-white);
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.2s ease;
+}
+
+.admin-stuclub-table button:hover {
+  background: color-mix(in srgb, var(--motto-white) 12%, transparent);
+}
+
+.admin-muted {
+  color: var(--motto-ash);
+  font-size: 0.82rem;
+}
+
+.admin-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.admin-detail-email {
+  margin: 4px 0 0;
+  color: var(--motto-ash);
+  font-size: 0.85rem;
+}
+
+.admin-detail-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.admin-detail-grid h4 {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  color: var(--motto-ash);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-status-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.admin-status-available {
+  background: color-mix(in srgb, #4ade80 20%, transparent);
+  color: #4ade80;
+}
+
+.admin-status-used {
+  background: color-mix(in srgb, var(--motto-ash) 20%, transparent);
+  color: var(--motto-ash);
+}
+
+.admin-status-expired {
+  background: color-mix(in srgb, #f87171 20%, transparent);
+  color: #f87171;
+}
+
+.admin-detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--motto-stone-light);
+}
+
+.admin-action-box h4 {
+  margin: 0 0 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.admin-action-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-action-row input,
+.admin-action-row select {
+  flex: 1;
+  min-width: 120px;
+  padding: 7px 10px;
+  border-radius: 0.65rem;
+  border: 1px solid var(--motto-stone-light);
+  background: var(--motto-bg);
+  color: var(--motto-white);
+  font-size: 0.88rem;
+}
+
+.admin-action-row button {
+  padding: 7px 16px;
+  border-radius: 0.65rem;
+  border: none;
+  background: var(--motto-accent);
+  color: var(--motto-bg);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.admin-action-row button:hover {
+  filter: brightness(1.1);
+}

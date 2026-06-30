@@ -5,12 +5,14 @@ import { LivePresenceBar } from "@/components/store/LivePresenceBar";
 import { NAV_LINKS } from "@/lib/store/navigation";
 import { PAGE_ROUTES, STORE_NAME } from "@/lib/store/site";
 import { FooterContact } from "@/components/store/FooterContact";
+import { FooterMembershipCta } from "@/components/home/FooterMembershipCta";
 
 type SiteFooterProps = {
   className?: string;
+  hideMembershipCta?: boolean;
 };
 
-export function SiteFooter({ className = "" }: SiteFooterProps) {
+export function SiteFooter({ className = "", hideMembershipCta = false }: SiteFooterProps) {
   return (
     <footer className={`${styles.footer} ${className}`.trim()}>
       <div className={styles.grid}>
@@ -78,6 +80,8 @@ export function SiteFooter({ className = "" }: SiteFooterProps) {
           </ul>
         </div>
       </div>
+
+      {!hideMembershipCta && <FooterMembershipCta />}
 
       <div className={styles.contactWrap}>
         <h3 className={styles.contactTitle}>Contact</h3>

@@ -5,7 +5,8 @@ export type NavId =
   | "clothing"
   | "bags"
   | "watches"
-  | "blog";
+  | "blog"
+  | "stuclub";
 
 export type ProductCategory = Exclude<NavId, "home" | "blog">;
 

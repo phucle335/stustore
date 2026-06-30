@@ -1,0 +1,283 @@
+.page {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+  background: var(--motto-bg);
+  color: var(--motto-white);
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 32px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: min(100% - 32px, 100%);
+  }
+}
+
+.heading {
+  margin: 0 0 clamp(1.75rem, 4vw, 3rem);
+  font-family: "Segoe UI", Tahoma, var(--font-sans), sans-serif;
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.headingWrap {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(1.75rem, 4vw, 3rem);
+}
+
+.headingActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 12px;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  background: var(--motto-accent);
+  color: var(--motto-bg);
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.primaryButton:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.pointBanner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1.5rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  background: var(--motto-surface);
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 1.25rem;
+}
+
+.pointIconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: color-mix(in srgb, var(--motto-accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--motto-accent) 32%, transparent);
+  border-radius: 0.85rem;
+  color: var(--motto-accent);
+}
+
+.pointIcon {
+  font-size: 1.35rem;
+}
+
+.pointLabel {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--motto-silver);
+}
+
+.pointValue {
+  margin: 0;
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--motto-white);
+}
+
+.tiersGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 1.25rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+@media (max-width: 1024px) {
+  .tiersGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .tiersGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tierCard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 1.1rem;
+  padding: 1.4rem 1.25rem 1.35rem;
+  background: var(--motto-surface);
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 1.35rem;
+  transition: all 0.3s ease;
+}
+
+@media (hover: hover) {
+  .tierCard:hover {
+    border-color: color-mix(in srgb, var(--motto-accent) 45%, transparent);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--motto-accent) 14%, transparent);
+    transform: translateY(-2px);
+  }
+}
+
+.tierHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.tierBadge {
+  width: fit-content;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--motto-accent) 18%, transparent);
+  color: var(--motto-accent);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.tierRequirement {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--motto-ash);
+}
+
+.benefitList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.benefitItem {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 0.6rem;
+  align-items: start;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--motto-ash);
+}
+
+.benefitItem i {
+  margin-top: 0.25rem;
+  color: var(--motto-accent);
+  font-size: 0.75rem;
+}
+
+.faqSection {
+  margin-top: 48px;
+}
+
+.sectionHeading {
+  margin: 0 0 1.25rem;
+  font-family: "Segoe UI", Tahoma, var(--font-sans), sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.faqItem {
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 1.25rem;
+  background: var(--motto-surface);
+  overflow: hidden;
+}
+
+.faqTrigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 64px;
+  padding: 20px 24px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  line-height: 1.7;
+}
+
+@media (hover: hover) {
+  .faqTrigger:hover {
+    background: color-mix(in srgb, var(--motto-white) 4%, transparent);
+  }
+}
+
+.faqChevron {
+  color: var(--motto-silver);
+  transition: transform 0.25s ease;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.faqOpen .faqChevron {
+  transform: rotate(180deg);
+}
+
+.faqPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.faqOpen .faqPanel {
+  grid-template-rows: 1fr;
+}
+
+.faqAnswer {
+  margin: 0;
+  padding: 0 24px 24px;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--motto-ash);
+  min-height: 0;
+}

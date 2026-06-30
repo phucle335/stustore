@@ -1,0 +1,149 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.dialog {
+  width: min(640px, 100%);
+  max-height: min(80vh, 860px);
+  overflow: auto;
+  border-radius: 1.25rem;
+  background: var(--motto-surface);
+  border: 1px solid var(--motto-stone-light);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: var(--motto-ash);
+  font-size: 0.95rem;
+}
+
+.closeButton {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 0.5rem;
+}
+
+.closeButton:hover {
+  background: color-mix(in srgb, var(--motto-white) 12%, transparent);
+}
+
+.error {
+  color: #ff9d9d;
+}
+
+.muted {
+  color: var(--motto-ash);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 1rem;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.code {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.description {
+  margin: 6px 0 0;
+  color: var(--motto-ash);
+  font-size: 0.95rem;
+}
+
+.pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.available {
+  background: color-mix(in srgb, var(--motto-accent) 18%, transparent);
+  color: var(--motto-accent);
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.meta p {
+  margin: 0;
+}
+
+.value {
+  margin: 4px 0 0;
+  font-weight: 700;
+}
+
+.applyButton {
+  align-self: flex-end;
+  padding: 10px 16px;
+  border-radius: 0.85rem;
+  border: none;
+  background: var(--motto-accent);
+  color: var(--motto-bg);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.applyButton:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .meta {
+    grid-template-columns: 1fr;
+  }
+}

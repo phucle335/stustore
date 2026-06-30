@@ -1,0 +1,115 @@
+/* TierBadge */
+.stuclub-tier-badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.tier-starter {
+  background: color-mix(in srgb, var(--motto-stone) 25%, transparent);
+  color: var(--motto-stone);
+  border: 1px solid color-mix(in srgb, var(--motto-stone) 40%, transparent);
+}
+
+.tier-member {
+  background: color-mix(in srgb, var(--motto-accent) 18%, transparent);
+  color: var(--motto-accent);
+  border: 1px solid color-mix(in srgb, var(--motto-accent) 35%, transparent);
+}
+
+.tier-elite {
+  background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+  color: #1a1a1a;
+  border: 1px solid rgba(255, 215, 0, 0.5);
+}
+
+/* ProgressBar */
+.stuclub-progress {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stuclub-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.stuclub-progress-tier {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--motto-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.stuclub-progress-points {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--motto-white);
+}
+
+.stuclub-progress-next {
+  font-weight: 400;
+  color: var(--motto-ash);
+  font-size: 0.82rem;
+}
+
+.stuclub-progress-track {
+  width: 100%;
+  height: 8px;
+  background: color-mix(in srgb, var(--motto-stone) 20%, transparent);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.stuclub-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--motto-accent), color-mix(in srgb, var(--motto-accent) 70%, #ffd700));
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.stuclub-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--motto-ash);
+}
+
+/* PointsDisplay */
+.stuclub-points-display {
+  padding: 20px;
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--motto-white) 4%, transparent);
+}
+
+.stuclub-points-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stuclub-points-label {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--motto-ash);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.stuclub-points-value {
+  margin: 6px 0 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--motto-white);
+  line-height: 1;
+}

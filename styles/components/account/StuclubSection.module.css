@@ -1,0 +1,175 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header h2 {
+  margin: 8px 0 0;
+  font-family: "Segoe UI", Tahoma, var(--font-sans), sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--motto-silver);
+}
+
+.badge {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--motto-accent) 18%, transparent);
+  color: var(--motto-accent);
+  font-weight: 700;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  padding: 20px;
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 1.25rem;
+  background: var(--motto-surface);
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.label {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  color: var(--motto-silver);
+}
+
+.points {
+  margin: 0 0 8px;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+}
+
+.muted {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--motto-ash);
+}
+
+.progressTrack {
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--motto-white) 12%, transparent);
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--motto-accent);
+  transition: width 0.4s ease;
+}
+
+.benefits {
+  padding: 20px;
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 1.25rem;
+  background: var(--motto-surface);
+}
+
+.benefits h3 {
+  margin: 0 0 16px;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.benefits ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.benefits li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 12px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--motto-ash);
+}
+
+.benefits li::before {
+  content: "✓";
+  color: var(--motto-accent);
+  font-weight: 700;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.tableWrap {
+  border: 1px solid var(--motto-stone-light);
+  border-radius: 1.25rem;
+  background: var(--motto-surface);
+  overflow: auto;
+}
+
+.tableWrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.tableWrap th,
+.tableWrap td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--motto-stone-light);
+}
+
+.tableWrap th {
+  font-weight: 600;
+  color: var(--motto-silver);
+}
+
+.tableWrap td {
+  color: var(--motto-ash);
+}
+
+.tableWrap tbody tr:last-child td {
+  border-bottom: none;
+}

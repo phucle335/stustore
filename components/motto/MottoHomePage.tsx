@@ -4,6 +4,7 @@ import "@/styles/motto/tokens.css";
 import styles from "@/styles/components/motto/MottoHomePage.module.css";
 import { useCallback, useEffect, useState } from "react";
 import { SiteFooter } from "@/components/home/SiteFooter";
+import { FooterMembershipCta } from "@/components/home/FooterMembershipCta";
 import { useSiteContent } from "@/lib/site-content/useSiteContent";
 import { MottoAbout } from "./MottoAbout";
 import { MottoBigIdea } from "./MottoBigIdea";
@@ -56,19 +57,20 @@ export function MottoHomePage() {
       <div className={`${styles.app} ${entered ? styles.appEntered : ""}`}>
         {!entered && <MottoLoader onComplete={onLoaderComplete} />}
         <MottoHeader theme="light" />
-        <main id="main">
-          <MottoHero
-            ready={entered}
-            slides={motto.mottoHeroSlides}
-            rotatingWords={motto.homeRotatingWords}
-          />
-          <MottoMarquee items={motto.mottoMarqueeItems} />
-          <MottoBigIdea />
-          <MottoTrusted />
-          <MottoWork />
-          <BlogSection />
-        </main>
-        <SiteFooter className={styles.footerOnMotto} />
+      <main id="main">
+        <MottoHero
+          ready={entered}
+          slides={motto.mottoHeroSlides}
+          rotatingWords={motto.homeRotatingWords}
+        />
+        <MottoMarquee items={motto.mottoMarqueeItems} />
+        <MottoBigIdea />
+        <MottoTrusted />
+        <MottoWork />
+        <BlogSection />
+      </main>
+      <FooterMembershipCta />
+      <SiteFooter className={styles.footerOnMotto} />
       </div>
     </MottoSmoothScroll>
   );

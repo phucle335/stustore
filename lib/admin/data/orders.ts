@@ -1,4 +1,5 @@
 import { createAdminSupabaseClient } from "@/lib/supabase/server";
+import { awardPointsForOrder } from "@/lib/stuclub/coupon-rewards";
 import type {
   CreateOrderInput,
   DbOrder,
@@ -193,11 +194,41 @@ export async function updateOrderStatus(
   }
 
   const supabase = createAdminSupabaseClient();
+
+  const { data: existingOrders, error: fetchError } = await supabase
+    .from("orders")
+    .select("id, status, user_id, subtotal")
+    .in("id", uniqueIds);
+
+  if (fetchError) {
+    return failure(fetchError.message);
+  }
+
+  const orderMetaById = new Map<string, { userId: string | null; subtotal: number | null; previousStatus: OrderStatus }>();
+  for (const row of existingOrders ?? []) {
+    orderMetaById.set(row.id, {
+      userId: row.user_id,
+      subtotal: row.subtotal != null ? Number(row.subtotal) : null,
+      previousStatus: row.status,
+    });
+  }
+
   const { error } = await supabase
     .from("orders")
     .update({ status })
     .in("id", uniqueIds);
 
   if (error) return failure(error.message);
+
+  if (status === "completed" || status === "delivered") {
+    for (const id of uniqueIds) {
+      const meta = orderMetaById.get(id);
+      if (!meta || !meta.userId || meta.subtotal == null) continue;
+      if (meta.previousStatus === "completed" || meta.previousStatus === "delivered") continue;
+
+      await awardPointsForOrder(meta.userId, id, meta.subtotal);
+    }
+  }
+
   return success({ ids: uniqueIds, count: uniqueIds.length });
 }

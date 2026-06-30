@@ -4,7 +4,9 @@ export type MemberSectionId =
   | "favorites"
   | "profile"
   | "password"
-  | "preferences";
+  | "preferences"
+  | "stuclub"
+  | "my-coupons";
 
 export type MemberAccountSection = {
   id: MemberSectionId;
@@ -13,7 +15,9 @@ export type MemberAccountSection = {
 
 export const MEMBER_ACCOUNT_SECTIONS: readonly MemberAccountSection[] = [
   { id: "orders", label: "Order History" },
+  { id: "stuclub", label: "STUClub" },
   { id: "coupons", label: "Coupons" },
+  { id: "my-coupons", label: "My Coupons" },
   { id: "favorites", label: "Favorites" },
   { id: "profile", label: "Edit Profile" },
   { id: "password", label: "Change Password" },

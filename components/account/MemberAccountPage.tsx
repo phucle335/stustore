@@ -22,6 +22,8 @@ import {
   parseMemberSectionId,
   type MemberSectionId,
 } from "@/lib/account/member-sections";
+import { StuclubSection } from "@/components/account/StuclubSection";
+import { MyCouponsSection } from "@/components/account/MyCouponsSection";
 
 const statusLabel: Record<string, string> = {
   pending: "Pending",
@@ -531,6 +533,9 @@ export function MemberAccountPage({
               ) : null}
             </div>
           ) : null}
+
+          {section === "stuclub" ? <StuclubSection /> : null}
+          {section === "my-coupons" ? <MyCouponsSection /> : null}
 
           {section === "favorites" ? (
             <div>
