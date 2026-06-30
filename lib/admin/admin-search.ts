@@ -26,6 +26,7 @@ const VIEW_KEYWORDS: Record<AdminView, string[]> = {
   orders: ["order"],
   customers: ["customer", "user"],
   coupons: ["coupon", "voucher"],
+  stuclub: ["stuclub", "club", "loyalty"],
   site_content: ["site", "content"],
   blog_cms: ["blog", "cms"],
 };
