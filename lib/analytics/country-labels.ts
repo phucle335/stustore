@@ -1,26 +1,26 @@
 const COUNTRY_NAMES: Record<string, string> = {
-  VN: "Việt Nam",
-  US: "Hoa Kỳ",
+  VN: "Vietnam",
+  US: "United States",
   SG: "Singapore",
-  TH: "Thái Lan",
-  JP: "Nhật Bản",
-  KR: "Hàn Quốc",
-  CN: "Trung Quốc",
-  TW: "Đài Loan",
-  HK: "Hồng Kông",
+  TH: "Thailand",
+  JP: "Japan",
+  KR: "South Korea",
+  CN: "China",
+  TW: "Taiwan",
+  HK: "Hong Kong",
   MY: "Malaysia",
   ID: "Indonesia",
   PH: "Philippines",
-  AU: "Úc",
-  GB: "Anh",
-  FR: "Pháp",
-  DE: "Đức",
+  AU: "Australia",
+  GB: "United Kingdom",
+  FR: "France",
+  DE: "Germany",
   CA: "Canada",
-  IN: "Ấn Độ",
+  IN: "India",
 };
 
 export function countryLabel(code: string | null | undefined): string {
-  if (!code) return "Không xác định";
+  if (!code) return "Unknown";
   const upper = code.trim().toUpperCase();
   return COUNTRY_NAMES[upper] ?? upper;
 }

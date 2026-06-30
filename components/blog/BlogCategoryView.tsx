@@ -15,11 +15,11 @@ export function BlogCategoryView({ category, posts }: BlogCategoryViewProps) {
       <header className={styles.blogCategoryPageHead}>
         <Link href="/blog" className={styles.blogPostBack}>
           <i className="fas fa-arrow-left" aria-hidden="true" />
-          Quay lại Blog
+          Back to Blog
         </Link>
         <h1 className={styles.blogSectionTitle}>{category.label}</h1>
         <p className={styles.blogCategoryPageCount}>
-          {posts.length} bài viết
+          {posts.length} articles
         </p>
       </header>
 

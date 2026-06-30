@@ -24,12 +24,12 @@ import {
 } from "@/lib/account/member-sections";
 
 const statusLabel: Record<string, string> = {
-  pending: "Chờ xử lý",
-  confirmed: "Đã xác nhận",
-  processing: "Đang xử lý",
-  shipped: "Đang giao",
-  delivered: "Đã giao",
-  cancelled: "Đã hủy",
+  pending: "Pending",
+  confirmed: "Confirmed",
+  processing: "Processing",
+  shipped: "Shipping",
+  delivered: "Delivered",
+  cancelled: "Cancelled",
 };
 
 type MemberAccountPageProps = {
@@ -103,7 +103,7 @@ export function MemberAccountPage({
         ),
       );
       if (!profileRes.ok) {
-        setError(profileBody.error ?? "Không tải được hồ sơ.");
+        setError(profileBody.error ?? "Could not load profile.");
       }
     }
 
@@ -162,11 +162,11 @@ export function MemberAccountPage({
       error?: string;
     };
     if (!res.ok) {
-      setError(body.error ?? "Không lưu được hồ sơ.");
+      setError(body.error ?? "Could not save profile.");
       return;
     }
     if (body.data) setProfile(body.data);
-    setMessage("Đã cập nhật hồ sơ.");
+    setMessage("Profile updated.");
     await refreshProfile();
   }
 
@@ -191,11 +191,11 @@ export function MemberAccountPage({
       error?: string;
     };
     if (!res.ok) {
-      setError(body.error ?? "Không lưu được cài đặt.");
+      setError(body.error ?? "Could not save preferences.");
       return;
     }
     if (body.data) setProfile(body.data);
-    setMessage("Đã lưu cài đặt.");
+    setMessage("Preferences saved.");
   }
 
   async function changePassword(event: React.FormEvent) {
@@ -204,11 +204,11 @@ export function MemberAccountPage({
     setMessage(null);
 
     if (passwordForm.newPassword.length < 6) {
-      setError("Mật khẩu mới tối thiểu 6 ký tự.");
+      setError("New password must be at least 6 characters.");
       return;
     }
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      setError("Mật khẩu xác nhận không khớp.");
+      setError("Passwords do not match.");
       return;
     }
 
@@ -222,7 +222,7 @@ export function MemberAccountPage({
       return;
     }
 
-    setMessage("Đã đổi mật khẩu.");
+    setMessage("Password changed.");
     setPasswordForm({ newPassword: "", confirmPassword: "" });
   }
 
@@ -231,7 +231,7 @@ export function MemberAccountPage({
     setError(null);
     const subtotal = Number(couponSubtotal);
     if (!couponCode.trim() || !Number.isFinite(subtotal) || subtotal <= 0) {
-      setError("Nhập mã và tổng đơn thử (đ) hợp lệ.");
+      setError("Enter a valid code and order subtotal.");
       return;
     }
 
@@ -247,12 +247,12 @@ export function MemberAccountPage({
     };
 
     if (!res.ok) {
-      setError(body.error ?? "Mã không hợp lệ.");
+      setError(body.error ?? "Invalid coupon code.");
       return;
     }
 
     setCouponResult(
-      `Mã ${body.data?.code}: giảm ${formatPriceVnd(body.data?.discount_amount ?? 0)}, còn ${formatPriceVnd(body.data?.final_total ?? 0)}.`,
+      `Code ${body.data?.code}: -${formatPriceVnd(body.data?.discount_amount ?? 0)}, final total ${formatPriceVnd(body.data?.final_total ?? 0)}.`,
     );
   }
 
@@ -286,8 +286,8 @@ export function MemberAccountPage({
             className="stusport-logo--compact"
           />
         </div>
-        <h1>Tư cách thành viên</h1>
-        <p>Xin chào, {user?.display_name ?? "thành viên"}</p>
+        <h1>My Account</h1>
+        <p>Hello, {user?.display_name ?? "member"}</p>
       </div>
 
       <div className={styles.memberLayout}>
@@ -312,17 +312,17 @@ export function MemberAccountPage({
           {error ? <p className={styles.memberError}>{error}</p> : null}
 
           {sectionLoading ? (
-            <p className={styles.memberMuted}>Đang tải…</p>
+            <p className={styles.memberMuted}>Loading…</p>
           ) : null}
 
           {section === "orders" && !ordersLoading ? (
             <div>
-              <h2>Lịch sử mua hàng</h2>
+              <h2>Order History</h2>
               <p className={styles.memberSectionIntro}>
-                Xem các đơn hàng bạn đã đặt trên Stusport.
+                View your past orders on Stusport.
               </p>
               {orders.length === 0 ? (
-                <p className={styles.memberMuted}>Chưa có đơn hàng.</p>
+                <p className={styles.memberMuted}>No orders yet.</p>
               ) : (
                 <>
                   <ul className={styles.memberOrderList}>
@@ -356,18 +356,18 @@ export function MemberAccountPage({
                         {new Date(order.created_at).toLocaleString("vi-VN")}
                       </p>
                       {order.coupon_code ? (
-                        <p className={styles.memberMuted}>Mã: {order.coupon_code}</p>
+                        <p className={styles.memberMuted}>Code: {order.coupon_code}</p>
                       ) : null}
                       <p className={styles.memberOrderTotal}>
                         {formatPriceVnd(Number(order.total_price))}
                         {order.discount_amount
-                          ? ` (đã giảm ${formatPriceVnd(Number(order.discount_amount))})`
+                          ? ` (saved ${formatPriceVnd(Number(order.discount_amount))})`
                           : ""}
                       </p>
                       <p className={styles.memberMuted}>
-                        Đã cọc: {formatPriceVnd(Number(order.deposit_amount ?? 0))}
+                        Deposit: {formatPriceVnd(Number(order.deposit_amount ?? 0))}
                         {Number(order.remaining_amount ?? 0) > 0
-                          ? ` · Còn lại: ${formatPriceVnd(Number(order.remaining_amount ?? 0))}`
+                          ? ` · Remaining: ${formatPriceVnd(Number(order.remaining_amount ?? 0))}`
                           : ""}
                       </p>
                       <button
@@ -379,29 +379,29 @@ export function MemberAccountPage({
                           )
                         }
                       >
-                        {isExpanded ? "Ẩn chi tiết đơn" : "Chi tiết đơn"}
+                        {isExpanded ? "Hide details" : "View details"}
                       </button>
 
                       {isExpanded ? (
                         <div className={styles.memberOrderDetail}>
                           <p className={styles.memberOrderItemLine}>
-                            Trạng thái:{" "}
+                            Status:{" "}
                             <strong>{statusLabel[order.status] ?? order.status}</strong>
                           </p>
                           <p className={styles.memberOrderItemLine}>
-                            Tổng tiền: <strong>{formatPriceVnd(Number(order.total_price))}</strong>
+                            Total: <strong>{formatPriceVnd(Number(order.total_price))}</strong>
                           </p>
                           <p className={styles.memberOrderItemLine}>
-                            Địa chỉ giao:{" "}
+                            Delivery address:{" "}
                             {order.shipping_address
                               ? String(order.shipping_address)
-                              : "Chưa có"}
+                              : "None"}
                           </p>
                           <p className={styles.memberOrderItemLine}>
-                            Người nhận:{" "}
+                            Recipient:{" "}
                             {order.shipping_full_name
                               ? String(order.shipping_full_name)
-                              : "Chưa có"}
+                              : "None"}
                             {order.shipping_phone
                               ? ` · ${String(order.shipping_phone)}`
                               : ""}
@@ -448,13 +448,13 @@ export function MemberAccountPage({
                           })}
                           {orderItems.length > 5 ? (
                             <li className={`${styles.memberOrderItemsMore} ${styles.memberMuted}`}>
-                              +{orderItems.length - 5} sản phẩm khác
+                              +{orderItems.length - 5} more items
                             </li>
                           ) : null}
                         </ul>
                       ) : !isExpanded ? (
                         <p className={styles.memberMuted} style={{ marginTop: 10 }}>
-                          Chưa có mô tả sản phẩm trong đơn.
+                          No item details in this order.
                         </p>
                       ) : null}
                     </li>
@@ -465,7 +465,7 @@ export function MemberAccountPage({
                   {orders.length > ORDERS_PAGE_SIZE ? (
                     <div className={styles.memberOrdersPager}>
                       <p className={styles.memberMuted}>
-                        Trang {ordersPage}/{ordersTotalPages} · {orders.length} đơn
+                        Page {ordersPage}/{ordersTotalPages} · {orders.length} orders
                       </p>
                       <div className={styles.memberOrdersPagerActions}>
                         <button
@@ -474,7 +474,7 @@ export function MemberAccountPage({
                           disabled={ordersPage <= 1}
                           onClick={() => setOrdersPage((p) => Math.max(1, p - 1))}
                         >
-                          Trang trước
+                          Previous
                         </button>
                         <button
                           type="button"
@@ -484,7 +484,7 @@ export function MemberAccountPage({
                             setOrdersPage((p) => Math.min(ordersTotalPages, p + 1))
                           }
                         >
-                          Trang sau
+                          Next
                         </button>
                       </div>
                     </div>
@@ -495,27 +495,27 @@ export function MemberAccountPage({
           ) : null}
 
           {section === "orders" && ordersLoading ? (
-            <p className={styles.memberMuted}>Đang tải đơn hàng…</p>
+            <p className={styles.memberMuted}>Loading orders…</p>
           ) : null}
 
           {section === "coupons" ? (
             <div>
-              <h2>Phiếu giảm giá</h2>
+              <h2>Coupons</h2>
               <p className={styles.memberMuted}>
-                Nhập mã khi thanh toán hoặc kiểm tra mã tại đây.
+                Enter your code at checkout or test it here.
               </p>
               <div className={styles.memberCouponBox}>
                 <input
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                  placeholder="Mã phiếu (VD: STU10)"
+                  placeholder="Coupon code (e.g. STU10)"
                   className={styles.memberInput}
                 />
                 <input
                   type="number"
                   value={couponSubtotal}
                   onChange={(e) => setCouponSubtotal(e.target.value)}
-                  placeholder="Tổng đơn thử (đ)"
+                  placeholder="Order subtotal"
                   className={styles.memberInput}
                 />
                 <button
@@ -523,7 +523,7 @@ export function MemberAccountPage({
                   className={styles.memberBtn}
                   onClick={() => void validateCoupon()}
                 >
-                  Kiểm tra mã
+                  Test code
                 </button>
               </div>
               {couponResult ? (
@@ -534,9 +534,9 @@ export function MemberAccountPage({
 
           {section === "favorites" ? (
             <div>
-              <h2>Yêu thích</h2>
+              <h2>Favorites</h2>
               {favorites.length === 0 ? (
-                <p className={styles.memberMuted}>Chưa có sản phẩm yêu thích.</p>
+                <p className={styles.memberMuted}>No favorites yet.</p>
               ) : (
                 <ul className={styles.memberFavGrid}>
                   {favorites.map((productId) => {
@@ -559,7 +559,7 @@ export function MemberAccountPage({
                           className={styles.memberLinkBtn}
                           onClick={() => void removeFavorite(productId)}
                         >
-                          Bỏ yêu thích
+                          Remove
                         </button>
                       </li>
                     );
@@ -571,15 +571,14 @@ export function MemberAccountPage({
 
           {section === "profile" && !sectionLoading ? (
             <form onSubmit={saveProfile}>
-              <h2>Chỉnh sửa hồ sơ</h2>
+              <h2>Edit Profile</h2>
               <p className={styles.memberSectionIntro}>
-                Cập nhật thông tin giao hàng. <strong>Địa chỉ là bắt buộc</strong>{" "}
-                trước khi thanh toán; họ tên, số điện thoại, ngày sinh và giới
-                tính là tuỳ chọn.
+                Update your delivery information. <strong>Address is required</strong>{" "}
+                before checkout; name, phone, date of birth, and gender are optional.
               </p>
               <p className={styles.memberMuted}>Email: {displayProfile.email}</p>
               <label className={styles.memberField}>
-                Họ và tên
+                Full Name
                 <input
                   className={styles.memberInput}
                   value={displayProfile.full_name ?? ""}
@@ -592,11 +591,11 @@ export function MemberAccountPage({
                 />
               </label>
               <label className={styles.memberField}>
-                Địa chỉ giao hàng *
+                Delivery Address *
                 <textarea
                   required
                   className={`${styles.memberInput} ${styles.memberTextarea}`}
-                  placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành"
+                  placeholder="Street, ward, district, city"
                   value={displayProfile.address}
                   onChange={(e) =>
                     setProfile((p) => ({
@@ -607,7 +606,7 @@ export function MemberAccountPage({
                 />
               </label>
               <label className={styles.memberField}>
-                Số điện thoại
+                Phone Number
                 <input
                   className={styles.memberInput}
                   type="tel"
@@ -622,7 +621,7 @@ export function MemberAccountPage({
                 />
               </label>
               <label className={styles.memberField}>
-                Ngày sinh (tuỳ chọn)
+                Date of Birth (optional)
                 <input
                   type="date"
                   className={styles.memberInput}
@@ -636,7 +635,7 @@ export function MemberAccountPage({
                 />
               </label>
               <label className={styles.memberField}>
-                Giới tính (tuỳ chọn)
+                Gender (optional)
                 <select
                   className={styles.memberInput}
                   value={displayProfile.gender}
@@ -647,23 +646,23 @@ export function MemberAccountPage({
                     }))
                   }
                 >
-                  <option value="">Không chọn</option>
-                  <option value="male">Nam</option>
-                  <option value="female">Nữ</option>
-                  <option value="other">Khác</option>
+                  <option value="">Prefer not to say</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
                 </select>
               </label>
               <button type="submit" className={styles.memberBtn}>
-                Lưu hồ sơ
+                Save Profile
               </button>
             </form>
           ) : null}
 
           {section === "password" && !sectionLoading ? (
             <form onSubmit={changePassword}>
-              <h2>Đổi mật khẩu</h2>
+              <h2>Change Password</h2>
               <label className={styles.memberField}>
-                Mật khẩu mới
+                New Password
                 <input
                   type="password"
                   required
@@ -679,7 +678,7 @@ export function MemberAccountPage({
                 />
               </label>
               <label className={styles.memberField}>
-                Xác nhận mật khẩu
+                Confirm Password
                 <input
                   type="password"
                   required
@@ -695,17 +694,16 @@ export function MemberAccountPage({
                 />
               </label>
               <button type="submit" className={styles.memberBtn}>
-                Cập nhật mật khẩu
+                Update Password
               </button>
             </form>
           ) : null}
 
           {section === "preferences" && !sectionLoading ? (
             <form onSubmit={savePreferences}>
-              <h2>Cài đặt tuỳ chọn</h2>
+              <h2>Preferences</h2>
               <p className={styles.memberSectionIntro}>
-                Chọn những gì bạn muốn nhận từ Stusport. Bạn có thể bật/tắt bất
-                cứ lúc nào.
+                Choose what you want to receive from Stusport. You can toggle these at any time.
               </p>
               <div className={styles.memberPrefList}>
                 <label className={styles.memberCheck}>
@@ -720,8 +718,8 @@ export function MemberAccountPage({
                     }
                   />
                   <span>
-                    <strong>Bản tin Stusport</strong> — Nhận email về sản phẩm
-                    mới, ưu đãi và tin tức từ Stusport.
+                    <strong>Stusport Newsletter</strong> — Receive emails about new products,
+                    deals, and news from Stusport.
                   </span>
                 </label>
                 <label className={styles.memberCheck}>
@@ -736,8 +734,8 @@ export function MemberAccountPage({
                     }
                   />
                   <span>
-                    <strong>Đề xuất cá nhân hoá</strong> — Muốn thấy gợi ý sản
-                    phẩm phù hợp khi duyệt website Stusport.
+                    <strong>Personalized Recommendations</strong> — See product suggestions
+                    tailored to you while browsing Stusport.
                   </span>
                 </label>
                 <label className={styles.memberCheck}>
@@ -752,13 +750,12 @@ export function MemberAccountPage({
                     }
                   />
                   <span>
-                    <strong>Quảng cáo cá nhân hoá</strong> — Muốn thấy quảng
-                    cáo Stusport phù hợp trên các website đối tác khác.
+                    <strong>Personalized Ads</strong> — See relevant Stusport ads on partner websites.
                   </span>
                 </label>
               </div>
               <button type="submit" className={styles.memberBtn}>
-                Lưu cài đặt
+                Save Preferences
               </button>
             </form>
           ) : null}

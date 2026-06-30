@@ -7,7 +7,7 @@ import SuccessClient from "./success-client";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Thanh toán thành công | Stusport",
+  title: "Checkout Successful | Stusport",
 };
 
 export default function CheckoutSuccessPage() {

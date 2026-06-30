@@ -8,12 +8,12 @@ export default function BlogPostNotFound() {
       <section
         className={`${styles.blogPage} ${styles.blogPageNotFound}`}
       >
-        <h1 className={styles.blogPageTitle}>Không tìm thấy bài viết</h1>
+        <h1 className={styles.blogPageTitle}>Post Not Found</h1>
         <p className={styles.blogPageSubtitle}>
-          Bài viết có thể đã bị gỡ hoặc đường dẫn không đúng.
+          This post may have been removed or the link is incorrect.
         </p>
         <Link href="/blog" className="product-detail-add-btn">
-          Về danh sách Blog
+          Back to Blog List
         </Link>
       </section>
     </StoreShell>

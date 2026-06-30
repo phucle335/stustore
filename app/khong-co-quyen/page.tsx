@@ -8,7 +8,7 @@ import { StoreShell } from "@/components/store/StoreShell";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Không có quyền truy cập | Stusport",
+  title: "Access Denied | Stusport",
   robots: { index: false, follow: false },
 };
 

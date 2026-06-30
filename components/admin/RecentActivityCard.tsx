@@ -5,11 +5,11 @@ export function RecentActivityCard() {
     <section className="admin-card">
       <div className="mb-4 flex items-center justify-between gap-2">
         <div>
-          <h2 className="admin-card-title">Hoạt động gần đây</h2>
-          <p className="admin-card-sub">Cập nhật mới nhất từ cửa hàng</p>
+          <h2 className="admin-card-title">Recent Activity</h2>
+          <p className="admin-card-sub">Latest updates from the store</p>
         </div>
         <button type="button" className="admin-btn">
-          Xem tất cả
+          View All
         </button>
       </div>
       <ul className="admin-activity-list">

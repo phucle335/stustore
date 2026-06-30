@@ -20,19 +20,19 @@ export function ForbiddenMessage() {
           className="stusport-logo--compact"
         />
       </div>
-      <h1>Bạn không được cấp phép</h1>
+      <h1>Access denied</h1>
       <p>
         {isAdmin
-          ? "Tài khoản của bạn không có quyền quản trị. Chỉ admin mới vào được trang quản lý."
-          : "Bạn không có quyền xem nội dung này."}
+          ? "Your account does not have admin privileges. Only admins can access the management dashboard."
+          : "You are not authorized to view this content."}
       </p>
       <div className={styles.forbiddenPageActions}>
         <Link href="/" className={styles.storeBtnPrimary}>
-          Về trang chủ
+          Back to home
         </Link>
         {isAdmin ? (
           <Link href="/login" className={styles.forbiddenPageLink}>
-            Đăng nhập admin khác
+            Sign in with a different admin account
           </Link>
         ) : null}
       </div>

@@ -41,7 +41,7 @@ export async function resolveSupportRequestAction(
       },
       {
         type: "support_request",
-        title: "Yêu cầu hỗ trợ đã được xử lý",
+        title: "Support request resolved",
         body: result.data.message,
         entityType: "support_request",
         entityId: id,

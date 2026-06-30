@@ -7,7 +7,7 @@ import { LoginForm } from "@/components/admin/LoginForm";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Đăng nhập Admin | Stusport",
+  title: "Admin Login | Stusport",
 };
 
 export default function LoginPage() {

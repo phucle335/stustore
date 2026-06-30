@@ -2,7 +2,7 @@ import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { isAdminEmail } from "@/lib/admin/constants";
 
 /**
- * Kiểm tra quyền admin — dùng RPC security definer (tránh RLS chặn đọc profile).
+ * Check admin privileges — uses RPC security definer (avoids RLS blocking profile reads).
  */
 export async function userIsAdmin(
   supabase: SupabaseClient,

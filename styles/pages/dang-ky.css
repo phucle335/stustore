@@ -1,1 +1,62 @@
 /* /dang-ky */
+.dangKyPage {
+  background: #000;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.dangKyPage .customerPageTitle,
+.dangKyPage .customerAuthTitle {
+  color: #fff;
+}
+
+.dangKyPage .customerPageSubtitle,
+.dangKyPage .customerAuthSubtitle {
+  color: #999;
+}
+
+.dangKyPage .customerAuthInput {
+  background: #111;
+  border-color: #333;
+  color: #fff;
+}
+
+.dangKyPage .customerAuthLabel {
+  color: #ddd;
+}
+
+.dangKyPage .customerAuthInput::placeholder {
+  color: #666;
+}
+
+.dangKyPage .customerAuthError {
+  background: #2a0a0a;
+  border-color: #f24e35;
+  color: #ff9999;
+}
+
+.dangKyPage .customerAuthInfo {
+  background: #0a2a0a;
+  border-color: #4caf50;
+  color: #99ff99;
+}
+
+.dangKyPage .customerAuthForgot a,
+.dangKyPage .customerAuthSwitch a {
+  color: #f24e35;
+}
+
+.dangKyPage .customerAuthSwitch {
+  color: #999;
+}
+
+.dangKyPage .storeBtnSecondary {
+  border-color: #444;
+  background: transparent;
+  color: #fff;
+}
+
+.dangKyPage .storeBtnSecondary:hover:not(:disabled) {
+  background: #222;
+  color: #fff;
+}

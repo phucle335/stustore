@@ -22,7 +22,7 @@ export async function guardAdmin(): Promise<ActionResult<AdminSession>> {
   } = await supabase.auth.getUser();
 
   if (authError || !user?.email) {
-    return failure("Unauthorized — hãy đăng nhập lại tại /login.");
+    return failure("Unauthorized — please sign in at /login.");
   }
 
   const profile = await ensureUserProfile(user.id, user.email);

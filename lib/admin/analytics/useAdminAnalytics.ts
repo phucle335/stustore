@@ -21,13 +21,13 @@ export function useAdminAnalytics() {
         error?: string;
       };
       if (!res.ok) {
-        setError(body.error || "Không tải được analytics");
+        setError(body.error || "Could not load analytics");
         return;
       }
       setData(body.data ?? null);
       setError(null);
     } catch {
-      setError("Lỗi kết nối analytics");
+      setError("Analytics connection error");
     } finally {
       setLoading(false);
     }

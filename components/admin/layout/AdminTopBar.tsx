@@ -92,8 +92,8 @@ export function AdminTopBar({
           <Search className="h-4 w-4 shrink-0" aria-hidden />
           <input
             type="search"
-            placeholder="Tìm kiếm…"
-            aria-label="Tìm kiếm admin"
+            placeholder="Search…"
+            aria-label="Admin search"
             value={searchQuery}
             onChange={(e) => {
               onSearchQueryChange(e.target.value);
@@ -107,7 +107,7 @@ export function AdminTopBar({
         {searchOpen && searchQuery.trim() ? (
           <div className="admin-search-dropdown" role="listbox">
             {searchResults.length === 0 ? (
-              <p className="admin-search-dropdown__empty">Không tìm thấy kết quả</p>
+              <p className="admin-search-dropdown__empty">No results found</p>
             ) : (
               searchResults.map((result) => (
                 <button
@@ -135,7 +135,7 @@ export function AdminTopBar({
         <button
           type="button"
           className={`admin-icon-btn${notifications.length > 0 ? " admin-icon-btn--has-badge" : ""}`}
-          aria-label="Thông báo"
+          aria-label="Notifications"
           onClick={() => setOpenNotif((v) => !v)}
         >
           <Bell className="h-4 w-4" />
@@ -145,9 +145,9 @@ export function AdminTopBar({
         </button>
         {openNotif ? (
           <div className="admin-notif-panel">
-            <p className="admin-notif-head">Thông báo Admin</p>
+            <p className="admin-notif-head">Admin Notifications</p>
             {adminNotifs.length === 0 ? (
-              <p className="admin-notif-empty">Chưa có thông báo admin.</p>
+              <p className="admin-notif-empty">No admin notifications yet.</p>
             ) : (
               adminNotifs.map((n) => (
                 <div key={n.id} className="admin-notif-item">
@@ -159,10 +159,10 @@ export function AdminTopBar({
             )}
 
             <p className="admin-notif-head" style={{ marginTop: 10 }}>
-              KH hỗ trợ / Đơn hàng
+              Support / Orders
             </p>
             {customerNotifs.length === 0 ? (
-              <p className="admin-notif-empty">Chưa có thông báo khách hàng/đơn.</p>
+              <p className="admin-notif-empty">No customer/order notifications yet.</p>
             ) : (
               customerNotifs.map((n) => (
                 <div key={n.id} className="admin-notif-item">
@@ -174,18 +174,18 @@ export function AdminTopBar({
             )}
           </div>
         ) : null}
-        <Link href="/" className="admin-icon-btn" aria-label="Cửa hàng">
+        <Link href="/" className="admin-icon-btn" aria-label="Store">
           <Store className="h-4 w-4" />
         </Link>
         <button
           type="button"
           className="admin-icon-btn"
           onClick={() => void handleSignOut()}
-          aria-label="Đăng xuất"
+          aria-label="Sign Out"
         >
           <LogOut className="h-4 w-4" />
         </button>
-        <Link href="/tai-khoan" className="admin-user-pill" aria-label="Hồ sơ cá nhân">
+        <Link href="/tai-khoan" className="admin-user-pill" aria-label="Profile">
           <span className="admin-user-avatar">AD</span>
           <span className="admin-user-pill__name">Admin</span>
         </Link>

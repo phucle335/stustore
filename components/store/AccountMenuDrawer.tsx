@@ -35,10 +35,10 @@ function getGreetingName(user: {
   }
 
   if (user.email) {
-    return user.email.split("@")[0] ?? "bạn";
+    return user.email.split("@")[0] ?? "you";
   }
 
-  return "bạn";
+  return "you";
 }
 
 export function AccountMenuDrawer({
@@ -89,7 +89,7 @@ function AccountMenuDrawerContent({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
-  const greetingName = user ? getGreetingName(user) : "bạn";
+  const greetingName = user ? getGreetingName(user) : "you";
 
   function selectSection(sectionId: MemberSectionId): void {
     router.push(buildMemberAccountUrl(sectionId));
@@ -107,7 +107,7 @@ function AccountMenuDrawerContent({
       <button
         type="button"
         className={styles.backdrop}
-        aria-label="Đóng menu tài khoản"
+        aria-label="Close account menu"
         tabIndex={open ? 0 : -1}
         onClick={onClose}
       />
@@ -119,15 +119,15 @@ function AccountMenuDrawerContent({
       >
         <MobileOverlayLogoHeader
           onClose={onClose}
-          closeLabel="Đóng menu tài khoản"
+          closeLabel="Close account menu"
         />
         <div className={styles.header}>
           <h2 id={titleId} className={styles.title}>
-            Tài khoản
+            Account
           </h2>
           <p className={styles.greeting}>Hi, {greetingName}</p>
         </div>
-        <nav className={styles.nav} aria-label="Tài khoản thành viên">
+        <nav className={styles.nav} aria-label="Member account">
           <ul className={styles.list}>
             {MEMBER_ACCOUNT_SECTIONS.map((section) => (
               <li key={section.id} className={styles.listItem}>

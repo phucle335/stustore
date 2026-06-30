@@ -17,23 +17,23 @@ export function RecentInteractionsTable({ rows }: RecentInteractionsTableProps) 
 
   return (
     <AnalyticsCard
-      title="Hoạt động gần đây (realtime)"
-      subtitle="Khách #… · nút bấm · xem sản phẩm · thiết bị · quốc gia"
+      title="Recent activity (realtime)"
+      subtitle="Visitor #… · button clicks · product views · device · country"
     >
       {rows.length === 0 ? (
-        <p className="text-sm admin-muted">Chưa có tương tác nào được ghi nhận.</p>
+        <p className="text-sm admin-muted">No interactions recorded yet.</p>
       ) : (
         <>
           <div className="admin-table-wrap">
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Thời gian</th>
-                  <th>Khách</th>
-                  <th>Loại</th>
-                  <th>Hành động</th>
-                  <th>Thiết bị</th>
-                  <th>Quốc gia</th>
+                  <th>Time</th>
+                  <th>Visitor</th>
+                  <th>Type</th>
+                  <th>Action</th>
+                  <th>Device</th>
+                  <th>Country</th>
                 </tr>
               </thead>
               <tbody>
@@ -57,7 +57,7 @@ export function RecentInteractionsTable({ rows }: RecentInteractionsTableProps) 
                             : "bg-violet-500/15 text-violet-700"
                         }`}
                       >
-                        {row.kind === "product_view" ? "Xem SP" : "Click"}
+                        {row.kind === "product_view" ? "View" : "Click"}
                       </span>
                     </td>
                     <td className="max-w-[200px]">

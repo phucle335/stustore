@@ -37,7 +37,7 @@ export function LivePresenceBar() {
       <div className={styles.presenceItem}>
         <span className={styles.presenceDot} aria-hidden />
         <span>
-          Khách truy cập: <strong>{display}</strong>
+          Visitors: <strong>{display}</strong>
         </span>
       </div>
     </div>

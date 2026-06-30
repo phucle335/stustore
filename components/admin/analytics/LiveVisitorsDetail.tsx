@@ -30,8 +30,8 @@ function BreakdownList({
         {icon}
         {title}
       </p>
-      {items.length === 0 ? (
-        <p className="text-sm admin-muted">Chưa có dữ liệu</p>
+          {items.length === 0 ? (
+        <p className="text-sm admin-muted">No data yet</p>
       ) : (
         <ul className="space-y-2">
           {items.map((item) => (
@@ -66,35 +66,35 @@ export function LiveVisitorsDetail({
 
   return (
     <AnalyticsCard
-      title="Khách đang online (realtime)"
-      subtitle="Cập nhật ~5 giây · Desktop/Mobile · Quốc gia theo IP"
+      title="Online visitors (realtime)"
+      subtitle="Updates every ~5 seconds · Desktop/Mobile · Country by IP"
     >
       <div className="admin-grid-2 mb-5 gap-6">
         <BreakdownList
-          title="Thiết bị (live)"
+          title="Devices (live)"
           items={deviceBreakdown}
           icon={<Monitor className="h-3.5 w-3.5" aria-hidden />}
         />
         <BreakdownList
-          title="Quốc gia (live)"
+          title="Countries (live)"
           items={countryBreakdown}
           icon={<Globe className="h-3.5 w-3.5" aria-hidden />}
         />
       </div>
 
       {visitors.length === 0 ? (
-        <p className="text-sm admin-muted">Chưa có ai online trong 2 phút gần nhất.</p>
+        <p className="text-sm admin-muted">No visitors online in the last 2 minutes.</p>
       ) : (
         <>
           <div className="admin-table-wrap">
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Khách</th>
-                  <th>Trang</th>
-                  <th>Thiết bị</th>
-                  <th>Quốc gia</th>
-                  <th style={{ textAlign: "right" }}>Hoạt động</th>
+                  <th>Visitor</th>
+                  <th>Page</th>
+                  <th>Device</th>
+                  <th>Country</th>
+                  <th style={{ textAlign: "right" }}>Activity</th>
                 </tr>
               </thead>
               <tbody>

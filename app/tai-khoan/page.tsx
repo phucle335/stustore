@@ -12,7 +12,7 @@ import customerStyles from "@/styles/components/store/Customer.module.css";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Tài khoản thành viên | Stusport",
+  title: "Member Account | Stusport",
 };
 
 export default async function MemberAccountRoute() {
@@ -35,7 +35,7 @@ export default async function MemberAccountRoute() {
   return (
     <StoreShell activeNav="home">
       <StaticPageShell backgroundImage={bg}>
-        <div className={customerStyles.customerPageWrapDark}>
+        <div className={`${customerStyles.customerPageWrapDark} taiKhoanPage`}>
           <MemberAccountPage productsById={productsById} />
         </div>
       </StaticPageShell>

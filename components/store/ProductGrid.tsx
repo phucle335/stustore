@@ -82,16 +82,16 @@ export function ProductGrid({
       </div>
 
       {totalPages > 1 ? (
-        <nav className={styles.productPagination} aria-label="Phân trang sản phẩm">
+        <nav className={styles.productPagination} aria-label="Product pagination">
           <button
             type="button"
             className={styles.paginationBtn}
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage <= 1}
-            aria-label="Trang trước"
+            aria-label="Previous page"
           >
             <i className="fas fa-chevron-left" aria-hidden="true" />
-            Trước
+            Previous
           </button>
 
           <div className={styles.paginationPages}>
@@ -101,7 +101,7 @@ export function ProductGrid({
                 type="button"
                 className={`${styles.paginationPage}${pageNumber === currentPage ? ` ${styles.active}` : ""}`}
                 onClick={() => goToPage(pageNumber)}
-                aria-label={`Trang ${pageNumber}`}
+                aria-label={`Page ${pageNumber}`}
                 aria-current={pageNumber === currentPage ? "page" : undefined}
               >
                 {pageNumber}
@@ -114,7 +114,7 @@ export function ProductGrid({
             className={styles.paginationBtn}
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage >= totalPages}
-            aria-label="Trang sau"
+            aria-label="Next page"
           >
             Sau
             <i className="fas fa-chevron-right" aria-hidden="true" />
@@ -123,9 +123,9 @@ export function ProductGrid({
       ) : null}
 
       <p className={styles.paginationInfo}>
-        Hiển thị {(currentPage - 1) * pageSize + 1}–
-        {Math.min(currentPage * pageSize, products.length)} trong{" "}
-        {products.length} sản phẩm
+        Showing {(currentPage - 1) * pageSize + 1}–
+        {Math.min(currentPage * pageSize, products.length)} of{" "}
+        {products.length} products
       </p>
     </div>
   );

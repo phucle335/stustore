@@ -6,7 +6,7 @@ import styles from "@/styles/components/motto/MottoLoader.module.css";
 
 const HOLD_MS = 1100;
 const EXIT_MS = 900;
-/** Desktop paint nhanh — đảm bảo loader luôn hiện đủ lâu */
+/** Desktop paint fast — ensures loader always shows long enough */
 const MIN_VISIBLE_MS = 1900;
 const REDUCED_MIN_MS = 550;
 

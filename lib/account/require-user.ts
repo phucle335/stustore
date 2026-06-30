@@ -11,7 +11,7 @@ export async function requireAuthUser(): Promise<
   } = await supabase.auth.getUser();
 
   if (error || !user?.email) {
-    return { ok: false, error: "Bạn cần đăng nhập.", status: 401 };
+    return { ok: false, error: "Please sign in.", status: 401 };
   }
 
   return { ok: true, user };

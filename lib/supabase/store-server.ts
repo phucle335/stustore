@@ -3,8 +3,8 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 let storeClient: SupabaseClient | undefined;
 
 /**
- * Supabase anon client — đọc products theo RLS "Anyone can read products".
- * Dùng trong Server Components / Route Handlers storefront.
+ * Supabase anon client — reads products per RLS "Anyone can read products".
+ * Used in Server Components / Route Handlers storefront.
  */
 export function createStoreSupabaseClient(): SupabaseClient {
   if (storeClient) return storeClient;
@@ -14,7 +14,7 @@ export function createStoreSupabaseClient(): SupabaseClient {
 
   if (!url || !anonKey) {
     throw new Error(
-      "Thiếu NEXT_PUBLIC_SUPABASE_URL hoặc NEXT_PUBLIC_SUPABASE_ANON_KEY trong .env.local",
+      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local",
     );
   }
 

@@ -22,7 +22,7 @@ export function Header({ activeNav, onLoginClick }: HeaderProps) {
     (user?.display_name && user.display_name.trim()) ||
     (user?.full_name && user.full_name.trim()) ||
     (user?.email ? user.email.split("@")[0] : "") ||
-    "bạn";
+    "you";
 
   return (
     <header className={styles.header}>
@@ -62,14 +62,14 @@ export function Header({ activeNav, onLoginClick }: HeaderProps) {
                 className={styles.headerUserSignout}
                 onClick={() => void signOut()}
               >
-                Đăng xuất
+                Sign Out
               </button>
             </div>
           ) : (
             <button
               type="button"
               onClick={onLoginClick}
-              aria-label="Đăng nhập"
+              aria-label="Sign In"
               className={styles.headerLoginBtn}
             >
               <i className="far fa-user" />
@@ -79,7 +79,7 @@ export function Header({ activeNav, onLoginClick }: HeaderProps) {
             type="button"
             className={styles.cartIconBtn}
             onClick={openCart}
-            aria-label={`Giỏ hàng${itemCount > 0 ? `, ${itemCount} sản phẩm` : ""}`}
+            aria-label={`Cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}
           >
             <i className="fas fa-shopping-bag" />
             {itemCount > 0 ? (

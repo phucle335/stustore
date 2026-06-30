@@ -48,7 +48,7 @@ export async function PATCH(request: Request) {
   try {
     body = (await request.json()) as MemberProfileInput;
   } catch {
-    return NextResponse.json({ error: "Dữ liệu không hợp lệ." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid data." }, { status: 400 });
   }
 
   const preferencesOnly =
@@ -65,7 +65,7 @@ export async function PATCH(request: Request) {
     const address = body.address?.trim() ?? "";
     if (!address) {
       return NextResponse.json(
-        { error: "Địa chỉ giao hàng là bắt buộc khi lưu hồ sơ." },
+        { error: "Delivery address is required when saving profile." },
         { status: 400 },
       );
     }
@@ -103,7 +103,7 @@ export async function PATCH(request: Request) {
 
   if (Object.keys(updatePayload).length === 0) {
     return NextResponse.json(
-      { error: "Không có dữ liệu để cập nhật." },
+      { error: "No data to update." },
       { status: 400 },
     );
   }
@@ -119,7 +119,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json(
         {
           error:
-            "Thiếu cột trong bảng users. Chạy supabase/member-features.sql trong Supabase SQL Editor.",
+            "Missing column in users table. Run supabase/member-features.sql in Supabase SQL Editor.",
         },
         { status: 500 },
       );

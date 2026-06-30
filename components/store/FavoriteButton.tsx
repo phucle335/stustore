@@ -62,7 +62,7 @@ export function FavoriteButton({ productId, className }: FavoriteButtonProps) {
       className={className ?? "product-favorite-btn"}
       disabled={loading}
       onClick={() => void toggle()}
-      aria-label={active ? "Bỏ yêu thích" : "Thêm yêu thích"}
+      aria-label={active ? "Remove from favorites" : "Add to favorites"}
     >
       <i className={active ? "fas fa-heart" : "far fa-heart"} />
     </button>

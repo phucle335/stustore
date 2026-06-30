@@ -5,7 +5,7 @@ export function HomeBrandMarquee() {
   const logos = [...PARTNER_BRAND_LOGO_URLS, ...PARTNER_BRAND_LOGO_URLS];
 
   return (
-    <div className={styles.homeBrandMarquee} aria-label="Thương hiệu đối tác">
+    <div className={styles.homeBrandMarquee} aria-label="Partner brands">
       <div className={styles.homeBrandMarqueeTrack}>
         {logos.map((src, index) => (
           <div key={`${src}-${index}`} className={styles.homeBrandMarqueeItem}>

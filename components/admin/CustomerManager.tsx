@@ -127,14 +127,14 @@ export function CustomerManager({
       );
       setMessage(
         role === "admin"
-          ? "Đã gán quyền admin."
-          : "Đã chuyển về khách hàng.",
+          ? "Admin role assigned."
+          : "Demoted to customer.",
       );
     });
   }
 
   function handleDelete(user: DbUser) {
-    if (!window.confirm(`Xóa tài khoản ${user.email}?`)) return;
+    if (!window.confirm(`Delete account ${user.email}?`)) return;
 
     startTransition(async () => {
       setPendingId(user.id);
@@ -150,7 +150,7 @@ export function CustomerManager({
       }
 
       setUsers((current) => current.filter((item) => item.id !== user.id));
-      setMessage("Đã xóa tài khoản.");
+      setMessage("Account deleted.");
     });
   }
 
@@ -181,7 +181,7 @@ export function CustomerManager({
           r.id === id ? { ...r, status: "resolved" } : r,
         ),
       );
-      setMessage("Đã đánh dấu yêu cầu hỗ trợ là đã xử lý.");
+      setMessage("Support request marked as resolved.");
       setResolvingRequestId(null);
     });
   }
@@ -190,31 +190,31 @@ export function CustomerManager({
     <section className="admin-panel">
       <div style={{ marginBottom: 20 }}>
         <h2 className="admin-card-title" style={{ margin: 0 }}>
-          Khách hàng & phân quyền
+          Customers & Roles
         </h2>
         <p className="admin-card-sub">
-          Gán role admin hoặc user cho từng tài khoản
+          Assign admin or user role to each account
         </p>
       </div>
 
       <div className="admin-stack" style={{ marginBottom: 24 }}>
         <div>
         <h3 className="admin-card-title" style={{ fontSize: "1rem" }}>
-          Khách hàng cần hỗ trợ
+          Support Requests
         </h3>
         <p className="admin-card-sub">
-          Yêu cầu mới gửi từ footer Contact (Zalo/Email)
+          New requests from footer Contact (Zalo/Email)
         </p>
 
         <div className="admin-table-wrap admin-only-desktop" style={{ marginTop: 12 }}>
           <table className="admin-table">
             <thead className="admin-muted">
               <tr>
-                <th className="px-4 py-3 font-medium">Khách</th>
-                <th className="px-4 py-3 font-medium">Liên hệ</th>
-                <th className="px-4 py-3 font-medium">Nội dung</th>
+                <th className="px-4 py-3 font-medium">Customer</th>
+                <th className="px-4 py-3 font-medium">Contact</th>
+                <th className="px-4 py-3 font-medium">Message</th>
                 <th className="px-4 py-3 font-medium text-right">
-                  Thao tác
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -225,7 +225,7 @@ export function CustomerManager({
                     colSpan={4}
                     className="px-4 py-8 text-center admin-muted"
                   >
-                    Chưa có yêu cầu mới
+                    No new support requests
                   </td>
                 </tr>
               ) : (
@@ -275,7 +275,7 @@ export function CustomerManager({
                                 : "admin-status-chip admin-status-chip--emerald"
                             }
                           >
-                            {req.status === "open" ? "Mới" : "Đã xử lý"}
+                            {req.status === "open" ? "New" : "Resolved"}
                           </span>
                         </div>
                       </td>
@@ -288,10 +288,10 @@ export function CustomerManager({
                             onClick={() => resolveRequest(req.id)}
                           >
                             {req.status === "resolved"
-                              ? "Đã xử lý"
+                              ? "Resolved"
                               : resolving
-                                ? "Đang xử lý…"
-                                : "Đánh dấu đã xử lý"}
+                                ? "Processing…"
+                                : "Mark as Resolved"}
                           </button>
                         </div>
                       </td>
@@ -306,7 +306,7 @@ export function CustomerManager({
         <div className="admin-order-mobile-list admin-only-mobile" style={{ marginTop: 12 }}>
           {recentSupportRequests.length === 0 ? (
             <p className="admin-muted" style={{ textAlign: "center", padding: 18 }}>
-              Chưa có yêu cầu mới
+              No new requests
             </p>
           ) : (
             pagedSupportRequests.map((req) => {
@@ -325,7 +325,7 @@ export function CustomerManager({
                           : "admin-status-chip admin-status-chip--emerald"
                       }
                     >
-                      {req.status === "open" ? "Mới" : "Đã xử lý"}
+                      {req.status === "open" ? "New" : "Resolved"}
                     </span>
                   </div>
                   <div className="admin-mobile-card__body">
@@ -353,10 +353,10 @@ export function CustomerManager({
                       onClick={() => resolveRequest(req.id)}
                     >
                       {req.status === "resolved"
-                        ? "Đã xử lý"
+                        ? "Resolved"
                         : resolving
-                          ? "Đang xử lý…"
-                          : "Đánh dấu đã xử lý"}
+                          ? "Processing…"
+                          : "Mark as Resolved"}
                     </button>
                   </div>
                 </article>
@@ -376,7 +376,7 @@ export function CustomerManager({
               disabled={supportPage <= 1}
               onClick={() => setSupportPage((current) => Math.max(1, current - 1))}
             >
-              Trang trước
+              Previous
             </button>
             <button
               type="button"
@@ -386,7 +386,7 @@ export function CustomerManager({
                 setSupportPage((current) => Math.min(supportTotalPages, current + 1))
               }
             >
-              Trang sau
+              Next
             </button>
           </div>
         </div>
@@ -406,15 +406,15 @@ export function CustomerManager({
             <tr>
               <th className="px-4 py-3 font-medium">Email</th>
               <th className="px-4 py-3 font-medium">Role</th>
-              <th className="px-4 py-3 font-medium">Ngày tạo</th>
-              <th className="px-4 py-3 font-medium text-right">Thao tác</th>
+              <th className="px-4 py-3 font-medium">Created</th>
+              <th className="px-4 py-3 font-medium text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredUsers.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-4 py-8 text-center admin-muted">
-                  Chưa có người dùng
+                  No users yet
                 </td>
               </tr>
             ) : (
@@ -433,7 +433,7 @@ export function CustomerManager({
                             : "admin-status-chip admin-status-chip--teal"
                         }
                       >
-                        {user.role === "admin" ? "Admin" : "Khách hàng"}
+                        {user.role === "admin" ? "Admin" : "Customer"}
                       </span>
                     </td>
                     <td className="px-4 py-3 admin-muted">
@@ -446,7 +446,7 @@ export function CustomerManager({
                             type="button"
                             disabled={busy}
                             onClick={() => setRole(user.id, "user")}
-                            title="Hạ xuống khách hàng"
+                            title="Demote to Customer"
                             className="admin-icon-btn disabled:opacity-50"
                           >
                             <ShieldOff className="h-4 w-4" />
@@ -456,7 +456,7 @@ export function CustomerManager({
                             type="button"
                             disabled={busy}
                             onClick={() => setRole(user.id, "admin")}
-                            title="Gán admin"
+                            title="Assign Admin"
                             className="admin-icon-btn disabled:opacity-50"
                           >
                             <Shield className="h-4 w-4" />
@@ -466,7 +466,7 @@ export function CustomerManager({
                           type="button"
                           disabled={busy}
                           onClick={() => handleDelete(user)}
-                          title="Xóa tài khoản"
+                          title="Delete Account"
                           className="admin-icon-btn disabled:opacity-50"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -484,7 +484,7 @@ export function CustomerManager({
       <div className="admin-order-mobile-list admin-only-mobile" style={{ marginTop: 12 }}>
         {filteredUsers.length === 0 ? (
           <p className="admin-muted" style={{ textAlign: "center", padding: 18 }}>
-            Chưa có người dùng
+            No users yet
           </p>
         ) : (
           pagedUsers.map((user) => {
@@ -502,11 +502,11 @@ export function CustomerManager({
                         : "admin-status-chip admin-status-chip--teal"
                     }
                   >
-                    {user.role === "admin" ? "Admin" : "Khách hàng"}
+                    {user.role === "admin" ? "Admin" : "Customer"}
                   </span>
                 </div>
                 <div className="admin-mobile-card__body">
-                  <p>Ngày tạo: {formatDate(user.created_at)}</p>
+                  <p>Created: {formatDate(user.created_at)}</p>
                 </div>
                 <div className="admin-user-actions">
                   {user.role === "admin" ? (
@@ -514,7 +514,7 @@ export function CustomerManager({
                       type="button"
                       disabled={busy}
                       onClick={() => setRole(user.id, "user")}
-                      title="Hạ xuống khách hàng"
+                      title="Demote to Customer"
                       className="admin-icon-btn"
                     >
                       <ShieldOff className="h-4 w-4" />
@@ -524,7 +524,7 @@ export function CustomerManager({
                       type="button"
                       disabled={busy}
                       onClick={() => setRole(user.id, "admin")}
-                      title="Gán admin"
+                      title="Assign Admin"
                       className="admin-icon-btn"
                     >
                       <Shield className="h-4 w-4" />
@@ -534,7 +534,7 @@ export function CustomerManager({
                     type="button"
                     disabled={busy}
                     onClick={() => handleDelete(user)}
-                    title="Xóa tài khoản"
+                    title="Delete Account"
                     className="admin-icon-btn"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -551,22 +551,22 @@ export function CustomerManager({
           Trang {userPage}/{userTotalPages}
         </p>
         <div className="admin-filter-row">
-          <button
-            type="button"
-            className="admin-btn admin-btn--sm"
-            disabled={userPage <= 1}
-            onClick={() => setUserPage((current) => Math.max(1, current - 1))}
-          >
-            Trang trước
-          </button>
-          <button
-            type="button"
-            className="admin-btn admin-btn--sm"
-            disabled={userPage >= userTotalPages}
-            onClick={() => setUserPage((current) => Math.min(userTotalPages, current + 1))}
-          >
-            Trang sau
-          </button>
+            <button
+              type="button"
+              className="admin-btn admin-btn--sm"
+              disabled={userPage <= 1}
+              onClick={() => setUserPage((current) => Math.max(1, current - 1))}
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              className="admin-btn admin-btn--sm"
+              disabled={userPage >= userTotalPages}
+              onClick={() => setUserPage((current) => Math.min(userTotalPages, current + 1))}
+            >
+              Next
+            </button>
         </div>
       </div>
     </section>

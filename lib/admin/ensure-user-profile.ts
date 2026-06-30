@@ -25,7 +25,7 @@ function isMissingFullNameColumn(message: string): boolean {
 
 type ExistingRow = { role?: UserRole; full_name?: string | null };
 
-/** Đảm bảo có dòng public.users (service role — không phụ thuộc RLS). */
+/** Ensure public.users row exists (service role — not subject to RLS). */
 export async function ensureUserProfile(
   userId: string,
   email: string,
@@ -64,7 +64,7 @@ export async function ensureUserProfile(
             return {
               ok: false,
               error:
-                "Bảng public.users chưa tồn tại. Chạy supabase/admin-schema.sql trong Supabase SQL Editor.",
+                "The public.users table does not exist. Run supabase/admin-schema.sql in the Supabase SQL Editor.",
             };
           }
           return { ok: false, error: msg };
@@ -76,7 +76,7 @@ export async function ensureUserProfile(
           return {
             ok: false,
             error:
-              "Bảng public.users chưa tồn tại. Chạy supabase/admin-schema.sql trong Supabase SQL Editor.",
+              "The public.users table does not exist. Run supabase/admin-schema.sql in the Supabase SQL Editor.",
           };
         }
         return { ok: false, error: msg };
@@ -148,7 +148,7 @@ export async function ensureUserProfile(
   } catch (err) {
     return {
       ok: false,
-      error: err instanceof Error ? err.message : "Không đồng bộ được hồ sơ user.",
+      error: err instanceof Error ? err.message : "Could not sync user profile.",
     };
   }
 }

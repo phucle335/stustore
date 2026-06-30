@@ -1,6 +1,6 @@
 import { Analytics } from "@vercel/analytics/next";
 
-/** Web Analytics — chỉ hoạt động khi deploy trên Vercel */
+/** Web Analytics — only works when deployed on Vercel */
 export function VercelAnalytics() {
   return <Analytics />;
 }

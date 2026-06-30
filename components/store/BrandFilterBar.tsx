@@ -19,13 +19,13 @@ export function BrandFilterBar({
   }
 
   return (
-    <nav className={styles.brandFilter} aria-label="Lọc theo thương hiệu">
+    <nav className={styles.brandFilter} aria-label="Filter by brand">
       <button
         type="button"
         className={activeBrand === null ? styles.active : undefined}
         onClick={() => onBrandChange(null)}
       >
-        Tất cả
+        All
       </button>
       {brands.map((brand) => (
         <button

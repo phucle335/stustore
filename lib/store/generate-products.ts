@@ -149,11 +149,11 @@ function buildProducts(config: CategoryConfig): Product[] {
 const SNEAKER_SEEDS: ProductSeed[] = [
   {
     brand: "/Nike/",
-    name: "Giày Nike Air Force 1 '07",
+    name: "Nike Air Force 1 '07",
     images: [
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80",
     ],
-    imageAlt: "Giày Nike Air Force 1",
+    imageAlt: "Nike Air Force 1",
     basePrice: 2_550_000,
     sizes: SNEAKER_SIZES,
   },

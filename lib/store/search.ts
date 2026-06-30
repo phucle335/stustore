@@ -4,19 +4,19 @@ import { NAV_LINKS } from "./navigation";
 import type { ProductCategory } from "./types";
 
 const CATEGORY_ALIASES: Record<ProductCategory, readonly string[]> = {
-  sneakers: ["sneaker", "sneakers", "giày", "giay", "shoe", "shoes"],
-  clothing: ["clothes", "clothing", "quần", "quan", "áo", "ao", "apparel"],
-  sunglasses: ["sunglasses", "sunglass", "kính", "kinh", "eyewear", "glasses"],
-  watches: ["watch", "watches", "đồng hồ", "dong ho", "timepiece"],
-  bags: ["bag", "bags", "túi", "tui", "handbag"],
+  sneakers: ["sneaker", "sneakers", "shoe", "shoes"],
+  clothing: ["clothes", "clothing", "top", "bottom", "dress", "apparel"],
+  sunglasses: ["sunglasses", "sunglass", "eyewear", "glasses", "spectacles"],
+  watches: ["watch", "watches", "wristwatch", "timepiece"],
+  bags: ["bag", "bags", "handbag", "backpack", "purse"],
 };
 
 const CATEGORY_BACK_LABELS: Record<ProductCategory, string> = {
-  sneakers: "Giày Sneaker",
-  clothing: "Quần Áo",
+  sneakers: "Sneakers",
+  clothing: "Clothing",
   sunglasses: "Sunglasses",
-  bags: "Túi Xách",
-  watches: "Đồng Hồ",
+  bags: "Bags",
+  watches: "Watches",
 };
 
 function getNavLabelForCategory(category: ProductCategory): string | undefined {

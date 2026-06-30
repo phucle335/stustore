@@ -20,9 +20,9 @@ export function RevenueChart({ data }: RevenueChartProps) {
   return (
     <section className="admin-card">
       <div className="mb-6">
-        <h2 className="admin-card-title">Xu hướng doanh thu</h2>
+        <h2 className="admin-card-title">Revenue Trend</h2>
         <p className="admin-card-sub">
-          Doanh thu 6 tháng gần nhất — đơn không bị hủy
+          Last 6 months — non-cancelled orders
         </p>
       </div>
 
@@ -66,7 +66,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
               }}
               formatter={(value) => [
                 formatCurrency(Number(value)),
-                "Doanh thu",
+                "Revenue",
               ]}
             />
             <Area

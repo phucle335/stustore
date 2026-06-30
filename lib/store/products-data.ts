@@ -26,7 +26,7 @@ async function fetchAllProductsFromDb(): Promise<ProductDetail[]> {
   const { data, error } = await queryAllProducts(supabase);
 
   if (error) {
-    throw new Error(`Không tải được sản phẩm: ${error}`);
+    throw new Error(`Could not load products: ${error}`);
   }
 
   return data
@@ -66,7 +66,7 @@ async function fetchProductByCodeFromDb(
   return mapRow(data) ?? undefined;
 }
 
-/** Đọc trực tiếp từ DB — không phụ thuộc cache danh sách */
+/** Direct DB read — independent of product list cache */
 export async function getProductById(
   id: string,
 ): Promise<ProductDetail | undefined> {

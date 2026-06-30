@@ -104,7 +104,7 @@ export async function POST(request: Request) {
         await supabase.from("analytics_events").insert({
           session_id: sessionId,
           event_name: "product_view",
-          label: title || `Sản phẩm ${productId}`,
+          label: title || `Product ${productId}`,
           path,
           product_id: productId,
           device_type: deviceType,
@@ -118,7 +118,7 @@ export async function POST(request: Request) {
       await supabase.from("analytics_events").insert({
         session_id: sessionId,
         event_name: "product_view",
-        label: body.label?.slice(0, 200) || title || `Sản phẩm ${productId}`,
+        label: body.label?.slice(0, 200) || title || `Product ${productId}`,
         path,
         product_id: productId,
         device_type: deviceType,

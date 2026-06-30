@@ -9,7 +9,7 @@ export function MottoBigIdea() {
       <div className={styles.container}>
         <div className={styles.bigIdeaGrid}>
           <div>
-            <p className={styles.eyebrow}>(Về chúng tôi)</p>
+            <p className={styles.eyebrow}>(About Us)</p>
             <MottoReveal as="h2" className={styles.bigIdeaTitle}>
               <MottoLine>The Authentic Culture</MottoLine>
               <MottoLine>
@@ -24,42 +24,43 @@ export function MottoBigIdea() {
               className={`${styles.body} ${styles.bigIdeaLead}`}
               splitLines={false}
             >
-              Được vận hành bởi những người trẻ đam mê Street-culture, STUSPORT không chỉ bán hàng chính hãng, chúng tôi mang đến một phong cách sống.
+              Operated by young people passionate about Street-culture, STUSPORT
+              not only sells authentic products, we bring a lifestyle.
             </MottoReveal>
           </div>
 
           <div>
             <MottoReveal as="h3" className={styles.bigIdeaSub}>
               <MottoLine>
-              Nền tảng chuyên phân phối Sneaker, Sportswear và phụ kiện chính hãng. Cam kết 100% Authentic, đổi trả linh hoạt 7 ngày.
+              Platform specializing in distributing authentic Sneakers, Sportswear and accessories. 100% Authentic commitment, flexible 7-day returns.
               </MottoLine>
           
             </MottoReveal>
             <MottoReveal as="p" className={styles.body} splitLines={false}>
-            Trải nghiệm giải pháp mua sắm thông minh
-            Đặt trước (Preorder) để tối ưu chi phí, hoặc sở hữu ngay (Hot Stock) các items "on-trend" nhất với cam kết minh bạch và mức giá dễ tiếp cận.
+            Experience smart shopping solutions
+            Pre-order to optimize costs, or own the trendiest items (Hot Stock) with transparent commitment and accessible prices.
             </MottoReveal>
 
             <p className={`${styles.eyebrow} ${styles.bigIdeaPurpose}`}>
-              (DANH MỤC NỔI BẬT)
+              (FEATURED CATEGORIES)
             </p>
 
             <ul className={styles.linkList}>
               <li>
                 <Link href="/sneakers" className={styles.btnLink}>
-                  <span>Xem Sneaker</span>
+                  <span>View Sneakers</span>
                   <span aria-hidden>→</span>
                 </Link>
               </li>
               <li>
                 <Link href="#work" className={styles.btnLink}>
-                  <span>Khám phá bộ sưu tập</span>
+                  <span>Explore Collections</span>
                   <span aria-hidden>→</span>
                 </Link>
               </li>
               <li>
                 <Link href="/ho-tro" className={styles.btnLink}>
-                  <span>Hỗ trợ khách hàng</span>
+                  <span>Customer Support</span>
                   <span aria-hidden>→</span>
                 </Link>
               </li>

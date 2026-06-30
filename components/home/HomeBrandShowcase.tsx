@@ -7,7 +7,7 @@ export function HomeBrandShowcase() {
     <section className={styles.homeBrandShowcase}>
       <Image
         src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=80"
-        alt="Không gian cửa hàng Stusport"
+        alt="Stusport store interior"
         fill
         className={styles.homeBrandShowcaseImg}
         sizes="100vw"

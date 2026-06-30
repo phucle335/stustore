@@ -14,7 +14,7 @@ export function getSupabaseClient(): SupabaseClient {
 
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error(
-      "Thiếu biến môi trường Supabase. Mở ecommerce_store-main/.env.local, điền NEXT_PUBLIC_SUPABASE_URL và NEXT_PUBLIC_SUPABASE_ANON_KEY (lấy từ Supabase → Project Settings → API), sau đó khởi động lại: npm run dev.",
+      "Missing Supabase environment variables. Open ecommerce_store-main/.env.local, add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY (from Supabase → Project Settings → API), then restart: npm run dev.",
     );
   }
 

@@ -60,16 +60,16 @@ export function getStockForProduct(
 
 export function formatStockLabel(stock: number, size?: string): string {
   if (stock <= 0) {
-    return size ? `Size ${size} — hết hàng` : "Hết hàng";
+    return size ? `Size ${size} — out of stock` : "Out of stock";
   }
 
   if (stock <= 5) {
     return size
-      ? `Size ${size} — sắp hết, còn ${stock}`
-      : `Sắp hết hàng — còn ${stock} sản phẩm`;
+      ? `Size ${size} — running low, ${stock} left`
+      : `Running low — ${stock} in stock`;
   }
 
   return size
-    ? `Size ${size} — còn ${stock} sản phẩm`
-    : `Còn ${stock} sản phẩm trong kho`;
+    ? `Size ${size} — ${stock} in stock`
+    : `${stock} in stock`;
 }

@@ -1,4 +1,4 @@
-/** Hostname được phép tối ưu qua `next/image` — đồng bộ với `next.config.ts` */
+/** Allowed hostnames for next/image optimization — synced with next.config.ts */
 export const STATIC_IMAGE_HOSTS = [
   "images.unsplash.com",
   "cdn.coverr.co",
@@ -35,7 +35,7 @@ export function buildImageRemotePatterns(): {
   ];
 }
 
-/** URL có thể dùng `next/image` (hostname đã khai báo) */
+/** URL allowed with next/image (declared hostname) */
 export function isNextImageAllowedUrl(src: string): boolean {
   try {
     const { hostname, protocol } = new URL(src);

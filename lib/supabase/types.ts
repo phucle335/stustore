@@ -67,21 +67,24 @@ export type ProductStatus = "selling" | "out_of_stock" | "paused";
 
 export type DbProduct = {
   id: string;
-  /** Mã tự đặt trong admin — dùng tra cứu, URL /products/[code] */
+  /** Admin product code — for lookup, URL /products/[code] */
   product_code?: string | null;
   name: string;
   brand_tag: string;
   category?: StoreProductCategory;
   fulfillment_type?: ProductFulfillmentType | null;
   product_status?: ProductStatus | null;
+  /** Selling price (what customers pay) */
   price: number;
+  /** Original/cost price — profit = price - origin_price */
+  origin_price?: number | null;
   sale_percent?: number | null;
   description: string | null;
   sizes: ProductSizeStock[];
   created_at: string;
   updated_at: string;
 } & ProductImageFields & {
-    /** Cột cũ — chỉ đọc nếu DB vẫn có mảng images */
+    /** Legacy column — only read if DB still has the images array */
     images?: string[];
   };
 
@@ -195,7 +198,10 @@ export type CreateProductInput = {
   category: StoreProductCategory;
   fulfillment_type?: ProductFulfillmentType | null;
   product_status?: ProductStatus | null;
+  /** Selling price (what customers pay) */
   price: number;
+  /** Original/cost price — profit = price - origin_price */
+  origin_price?: number | null;
   sale_percent?: number | null;
   description?: string | null;
   sizes?: ProductSizeStock[];

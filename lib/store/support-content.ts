@@ -24,137 +24,137 @@ export type SupportCategory = {
 export const SUPPORT_CATEGORIES: SupportCategory[] = [
   {
     id: "ordering",
-    label: "Đặt hàng",
+    label: "Ordering",
     icon: "fa-shopping-cart",
     items: [
       {
         id: "order-how",
-        question: "Làm thế nào để đặt hàng?",
-        answer: `Chọn sản phẩm → chọn size (nếu có) → bấm MUA NGAY hoặc thêm vào giỏ → hoàn tất thông tin giao hàng và thanh toán. Đơn hàng sẽ được ${STORE_NAME} xác nhận qua email hoặc tin nhắn.`,
+        question: "How do I place an order?",
+        answer: `Select product → choose size (if applicable) → click BUY NOW or add to cart → complete shipping information and payment. ${STORE_NAME} will confirm your order via email or message.`,
       },
       {
         id: "order-cancel",
-        question: "Làm thế nào để hủy đơn hàng đã đặt?",
+        question: "How do I cancel a placed order?",
         answer:
-          "Liên hệ hotline 0901 234 567 hoặc email support@stusport.vn trong vòng 2 giờ sau khi đặt (trước khi đơn chuyển sang trạng thái đang giao). Đơn đã giao cho vận chuyển không thể hủy — Quý khách có thể từ chối nhận hoặc yêu cầu đổi trả theo chính sách 14 ngày.",
+          "Contact hotline 0901 234 567 or email support@stusport.vn within 2 hours of ordering (before order status changes to shipping). Orders already handed to shipping cannot be cancelled — you may refuse delivery or request a return within 7 days.",
       },
       {
         id: "order-track",
-        question: "Làm sao để tra cứu đơn hàng?",
+        question: "How do I track my order?",
         answer:
-          "Sử dụng mã đơn hàng trong email xác nhận và liên hệ bộ phận CSKH. Chúng tôi sẽ gửi mã vận đơn khi hàng được bàn giao cho đơn vị ship.",
+          "Use your order code from the confirmation email and contact customer service. We will send the tracking number when your package is handed to the shipping carrier.",
       },
     ],
   },
   {
     id: "payment",
-    label: "Thanh toán",
+    label: "Payment",
     icon: "fa-credit-card",
     items: [
       {
         id: "pay-methods",
-        question: "Các hình thức thanh toán được chấp nhận?",
+        question: "What payment methods are accepted?",
         answer:
-          "Chuyển khoản ngân hàng, thẻ ATM/Visa/Mastercard, ví Momo/ZaloPay (tùy thời điểm) và COD khi giao hàng tại một số khu vực.",
+          "Bank transfer, ATM/Visa/Mastercard, Momo/ZaloPay e-wallets (depending on period) and COD on delivery in some areas.",
       },
       {
         id: "pay-installment",
-        question: "Có trả góp 0% không?",
+        question: "Is 0% installment available?",
         answer:
-          "Áp dụng trả góp 0% lãi suất cho đơn từ 3.000.000đ qua đối tác ngân hàng (điều kiện và kỳ hạn theo chương trình từng thời kỳ).",
+          "0% interest installment available for orders from 3,000,000đ through our banking partner (terms and duration vary by promotion).",
       },
       {
         id: "pay-failed",
-        question: "Thanh toán thất bại thì sao?",
+        question: "What if payment fails?",
         answer:
-          "Đơn hàng sẽ ở trạng thái chờ thanh toán. Quý khách có thể thử lại hoặc chọn phương thức khác trong vòng 24 giờ, sau đó đơn có thể tự hủy.",
+          "Your order will remain in pending payment status. You can retry or choose a different payment method within 24 hours, after which the order may be automatically cancelled.",
       },
     ],
   },
   {
     id: "delivery",
-    label: "Giao nhận",
+    label: "Delivery",
     icon: "fa-truck",
     items: [
       {
         id: "ship-time",
-        question: "Bao lâu thì tôi sẽ nhận được hàng?",
+        question: "How long will I receive my order?",
         answer:
-          "Nội thành TP.HCM: 2–3 ngày làm việc. Các tỉnh khác: 3–7 ngày làm việc. Thời gian có thể kéo dài trong mùa sale hoặc thời tiết xấu.",
+          "Ho Chi Minh City downtown: 2–3 business days. Other provinces: 3–7 business days. Delivery may take longer during sale seasons or bad weather.",
       },
       {
         id: "ship-fee",
-        question: "Chi phí vận chuyển là bao nhiêu?",
+        question: "What are the shipping fees?",
         answer:
-          "Miễn phí giao hàng cho đơn từ 799.000đ. Đơn dưới mức này áp dụng phí ship theo khu vực (thường 30.000–50.000đ nội thành).",
+          "Free shipping for orders from 799,000đ. Orders below this amount have shipping fees based on area (usually 30,000–50,000đ for downtown areas).",
       },
       {
         id: "ship-address",
-        question: "Tôi có thể thay đổi địa chỉ nhận hàng đã đặt không?",
+        question: "Can I change my delivery address after ordering?",
         answer:
-          "Có, nếu đơn chưa được bàn giao cho vận chuyển. Vui lòng gọi hotline ngay để cập nhật.",
+          "Yes, if your order has not been handed to the shipping carrier. Please call our hotline immediately to update.",
       },
     ],
   },
   {
     id: "returns",
-    label: "Đổi trả - Bảo hành",
+    label: "Returns & Warranty",
     icon: "fa-sync-alt",
     items: [
       {
         id: "return-policy",
-        question: "Chính sách đổi trả khi mua hàng tại website?",
-        answer: `Miễn phí đổi trả trong 14 ngày, sản phẩm còn nguyên tem/hộp, chưa qua sử dụng. ${STORE_NAME} cam kết 100% hàng chính hãng.`,
+        question: "What is the return policy for website purchases?",
+        answer: `Free returns within 7 days, product must have original tags/packaging and be unused. ${STORE_NAME} guarantees 100% genuine products.`,
       },
       {
         id: "return-time",
-        question: "Thời gian đổi trả sản phẩm?",
+        question: "How long does the return process take?",
         answer:
-          "Yêu cầu đổi trả cần gửi trong vòng 14 ngày kể từ ngày nhận hàng. Sau khi nhận hàng hoàn, chúng tôi xử lý đổi size/mẫu hoặc hoàn tiền trong 3–7 ngày làm việc.",
+          "Return requests must be submitted within 7 days of receiving the item. After we receive the returned item, we will process size/exchange or refund within 3–7 business days.",
       },
       {
         id: "warranty",
-        question: "Chính sách bảo hành?",
+        question: "What is the warranty policy?",
         answer:
-          "Sản phẩm lỗi do nhà sản xuất được bảo hành theo tem/hóa đơn của hãng. Stusport hỗ trợ tiếp nhận và chuyển bảo hành với nhà cung cấp chính hãng.",
+          "Products with manufacturer defects are warranted according to the brand's warranty terms/invoice. Stusport assists with warranty claims and forwards them to the genuine supplier.",
       },
     ],
   },
   {
     id: "account",
-    label: "Tài khoản",
+    label: "Account",
     icon: "fa-user",
     items: [
       {
         id: "acc-login",
-        question: "Tôi có bắt buộc đăng ký tài khoản không?",
+        question: "Do I need to register an account?",
         answer:
-          "Có thể mua hàng khách với email/số điện thoại. Đăng nhập Google/Facebook giúp lưu lịch sử đơn và nhận ưu đãi thành viên.",
+          "You can purchase as a guest using email or phone number. Signing in with Google/Facebook helps save order history and receive member offers.",
       },
       {
         id: "acc-forgot",
-        question: "Quên mật khẩu thì làm sao?",
+        question: "What if I forgot my password?",
         answer:
-          "Sử dụng chức năng quên mật khẩu trên trang đăng nhập hoặc liên hệ support@stusport.vn để được hỗ trợ xác minh.",
+          "Use the forgot password function on the sign-in page or contact support@stusport.vn for verification assistance.",
       },
     ],
   },
   {
     id: "contact",
-    label: "Liên hệ",
+    label: "Contact",
     icon: "fa-comments",
     items: [
       {
         id: "contact-info",
-        question: "Thông tin liên hệ Stusport?",
+        question: "How do I contact Stusport?",
         answer:
-          "Hotline: 0901 234 567 · Email: support@stusport.vn · Địa chỉ: 123 Nguyễn Huệ, Q.1, TP.HCM · Hỗ trợ: 09:00–22:00 hàng ngày.",
+          "Hotline: 0901 234 567 · Email: support@stusport.vn · Address: 123 Nguyen Hue, Q.1, Ho Chi Minh City · Support: 09:00–22:00 daily.",
       },
       {
         id: "contact-form",
-        question: "Gửi yêu cầu hỗ trợ qua đâu?",
+        question: "Where can I submit a support request?",
         answer:
-          "Gọi hotline, email support@stusport.vn hoặc nhắn tin qua fanpage Facebook/Zalo chính thức của Stusport.",
+          "Call our hotline, email support@stusport.vn, or message through our official Facebook/Zalo page.",
       },
     ],
   },

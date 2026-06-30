@@ -1,4 +1,4 @@
-/** Parse CSV đơn giản (hỗ trợ dấu ngoặc kép). */
+/** Parse CSV simply (supports quoted fields). */
 export function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [];

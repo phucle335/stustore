@@ -53,7 +53,7 @@ export function ProductCard({
       ref={cardRef}
       href={`/products/${product.id}`}
       data-product-name={product.name}
-      data-track={`Xem sản phẩm: ${product.name}`}
+      data-track={`View product: ${product.name}`}
       className={`${catalogStyles.productCard}${lightSurface ? ` ${catalogStyles.productCardLight} ${catalogStyles.show}` : ""}${showRating ? ` ${homeStyles.productCardHome}` : ""}`}
     >
       <div className={homeStyles.productCardMedia}>
@@ -71,7 +71,7 @@ export function ProductCard({
       <p className={catalogStyles.brand}>{product.brand}</p>
       {!lightSurface ? (
         <p>
-          {product.fulfillmentType === "pre_order" ? "Pre-order" : "Có sẵn"}
+          {product.fulfillmentType === "pre_order" ? "Pre-order" : "In stock"}
         </p>
       ) : null}
       <h4 className={catalogStyles.productName}>{product.name}</h4>

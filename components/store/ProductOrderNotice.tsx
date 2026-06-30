@@ -12,7 +12,7 @@ export function ProductOrderNotice() {
     const cancelled = searchParams.get("order_cancelled");
     if (cancelled !== "1") return;
 
-    showToast("Đơn hàng đã hủy", "error", "bottom-right");
+    showToast("Order cancelled", "error", "bottom-right");
   }, [searchParams, showToast]);
 
   return null;

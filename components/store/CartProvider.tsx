@@ -90,8 +90,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (stock <= 0) {
         showToast(
           input.size
-            ? `Size ${input.size} đã hết hàng`
-            : "Sản phẩm đã hết hàng",
+            ? `Size ${input.size} is out of stock`
+            : "This product is out of stock",
           "error",
         );
         return false;
@@ -103,8 +103,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (nextQuantity > stock) {
         showToast(
           input.size
-            ? `Size ${input.size} chỉ còn ${stock} sản phẩm`
-            : `Chỉ còn ${stock} sản phẩm trong kho`,
+            ? `Size ${input.size} only has ${stock} in stock`
+            : `Only ${stock} items available in stock`,
           "error",
         );
         return false;
@@ -124,7 +124,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return [...prev, { ...input, lineId, quantity: 1 }];
       });
 
-      showToast("Đã thêm vào giỏ hàng thành công", "success");
+      showToast("Added to cart", "success");
       return true;
     },
     [items, showToast, resolveStock],
@@ -152,8 +152,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (stock <= 0) {
         showToast(
           cartLine.size
-            ? `Size ${cartLine.size} đã hết hàng`
-            : "Sản phẩm đã hết hàng",
+            ? `Size ${cartLine.size} is out of stock`
+            : "This product is out of stock",
           "error",
         );
         removeItem(lineId);
@@ -163,8 +163,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (quantity > stock) {
         showToast(
           cartLine.size
-            ? `Size ${cartLine.size} chỉ còn ${stock} sản phẩm`
-            : `Chỉ còn ${stock} sản phẩm trong kho`,
+            ? `Size ${cartLine.size} only has ${stock} in stock`
+            : `Only ${stock} items available in stock`,
           "error",
         );
         return false;

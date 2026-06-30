@@ -122,17 +122,17 @@ export function CouponManager({
         setCoupons((prev) =>
           prev.map((row) => (row.id === result.data.id ? result.data : row)),
         );
-        setMessage("Đã cập nhật phiếu giảm giá.");
+        setMessage("Coupon updated.");
       } else {
         setCoupons((prev) => [result.data, ...prev]);
-        setMessage("Đã tạo phiếu giảm giá.");
+        setMessage("Coupon created.");
         resetForm();
       }
     });
   }
 
   function handleDelete(id: string) {
-    if (!confirm("Xóa phiếu giảm giá này?")) return;
+    if (!confirm("Delete this coupon?")) return;
     startTransition(async () => {
       const result = await deleteCouponAction(id);
       if (!result.ok) {
@@ -141,7 +141,7 @@ export function CouponManager({
       }
       setCoupons((prev) => prev.filter((row) => row.id !== id));
       if (form.id === id) resetForm();
-      setMessage("Đã xóa phiếu.");
+      setMessage("Coupon deleted.");
     });
   }
 
@@ -152,15 +152,15 @@ export function CouponManager({
         className="admin-card"
       >
         <h3 className="text-lg font-semibold admin-text">
-          {form.id ? "Sửa phiếu" : "Tạo phiếu giảm giá"}
+          {form.id ? "Edit Coupon" : "Create Coupon"}
         </h3>
         <p className="mt-1 text-sm admin-muted">
-          Khách nhập mã khi thanh toán hoặc trong Tài khoản thành viên.
+          Customer enters the code at checkout or in the Member Account.
         </p>
 
         <div className="mt-4 space-y-3">
           <label className="block text-sm admin-text">
-            Mã phiếu *
+            Coupon Code *
             <input
               required
               value={form.code}
@@ -172,7 +172,7 @@ export function CouponManager({
             />
           </label>
           <label className="block text-sm admin-text">
-            Mô tả
+            Description
             <input
               value={form.description}
               onChange={(e) =>
@@ -183,7 +183,7 @@ export function CouponManager({
           </label>
           <div className="grid grid-cols-2 gap-3">
             <label className="block text-sm admin-text">
-              Loại
+              Type
               <select
                 value={form.discount_type}
                 onChange={(e) =>
@@ -194,12 +194,12 @@ export function CouponManager({
                 }
                 className="admin-input mt-1"
               >
-                <option value="fixed">Số tiền (đ)</option>
-                <option value="percent">Phần trăm (%)</option>
+                <option value="fixed">Fixed Amount</option>
+                <option value="percent">Percentage (%)</option>
               </select>
             </label>
             <label className="block text-sm admin-text">
-              Giá trị *
+              Value *
               <input
                 required
                 type="number"
@@ -213,7 +213,7 @@ export function CouponManager({
             </label>
           </div>
           <label className="block text-sm admin-text">
-            Đơn tối thiểu (đ)
+            Min Order
             <input
               type="number"
               min={0}
@@ -225,7 +225,7 @@ export function CouponManager({
             />
           </label>
           <label className="block text-sm admin-text">
-            Số lượt dùng tối đa (để trống = không giới hạn)
+            Max Uses (leave blank = unlimited)
             <input
               type="number"
               min={1}
@@ -237,7 +237,7 @@ export function CouponManager({
             />
           </label>
           <label className="block text-sm admin-text">
-            Hết hạn
+            Expires
             <input
               type="datetime-local"
               value={form.expires_at}
@@ -255,7 +255,7 @@ export function CouponManager({
                 setForm((f) => ({ ...f, is_active: e.target.checked }))
               }
             />
-            Đang kích hoạt
+            Active
           </label>
         </div>
 
@@ -272,7 +272,7 @@ export function CouponManager({
             disabled={isPending}
             className="admin-btn admin-btn--primary disabled:opacity-60"
           >
-            {form.id ? "Cập nhật" : "Tạo mã"}
+            {form.id ? "Update" : "Create Code"}
           </button>
           {form.id ? (
             <button
@@ -280,17 +280,17 @@ export function CouponManager({
               onClick={resetForm}
               className="admin-btn"
             >
-              Hủy sửa
+              Cancel
             </button>
           ) : null}
         </div>
       </form>
 
       <div className="admin-card">
-        <h3 className="text-lg font-semibold admin-text">Danh sách mã</h3>
+        <h3 className="text-lg font-semibold admin-text">Code List</h3>
         <ul className="mt-4 max-h-[520px] space-y-2 overflow-y-auto">
           {coupons.length === 0 ? (
-            <li className="text-sm text-slate-500">Chưa có phiếu nào.</li>
+            <li className="text-sm text-slate-500">No coupons yet.</li>
           ) : (
             visibleCoupons.map((coupon) => (
               <li
@@ -311,18 +311,18 @@ export function CouponManager({
                   </p>
                   <p className="mt-1 text-xs text-slate-400">
                     {coupon.discount_type === "percent"
-                      ? `Giảm ${coupon.discount_value}%`
-                      : `Giảm ${formatCurrency(coupon.discount_value)}`}
-                    {" · "}Đã dùng {coupon.used_count}
+                      ? `${coupon.discount_value}% off`
+                      : `${formatCurrency(coupon.discount_value)} off`}
+                    {" · "}Used {coupon.used_count}
                     {coupon.max_uses != null ? `/${coupon.max_uses}` : ""}
-                    {!coupon.is_active ? " · Tắt" : ""}
+                    {!coupon.is_active ? " · Disabled" : ""}
                   </p>
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDelete(coupon.id)}
                   className="text-slate-500 hover:text-red-400"
-                  aria-label="Xóa"
+                  aria-label="Delete"
                 >
                   <Trash2 size={16} />
                 </button>

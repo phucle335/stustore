@@ -10,6 +10,7 @@ import {
   type BreakdownItem,
   type InteractionRow,
   type LiveVisitorRow,
+  type OrderProfitRow,
   type TopProductRow,
 } from "@/lib/admin/analytics/types";
 
@@ -34,6 +35,13 @@ function emptyDashboard(note: string): AnalyticsDashboard {
     topProducts: [],
     buttonClicks: [],
     recentInteractions: [],
+    orderProfit: {
+      rows: [],
+      totalProfit: 0,
+      totalRevenue: 0,
+      totalOrders: 0,
+      totalItems: 0,
+    },
     vercel: {
       enabled: Boolean(process.env.NEXT_PUBLIC_VERCEL_URL),
       dashboardUrl: buildVercelAnalyticsUrl(),
@@ -54,7 +62,7 @@ function buildVercelAnalyticsUrl(): string | null {
 }
 
 function referrerLabel(raw: string | null | undefined): string {
-  if (!raw || raw.trim() === "") return "Trực tiếp (Direct)";
+  if (!raw || raw.trim() === "") return "Direct";
   try {
     const host = new URL(raw).hostname.replace(/^www\./, "");
     if (host.includes("google")) return "Google";
@@ -64,7 +72,7 @@ function referrerLabel(raw: string | null | undefined): string {
     if (host.includes("zalo")) return "Zalo";
     return host;
   } catch {
-    return "Khác";
+    return "Other";
   }
 }
 
@@ -126,7 +134,7 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
     supabase = createAdminSupabaseClient();
   } catch {
     return emptyDashboard(
-      "Thiếu SUPABASE_SERVICE_ROLE_KEY — chưa thể đọc analytics.",
+      "Missing SUPABASE_SERVICE_ROLE_KEY — cannot read analytics.",
     );
   }
 
@@ -134,7 +142,7 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
   const presenceCutoff = new Date(Date.now() - PRESENCE_WINDOW_MS).toISOString();
 
   try {
-    const [presenceRes, viewsRes, eventsRes] = await Promise.all([
+    const [presenceRes, viewsRes, eventsRes, ordersRes] = await Promise.all([
       supabase
         .from("analytics_presence")
         .select(
@@ -159,16 +167,22 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
         .gte("created_at", since)
         .order("created_at", { ascending: false })
         .limit(3000),
+      supabase
+        .from("orders")
+        .select("id, total_price, status, order_items, created_at")
+        .neq("status", "cancelled")
+        .gte("created_at", since)
+        .order("created_at", { ascending: false }),
     ]);
 
     if (presenceRes.error && isMissingTableError(presenceRes.error)) {
       return emptyDashboard(
-        "Chạy supabase/analytics.sql và analytics-v2.sql trong Supabase.",
+        "Run supabase/analytics.sql and analytics-v2.sql in Supabase.",
       );
     }
     if (viewsRes.error && isMissingTableError(viewsRes.error)) {
       return emptyDashboard(
-        "Chạy supabase/analytics-v2.sql để bật thiết bị, quốc gia và sản phẩm.",
+        "Run supabase/analytics-v2.sql to enable device, country, and product tracking.",
       );
     }
     if (viewsRes.error) throw viewsRes.error;
@@ -176,6 +190,7 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
     const presenceRows = presenceRes.data ?? [];
     const views = viewsRes.data ?? [];
     const events = eventsRes.data ?? [];
+    const orders = ordersRes.data ?? [];
     const liveVisitors = presenceRows.length;
 
     const liveVisitorsList: LiveVisitorRow[] = presenceRows.map((row) => ({
@@ -267,7 +282,7 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
       if (!kind) continue;
 
       if (kind === "click") {
-        const label = ev.label || "Khác";
+        const label = ev.label || "Other";
         clickMap.set(label, (clickMap.get(label) ?? 0) + 1);
         if (ev.product_id) {
           productClicks.set(
@@ -288,7 +303,7 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
         at: ev.created_at,
         kind,
         sessionId: ev.session_id,
-        label: ev.label || (kind === "product_view" ? "Xem SP" : "Click"),
+        label: ev.label || (kind === "product_view" ? "Product View" : "Click"),
         path: ev.path || "/",
         productId: ev.product_id ?? null,
         device: deviceLabel(ev.device_type),
@@ -370,6 +385,61 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
       .sort((a, b) => b.clicks - a.clicks)
       .slice(0, 12);
 
+    // Calculate order profit
+    const productIdSet = new Set<string>();
+    for (const order of orders) {
+      const items = Array.isArray(order.order_items) ? order.order_items : [];
+      for (const item of items) {
+        if (item && typeof item === "object" && "product_id" in item) {
+          productIdSet.add(String((item as Record<string, unknown>).product_id));
+        }
+      }
+    }
+    const productPriceMap = new Map<string, { origin_price: number | null; price: number }>();
+    if (productIdSet.size > 0) {
+      const { data: productRows } = await supabase
+        .from("products")
+        .select("id, price, origin_price")
+        .in("id", [...productIdSet]);
+      for (const p of productRows ?? []) {
+        productPriceMap.set(p.id, { origin_price: p.origin_price ?? null, price: p.price });
+      }
+    }
+
+    const orderProfitRows: OrderProfitRow[] = [];
+    let totalProfit = 0;
+    let totalRevenue = 0;
+    let totalItems = 0;
+    for (const order of orders) {
+      const items = Array.isArray(order.order_items) ? order.order_items : [];
+      for (const item of items) {
+        if (!item || typeof item !== "object") continue;
+        const raw = item as Record<string, unknown>;
+        const productId = raw.product_id ? String(raw.product_id) : null;
+        const name = raw.name ? String(raw.name) : null;
+        const unitPrice = Number(raw.unit_price) ?? 0;
+        const quantity = Number(raw.quantity) ?? 1;
+        const productInfo = productId ? productPriceMap.get(productId) : null;
+        const originPrice = productInfo?.origin_price ?? null;
+        const sellingPrice = unitPrice > 0 ? unitPrice : (productInfo?.price ?? 0);
+        const profitPerItem = originPrice != null ? Math.max(0, sellingPrice - originPrice) : 0;
+        const itemTotalProfit = profitPerItem * quantity;
+        totalProfit += itemTotalProfit;
+        totalRevenue += sellingPrice * quantity;
+        totalItems += quantity;
+        orderProfitRows.push({
+          orderId: order.id,
+          productId,
+          productName: name,
+          sellingPrice,
+          originPrice,
+          profit: profitPerItem,
+          quantity,
+          totalProfit: itemTotalProfit,
+        });
+      }
+    }
+
     return {
       configured: true,
       liveVisitors,
@@ -387,19 +457,26 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
       topProducts,
       buttonClicks,
       recentInteractions,
+      orderProfit: {
+        rows: orderProfitRows,
+        totalProfit,
+        totalRevenue,
+        totalOrders: orders.length,
+        totalItems,
+      },
       vercel: {
         enabled: true,
         dashboardUrl: buildVercelAnalyticsUrl(),
-        note: "Quốc gia lấy từ IP khi deploy Vercel (header x-vercel-ip-country). Local thường hiển thị Không xác định.",
+        note: "Country is derived from IP at Vercel deploy (x-vercel-ip-country header). Local often shows Undefined.",
       },
       lastUpdated: new Date().toISOString(),
     };
   } catch (error) {
     if (isMissingTableError(error)) {
       return emptyDashboard(
-        "Chạy supabase/analytics.sql và analytics-v2.sql trong Supabase.",
+        "Run supabase/analytics.sql and analytics-v2.sql in Supabase.",
       );
     }
-    return emptyDashboard("Không tải được dữ liệu analytics.");
+    return emptyDashboard("Could not load analytics data.");
   }
 }

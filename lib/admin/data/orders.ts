@@ -92,7 +92,7 @@ export async function createOrdersBulk(
   inputs: CreateOrderInput[],
 ): Promise<ActionResult<DbOrder[]>> {
   if (inputs.length === 0) {
-    return failure("Không có đơn hàng để import.");
+    return failure("No orders to import.");
   }
 
   const supabase = createAdminSupabaseClient();
@@ -173,7 +173,7 @@ export async function deleteOrders(
 ): Promise<ActionResult<{ ids: string[]; count: number }>> {
   const uniqueIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))];
   if (uniqueIds.length === 0) {
-    return failure("Không có đơn hàng nào được chọn.");
+    return failure("No orders selected.");
   }
 
   const supabase = createAdminSupabaseClient();
@@ -189,7 +189,7 @@ export async function updateOrderStatus(
 ): Promise<ActionResult<{ ids: string[]; count: number }>> {
   const uniqueIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))];
   if (uniqueIds.length === 0) {
-    return failure("Không có đơn hàng nào được chọn.");
+    return failure("No orders selected.");
   }
 
   const supabase = createAdminSupabaseClient();

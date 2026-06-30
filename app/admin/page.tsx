@@ -62,14 +62,14 @@ export default async function AdminPage() {
       <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
         <div className="max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center">
           <h1 className="text-xl font-semibold text-white">
-            Không truy cập được Admin
+            Cannot Access Admin
           </h1>
           <p className="mt-2 text-sm text-slate-400">{error}</p>
           <Link
             href="/login?redirect=/admin"
             className="mt-6 inline-block rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950"
           >
-            Đăng nhập
+            Sign In
           </Link>
         </div>
       </div>

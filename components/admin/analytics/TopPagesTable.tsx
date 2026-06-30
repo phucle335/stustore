@@ -16,11 +16,11 @@ export function TopPagesTable({ pages }: TopPagesTableProps) {
 
   return (
     <AnalyticsCard
-      title="Trang truy cập nhiều nhất"
-      subtitle="Top trang theo lượt xem"
+      title="Most visited pages"
+      subtitle="Top pages by views"
     >
       {pages.length === 0 ? (
-        <p className="text-sm admin-muted">Chưa có lượt xem nào được ghi nhận.</p>
+        <p className="text-sm admin-muted">No page views recorded yet.</p>
       ) : (
         <>
           <div className="admin-table-wrap">
@@ -28,8 +28,8 @@ export function TopPagesTable({ pages }: TopPagesTableProps) {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Trang</th>
-                  <th style={{ textAlign: "right" }}>Lượt xem</th>
+                  <th>Page</th>
+                  <th style={{ textAlign: "right" }}>Views</th>
                 </tr>
               </thead>
               <tbody>

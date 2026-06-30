@@ -26,7 +26,7 @@ export function ProductImageGallery({
       <div className={styles.productDetailMainImage}>
         <ProductImage
           src={activeSrc}
-          alt={`${imageAlt} — ảnh ${safeIndex + 1}`}
+          alt={`${imageAlt} — photo ${safeIndex + 1}`}
           width={800}
           height={800}
           priority={safeIndex === 0}
@@ -35,13 +35,13 @@ export function ProductImageGallery({
       </div>
 
       {images.length > 1 ? (
-        <ul className={styles.productDetailThumbs} aria-label="Ảnh sản phẩm">
+        <ul className={styles.productDetailThumbs} aria-label="Product images">
           {images.map((src, index) => (
             <li key={`${src}-${index}`}>
               <button
                 type="button"
                 className={`${styles.productDetailThumb}${safeIndex === index ? ` ${styles.selected}` : ""}`}
-                aria-label={`Xem ảnh ${index + 1}`}
+                aria-label={`View image ${index + 1}`}
                 aria-current={safeIndex === index}
                 onClick={() => setActiveIndex(index)}
               >

@@ -22,7 +22,7 @@ async function uploadAdminImage(file: File): Promise<string> {
   });
   const json = (await res.json()) as { data?: { url: string }; error?: string };
   if (!res.ok || !json.data?.url) {
-    throw new Error(json.error ?? "Upload thất bại.");
+    throw new Error(json.error ?? "Upload failed.");
   }
   return json.data.url;
 }
@@ -43,13 +43,13 @@ export function BlogPostManager() {
       try {
         const res = await fetch("/api/blog-posts");
         const json = (await res.json()) as ApiListResponse;
-        if (!res.ok || !json.data) throw new Error(json.error ?? "Fetch blog thất bại.");
+        if (!res.ok || !json.data) throw new Error(json.error ?? "Failed to fetch blog.");
         if (cancelled) return;
         setPosts(json.data);
         setSelectedId(json.data[0]?.id ?? "");
       } catch (e) {
         if (cancelled) return;
-        setError(e instanceof Error ? e.message : "Không tải được blog.");
+        setError(e instanceof Error ? e.message : "Could not load blog.");
       }
     }
     run();
@@ -77,7 +77,7 @@ export function BlogPostManager() {
       const url = await uploadAdminImage(file);
       setDraft((d) => (d ? { ...d, image: url } : d));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Upload ảnh thất bại.");
+      setError(e instanceof Error ? e.message : "Image upload failed.");
     } finally {
       setUploading(false);
     }
@@ -88,7 +88,7 @@ export function BlogPostManager() {
     const now = new Date().toLocaleDateString("vi-VN");
     const next: BlogPost = {
       id,
-      title: "Bài viết mới",
+      title: "New Post",
       excerpt: "",
       image: "",
       date: now,
@@ -98,7 +98,7 @@ export function BlogPostManager() {
     setPosts((prev) => (prev ? [next, ...prev] : [next]));
     setSelectedId(id);
     setDraft(next);
-    setMessage("Đã tạo draft bài viết mới.");
+    setMessage("Draft post created.");
     setError(null);
   }
 
@@ -125,7 +125,7 @@ export function BlogPostManager() {
 
       const json = (await res.json()) as ApiPostResponse & { ok?: boolean };
       if (!res.ok || !json.data) {
-        setError(json.error ?? "Không lưu được blog post.");
+        setError(json.error ?? "Could not save blog post.");
         return;
       }
 
@@ -133,14 +133,14 @@ export function BlogPostManager() {
         if (!prev) return prev;
         return prev.map((p) => (p.id === json.data!.id ? json.data! : p));
       });
-      setMessage("Đã lưu blog post.");
+      setMessage("Blog post saved.");
     });
   }
 
   if (!posts || !draft) {
     return (
       <div className="admin-card">
-        <p className="admin-muted">Đang tải blog…</p>
+        <p className="admin-muted">Loading blog…</p>
       </div>
     );
   }
@@ -149,9 +149,9 @@ export function BlogPostManager() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold admin-text">CMS Blog</h2>
+          <h2 className="text-lg font-semibold admin-text">Blog CMS</h2>
           <p className="mt-1 text-sm admin-muted">
-            Chỉnh sửa bài viết — phân mục, title, excerpt, image, body.
+            Edit posts — category, title, excerpt, image, body.
           </p>
         </div>
 
@@ -162,13 +162,13 @@ export function BlogPostManager() {
 
       <div>
         <button type="button" className="admin-btn admin-btn--primary" onClick={createPostDraft}>
-          + Tạo post mới
+          + Create new post
         </button>
       </div>
 
       <div className="admin-card">
         <label className="block text-sm admin-text">
-          Chọn bài
+          Select post
           <select
             className="admin-input mt-1.5"
             value={selectedId}
@@ -188,11 +188,11 @@ export function BlogPostManager() {
 
       <div className="admin-grid-2">
         <div className="admin-card">
-          <h3 className="text-base font-semibold admin-text">Nội dung</h3>
+          <h3 className="text-base font-semibold admin-text">Content</h3>
 
           <div className="mt-4 space-y-3">
             <label className="block text-sm admin-text">
-              Phân mục
+              Category
               <select
                 className="admin-input mt-1"
                 value={draft.category ?? "tips"}
@@ -239,9 +239,9 @@ export function BlogPostManager() {
                     setDraft((d) => (d ? { ...d, image: e.target.value } : d))
                   }
                 />
-                <label className="admin-btn inline-flex items-center gap-2" aria-label="Upload ảnh">
+                <label className="admin-btn inline-flex items-center gap-2" aria-label="Upload image">
                   <Upload className="h-4 w-4" />
-                  {uploading ? "…" : "Tải lên"}
+                  {uploading ? "…" : "Upload"}
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp,image/gif"
@@ -264,7 +264,7 @@ export function BlogPostManager() {
                 onChange={(e) =>
                   setDraft((d) => (d ? { ...d, date: e.target.value } : d))
                 }
-                placeholder="12 Tháng 3, 2026"
+                placeholder="March 12, 2026"
               />
             </label>
           </div>
@@ -273,7 +273,7 @@ export function BlogPostManager() {
         <div className="admin-card">
           <h3 className="text-base font-semibold admin-text">Body</h3>
           <p className="mt-1 text-sm admin-muted">
-            Body là chuỗi phân đoạn bằng khoảng trắng dòng (chia bằng `\n\n`).
+            Body is a paragraph string separated by blank lines (split by `\n\n`).
           </p>
 
           <textarea
@@ -296,7 +296,7 @@ export function BlogPostManager() {
               onClick={handleSave}
             >
               <Save className="inline-block h-4 w-4 mr-2" />
-              {isPending ? "Đang lưu…" : "Lưu bài"}
+              {isPending ? "Saving…" : "Save Post"}
             </button>
           </div>
         </div>

@@ -1,1 +1,195 @@
 /* /tai-khoan */
+.taiKhoanPage {
+  background: #000;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.taiKhoanPage .customerPageTitle,
+.taiKhoanPage .customerAuthTitle,
+.taiKhoanPage .customerPageWrapDark .customerPageTitle,
+.taiKhoanPage .customerPageWrapDark .customerAuthTitle {
+  color: #fff;
+}
+
+.taiKhoanPage .customerPageSubtitle,
+.taiKhoanPage .customerAuthSubtitle,
+.taiKhoanPage .customerPageWrapDark .customerPageSubtitle,
+.taiKhoanPage .customerPageWrapDark .customerAuthSubtitle {
+  color: #e0e0e0;
+}
+
+.taiKhoanPage .customerAuthInput {
+  background: #111;
+  border-color: #333;
+  color: #fff;
+}
+
+.taiKhoanPage .customerAuthLabel {
+  color: #ddd;
+}
+
+.taiKhoanPage .customerAuthInput::placeholder {
+  color: #666;
+}
+
+.taiKhoanPage .customerAuthError {
+  background: #2a0a0a;
+  border-color: #f24e35;
+  color: #ff9999;
+}
+
+.taiKhoanPage .customerAuthInfo {
+  background: #0a2a0a;
+  border-color: #4caf50;
+  color: #99ff99;
+}
+
+.taiKhoanPage .customerAuthForgot a,
+.taiKhoanPage .customerAuthSwitch a {
+  color: #f24e35;
+}
+
+.taiKhoanPage .customerAuthSwitch {
+  color: #999;
+}
+
+.taiKhoanPage .storeBtnSecondary {
+  border-color: #444;
+  background: transparent;
+  color: #fff;
+}
+
+.taiKhoanPage .storeBtnSecondary:hover:not(:disabled) {
+  background: #222;
+  color: #fff;
+}
+
+/* Member account dark theme */
+.taiKhoanPage .memberHeader h1 {
+  color: #fff;
+}
+
+.taiKhoanPage .memberHeader {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.taiKhoanPage .memberHeader h1,
+.taiKhoanPage .memberPanel h2 {
+  color: #fff;
+}
+
+.taiKhoanPage .memberHeader p {
+  color: #e0e0e0;
+}
+
+.taiKhoanPage .memberNav button {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ddd;
+}
+
+.taiKhoanPage .memberNav button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(242, 78, 53, 0.65);
+  color: #fff;
+}
+
+.taiKhoanPage .memberNav button.isActive {
+  background: rgba(242, 78, 53, 0.95);
+  border-color: rgba(242, 78, 53, 0.95);
+  color: #fff;
+}
+
+.taiKhoanPage .memberPanel {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.taiKhoanPage .memberMuted,
+.taiKhoanPage .memberSectionIntro {
+  color: #e0e0e0;
+}
+
+.taiKhoanPage .memberField label,
+.taiKhoanPage .memberCheck strong {
+  color: #ddd;
+}
+
+.taiKhoanPage .memberField input {
+  background: #111;
+  border-color: #333;
+  color: #fff;
+}
+
+.taiKhoanPage .memberOrderItem {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.taiKhoanPage .memberOrderMeta,
+.taiKhoanPage .memberOrderStatus,
+.taiKhoanPage .memberOrderItemLine {
+  color: #ccc;
+}
+
+.taiKhoanPage .memberOrderTotal {
+  color: #fff;
+}
+
+.taiKhoanPage .memberWarning {
+  background: #2a1a00;
+  border-color: #fcd34d;
+  color: #fcd34d;
+}
+
+.taiKhoanPage .memberOrderDetail {
+  background: #111;
+  border-color: #333;
+}
+
+.taiKhoanPage .checkoutSecondaryBtn {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.taiKhoanPage .checkoutSecondaryBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.taiKhoanPage .memberCheck {
+  color: #ddd;
+}
+
+.taiKhoanPage .memberFavCard {
+  background: #111;
+  border-color: #333;
+}
+
+.taiKhoanPage .memberLinkBtn {
+  color: #666;
+}
+
+.taiKhoanPage .memberLinkBtn:hover {
+  color: #f24e35;
+}
+
+/* Orders section - ensure visibility */
+.taiKhoanPage .memberOrdersPager p,
+.taiKhoanPage .memberOrdersPagerActions button {
+  color: #e0e0e0;
+}
+
+.taiKhoanPage .memberOrdersPagerActions button:disabled {
+  color: #666;
+  opacity: 0.5;
+}
+
+.taiKhoanPage strong {
+  color: #fff;
+}
+
+.taiKhoanPage p {
+  color: #e0e0e0;
+}

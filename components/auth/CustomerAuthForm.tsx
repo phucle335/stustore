@@ -40,19 +40,19 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
 
     if (isRegister && !fullName.trim()) {
       setLoading(false);
-      setError("Vui lòng nhập họ tên.");
+      setError("Please enter your full name.");
       return;
     }
 
     if (isRegister && password !== confirmPassword) {
       setLoading(false);
-      setError("Mật khẩu xác nhận không khớp.");
+      setError("Passwords do not match.");
       return;
     }
 
     if (password.length < 6) {
       setLoading(false);
-      setError("Mật khẩu phải có ít nhất 6 ký tự.");
+      setError("Password must be at least 6 characters.");
       return;
     }
 
@@ -64,7 +64,7 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
       setError(
         err instanceof Error
           ? err.message
-          : "Thiếu cấu hình Supabase trong .env.local.",
+          : "Missing Supabase configuration in .env.local.",
       );
       return;
     }
@@ -85,7 +85,7 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
 
       if (!signupRes.ok) {
         setLoading(false);
-        setError(signupBody.error ?? "Đăng ký thất bại.");
+        setError(signupBody.error ?? "Registration failed.");
         return;
       }
 
@@ -124,7 +124,7 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
 
     if (!syncRes.ok) {
       setLoading(false);
-      setError(syncBody.error ?? "Không đồng bộ được hồ sơ người dùng.");
+      setError(syncBody.error ?? "Could not sync user profile.");
       return;
     }
 
@@ -150,17 +150,17 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
         />
       </div>
       <h1 className={styles.customerAuthTitle}>
-        {isRegister ? "Đăng ký tài khoản" : "Đăng nhập"}
+        {isRegister ? "Create Account" : "Sign In"}
       </h1>
       <p className={styles.customerAuthSubtitle}>
         {isRegister
-          ? "Tạo tài khoản để thanh toán đơn hàng."
-          : "Đăng nhập để tiếp tục thanh toán."}
+          ? "Create an account to place orders."
+          : "Sign in to continue."}
       </p>
 
       {isRegister ? (
         <label className={styles.customerAuthLabel}>
-          Họ và tên
+          Full Name
           <input
             type="text"
             required
@@ -168,7 +168,7 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             className={styles.customerAuthInput}
-            placeholder="Nguyễn Văn A"
+            placeholder="John Doe"
           />
         </label>
       ) : null}
@@ -187,7 +187,7 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
       </label>
 
       <label className={styles.customerAuthLabel}>
-        Mật khẩu
+        Password
         <input
           type="password"
           required
@@ -205,14 +205,14 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
           <Link
             href={`${getForgotPasswordPath("customer")}?redirect=${encodeURIComponent(redirect)}`}
           >
-            Quên mật khẩu?
+            Forgot password?
           </Link>
         </p>
       ) : null}
 
       {isRegister ? (
         <label className={styles.customerAuthLabel}>
-          Xác nhận mật khẩu
+          Confirm Password
           <input
             type="password"
             required
@@ -228,13 +228,13 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
 
       {resetSuccess ? (
         <p className={styles.customerAuthInfo}>
-          Đặt lại mật khẩu thành công. Đăng nhập bằng mật khẩu mới.
+          Password reset successful. Sign in with your new password.
         </p>
       ) : null}
       {resetLinkInvalid ? (
         <p className={styles.customerAuthError}>
-          Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.{" "}
-          <Link href={getForgotPasswordPath("customer")}>Gửi lại email</Link>.
+          Invalid or expired password reset link.{" "}
+          <Link href={getForgotPasswordPath("customer")}>Send new email</Link>.
         </p>
       ) : null}
       {error ? <p className={styles.customerAuthError}>{error}</p> : null}
@@ -242,25 +242,25 @@ export function CustomerAuthForm({ mode }: CustomerAuthFormProps) {
 
       <button type="submit" disabled={loading} className={styles.customerAuthSubmit}>
         {loading
-          ? "Đang xử lý…"
+          ? "Processing…"
           : isRegister
-            ? "Đăng ký"
-            : "Đăng nhập"}
+            ? "Create Account"
+            : "Sign In"}
       </button>
 
       <p className={styles.customerAuthSwitch}>
         {isRegister ? (
           <>
-            Đã có tài khoản?{" "}
+            Already have an account?{" "}
             <Link href={`/dang-nhap?redirect=${encodeURIComponent(redirect)}`}>
-              Đăng nhập
+              Sign In
             </Link>
           </>
         ) : (
           <>
-            Chưa có tài khoản?{" "}
+            No account yet?{" "}
             <Link href={`/dang-ky?redirect=${encodeURIComponent(redirect)}`}>
-              Đăng ký ngay
+              Create one
             </Link>
           </>
         )}

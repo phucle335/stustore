@@ -44,14 +44,8 @@ export function MottoWork() {
     <section className={styles.work} id="work">
       <div className={styles.container}>
         <div className={styles.workHead}>
-          <MottoReveal as="h2" className={styles.workTitle}>
-            <MottoLine>TRENDING</MottoLine>
-            <MottoLine>
-              <em>now</em>
-            </MottoLine>
-          </MottoReveal>
           <Link href="/sneakers" className={styles.btnLink}>
-            <span>Xem tất cả sản phẩm</span>
+            <span>View All Products</span>
             <span aria-hidden>→</span>
           </Link>
         </div>

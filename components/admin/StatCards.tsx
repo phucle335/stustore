@@ -12,7 +12,7 @@ type StatCardsProps = {
 const cards = [
   {
     key: "revenue" as const,
-    label: "Doanh thu",
+    label: "Revenue",
     icon: DollarSign,
     iconBg: "#dbeafe",
     iconColor: "#2563eb",
@@ -21,7 +21,7 @@ const cards = [
   },
   {
     key: "orders" as const,
-    label: "Đơn hàng",
+    label: "Orders",
     icon: ShoppingBag,
     iconBg: "#d1fae5",
     iconColor: "#059669",
@@ -30,7 +30,7 @@ const cards = [
   },
   {
     key: "products" as const,
-    label: "Sản phẩm",
+    label: "Products",
     icon: Package,
     iconBg: "#ede9fe",
     iconColor: "#7c3aed",
@@ -39,7 +39,7 @@ const cards = [
   },
   {
     key: "customers" as const,
-    label: "Khách hàng",
+    label: "Customers",
     icon: Users,
     iconBg: "#ffedd5",
     iconColor: "#ea580c",
@@ -76,7 +76,7 @@ export function StatCards({ stats }: StatCardsProps) {
                   className={`admin-stat-trend ${trend.up ? "admin-stat-trend--up" : "admin-stat-trend--down"}`}
                 >
                   <TrendIcon className="inline h-3.5 w-3.5" aria-hidden />
-                  {trend.value} so với 30 ngày trước
+                  {trend.value} vs 30 days ago
                 </span>
               </div>
               <div

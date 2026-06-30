@@ -54,7 +54,7 @@ export async function updateSession(request: NextRequest) {
   if (isCheckoutRoute && !user) {
     if (pathname.startsWith("/api/store")) {
       return NextResponse.json(
-        { error: "Bạn cần đăng nhập để thanh toán." },
+        { error: "Please sign in to checkout." },
         { status: 401 },
       );
     }

@@ -1,2 +1,41 @@
 @import "tailwindcss";
 @import "./motto/tokens.css";
+
+/* Messenger Chat Button */
+.messenger-chat-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  width: 56px;
+  height: 56px;
+  background: #0084ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 132, 255, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  color: #fff;
+  text-decoration: none;
+}
+
+.messenger-chat-btn:hover {
+  transform: scale(1.08);
+  background: #0073e6;
+  box-shadow: 0 6px 20px rgba(0, 132, 255, 0.5);
+  color: #fff;
+}
+
+.messenger-chat-btn:active {
+  transform: scale(0.96);
+}
+
+@media (max-width: 640px) {
+  .messenger-chat-btn {
+    bottom: 16px;
+    right: 16px;
+    width: 52px;
+    height: 52px;
+  }
+}

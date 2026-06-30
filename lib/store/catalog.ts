@@ -16,11 +16,11 @@ export type { ProductStockSnapshot } from "./products-data";
 
 const CATEGORY_BACK: Record<ProductCategory, { href: string; label: string }> =
   {
-    sneakers: { href: "/sneakers", label: "Giày Sneaker" },
+    sneakers: { href: "/sneakers", label: "Sneakers" },
     sunglasses: { href: "/sunglasses", label: "Sunglasses" },
-    clothing: { href: "/clothing", label: "Quần Áo" },
-    bags: { href: "/bags", label: "Túi Xách" },
-    watches: { href: "/watches", label: "Đồng Hồ" },
+    clothing: { href: "/clothing", label: "Clothing" },
+    bags: { href: "/bags", label: "Bags" },
+    watches: { href: "/watches", label: "Watches" },
   };
 
 export function getCategoryBackLink(category: ProductCategory): {

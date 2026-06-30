@@ -75,7 +75,7 @@ export function ProductPurchaseBlock({ product }: ProductPurchaseBlockProps) {
           type="button"
           onClick={() => setQuantity((q) => Math.max(1, q - 1))}
           className={styles.productQtyBtn}
-          aria-label="Giảm số lượng"
+          aria-label="Decrease quantity"
         >
           -
         </button>
@@ -86,7 +86,7 @@ export function ProductPurchaseBlock({ product }: ProductPurchaseBlockProps) {
             setQuantity((q) => Math.min(Math.max(1, selectedStock), q + 1))
           }
           className={styles.productQtyBtn}
-          aria-label="Tăng số lượng"
+          aria-label="Increase quantity"
         >
           +
         </button>
@@ -128,7 +128,7 @@ export function ProductPurchaseBlock({ product }: ProductPurchaseBlockProps) {
         stock={selectedStock}
         lineId={buildCartLineId(product.id, undefined, selectedSize)}
         quantity={quantity}
-        label="Thêm vào giỏ hàng"
+        label="Add to cart"
         openOnAdd={false}
         disabled={!canAdd}
         className={`${styles.productDetailAddBtn} ${styles.productDetailAddBtnSecondary}`}

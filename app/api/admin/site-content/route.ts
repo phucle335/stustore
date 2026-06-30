@@ -8,14 +8,14 @@ import {
 } from "@/lib/site-content/site-content";
 
 type UpdatePayload = {
-  // Cho phép truyền partial để admin chỉ sửa một phần.
+  // Allows partial updates so admin can edit just one part.
   value: Partial<SiteContent> | null;
 };
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  // Admin có thể đọc lại, nhưng hiện không cần — trả 405.
+  // Admin can read back, but currently not needed — return 405.
   return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
 }
 
@@ -29,7 +29,7 @@ export async function PATCH(request: Request) {
     const defaultContent = getDefaultSiteContent();
     const nextValue = body.value ?? defaultContent;
 
-    // Merge để tránh admin vô tình gửi thiếu key.
+    // Merge to avoid admin accidentally omitting keys.
     const merged = mergeSiteContent(nextValue);
     const payload = {
       key: "site_content",

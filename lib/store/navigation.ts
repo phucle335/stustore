@@ -7,9 +7,9 @@ export type NavLink = {
 };
 
 export const NAV_LINKS: NavLink[] = [
-  { id: "home", href: "/", label: "Trang chủ" },
-  { id: "sneakers", href: "/sneakers", label: "Sneaker" },
-  { id: "clothing", href: "/clothing", label: "Clothes" },
+  { id: "home", href: "/", label: "Home" },
+  { id: "sneakers", href: "/sneakers", label: "Sneakers" },
+  { id: "clothing", href: "/clothing", label: "Clothing" },
   { id: "sunglasses", href: "/sunglasses", label: "Sunglasses" },
   { id: "watches", href: "/watches", label: "Watches" },
   { id: "blog", href: "/blog", label: "Blog" },

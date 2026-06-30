@@ -62,7 +62,7 @@ export async function PUT(
     const category = parseBlogCategoryId(body.category) ?? "tips";
 
     if (!title || !excerpt || !image || !content.trim()) {
-      return { ok: false, error: "Thiếu title/excerpt/image/body." };
+      return { ok: false, error: "Missing title/excerpt/image/body." };
     }
 
     const supabase = createAdminSupabaseClient();

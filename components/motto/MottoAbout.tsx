@@ -2,13 +2,14 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "@/styles/components/motto/MottoAbout.module.css";
 import { MottoReveal } from "./MottoReveal";
+import { STORE_NAME } from "@/lib/store/site";
 
 export function MottoAbout() {
   return (
     <section className={styles.about} id="about">
       <div className={styles.container}>
         <MottoReveal as="h2" className={styles.aboutTitle} splitLines={false}>
-          Về Stusport
+          About Stusport
         </MottoReveal>
 
         <div className={styles.aboutGrid}>
@@ -27,12 +28,12 @@ export function MottoAbout() {
             <div className={styles.aboutCardMedia}>
               <Image
                 src="https://minhshop.vn/_next/static/media/about-2.fb51b4e0.jpg"
-                alt="Cửa hàng trực tuyến Stusport"
+                alt="Stusport Online Store"
                 fill
                 sizes="(max-width: 767px) 100vw, 50vw"
               />
             </div>
-            <p className={styles.aboutCardLabel}>Cửa hàng trực tuyến</p>
+            <p className={styles.aboutCardLabel}>Online Store</p>
           </div>
         </div>
 
@@ -41,12 +42,14 @@ export function MottoAbout() {
           className={`${styles.body} ${styles.aboutText}`}
           splitLines={false}
         >
-          Stusport mang đến sneaker và streetwear chính hãng, tư vấn size chuẩn
-          và giao nhanh toàn quốc — mua sắm an tâm, đổi trả rõ ràng.
+          <Link href="/gioi-thieu">
+            Operated by young people passionate about Street-culture, {STORE_NAME} not
+            only sells authentic products, we bring a lifestyle.
+          </Link>
         </MottoReveal>
 
-        <Link href="/ho-tro" className={styles.btnLink}>
-          Liên hệ hỗ trợ
+        <Link href="/gioi-thieu" className={styles.btnLink}>
+          About Us
         </Link>
       </div>
     </section>

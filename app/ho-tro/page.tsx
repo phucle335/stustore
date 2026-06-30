@@ -7,7 +7,7 @@ import { STORE_NAME } from "@/lib/store/site";
 import styles from "@/styles/components/store/StoreStatic.module.css";
 
 export const metadata = {
-  title: `Hỗ trợ và giải đáp thắc mắc — ${STORE_NAME}`,
+  title: `Help & FAQ — ${STORE_NAME}`,
 };
 
 export default async function SupportPage() {
@@ -17,10 +17,10 @@ export default async function SupportPage() {
   return (
     <StoreShell activeNav="home">
       <StaticPageShell backgroundImage={bg}>
-        <h1 className={styles.staticPageTitle}>Hỗ trợ và giải đáp thắc mắc</h1>
+        <h1 className={styles.staticPageTitle}>Help & FAQ</h1>
         <p className={styles.staticPageIntro}>
-          Tìm câu trả lời nhanh về đặt hàng, thanh toán, giao nhận và đổi trả
-          tại {STORE_NAME}.
+          Find quick answers about ordering, payment, delivery, and returns
+          at {STORE_NAME}.
         </p>
         <SupportFaq />
       </StaticPageShell>

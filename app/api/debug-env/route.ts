@@ -8,7 +8,7 @@ export async function GET() {
   const hasAnonKey = Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
   const hasServiceRoleKey = Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-  // Test nhanh quyền đọc products (anon + RLS “Anyone can read products”)
+  // Quick permission check for products read (anon + RLS)
   let productsTest: { ok: boolean; count?: number; error?: string } = {
     ok: false,
   };
@@ -48,4 +48,3 @@ export async function GET() {
     { status: 200 },
   );
 }
-

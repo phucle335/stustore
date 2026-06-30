@@ -38,8 +38,8 @@ export async function updateUserAction(id: string, input: UpdateUserInput) {
           },
           {
             type: "admin_action",
-            title: "Admin cập nhật khách hàng",
-            body: `Cập nhật user ${id}`,
+            title: "Admin updated customer",
+            body: `Updated user ${id}`,
             entityType: "user",
             entityId: id,
           },
@@ -67,7 +67,7 @@ export async function assignRoleAction(id: string, role: UserRole) {
           },
           {
             type: "admin_action",
-            title: "Admin cập nhật role khách hàng",
+            title: "Admin updated customer role",
             body: `User ${id} → ${role}`,
             entityType: "user",
             entityId: id,
@@ -96,8 +96,8 @@ export async function deleteUserAction(id: string) {
           },
           {
             type: "admin_action",
-            title: "Admin xóa khách hàng",
-            body: `Xóa user ${id}`,
+            title: "Admin deleted customer",
+            body: `Deleted user ${id}`,
             entityType: "user",
             entityId: id,
           },

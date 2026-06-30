@@ -17,15 +17,15 @@ export async function POST(request: Request) {
     const file = formData.get("file");
 
     if (!(file instanceof File)) {
-      return failure("Thiếu file ảnh.");
+      return failure("Missing image file.");
     }
 
     if (!ALLOWED_TYPES.has(file.type)) {
-      return failure("Chỉ chấp nhận JPEG, PNG, WebP hoặc GIF.");
+      return failure("Only JPEG, PNG, WebP or GIF accepted.");
     }
 
     if (file.size > MAX_BYTES) {
-      return failure("Ảnh tối đa 5MB.");
+      return failure("Image max 5MB.");
     }
 
     const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     if (uploadError) {
       return failure(
         uploadError.message.includes("Bucket not found")
-          ? "Chưa tạo bucket product-images. Chạy supabase/product-images-storage.sql trong SQL Editor."
+          ? "product-images bucket not created. Run supabase/product-images-storage.sql in SQL Editor."
           : uploadError.message,
       );
     }

@@ -8,13 +8,13 @@ import { StoreShell } from "@/components/store/StoreShell";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Đăng nhập | Stusport",
+  title: "Sign In | Stusport",
 };
 
 export default function CustomerLoginPage() {
   return (
     <StoreShell activeNav="home">
-      <CustomerPageWrap narrow>
+      <CustomerPageWrap narrow pageClassName="dangNhapPage">
         <Suspense
           fallback={<div className="customer-auth-card--loading" aria-hidden />}
         >

@@ -34,14 +34,14 @@ export function MottoTestimonials() {
           className={styles.testimonialsTitle}
           splitLines={false}
         >
-          Khách hàng nói gì
+          What Our Customers Say
         </MottoReveal>
         <MottoReveal
           as="p"
           className={styles.testimonialsSub}
           splitLines={false}
         >
-          Trải nghiệm thực tế khi mua sắm tại Stusport
+          Real experiences from shopping at Stusport
         </MottoReveal>
 
         <div className={styles.testimonialsSlider}>

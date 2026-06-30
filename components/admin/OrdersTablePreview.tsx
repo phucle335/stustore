@@ -99,13 +99,13 @@ export function OrdersTablePreview({
     <section className="admin-card">
       <div className="admin-flex-between" style={{ marginBottom: 16 }}>
         <div>
-          <h2 className="admin-card-title">Đơn hàng</h2>
-          <p className="admin-card-sub">Bảng tóm tắt trạng thái mới nhất</p>
+          <h2 className="admin-card-title">Orders</h2>
+          <p className="admin-card-sub">Latest order status summary</p>
         </div>
         <div className="admin-filter-row">
           <input
             className="admin-input"
-            placeholder="Tìm theo mã / khách hàng"
+            placeholder="Search by ID / customer"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -114,7 +114,7 @@ export function OrdersTablePreview({
             value={status}
             onChange={(e) => setStatus(e.target.value as OrderStatus | "all")}
           >
-            <option value="all">Tất cả trạng thái</option>
+            <option value="all">All statuses</option>
             {ORDER_STATUSES.map((s) => (
               <option key={s} value={s}>
                 {ORDER_STATUS_LABELS[s]}
@@ -127,28 +127,28 @@ export function OrdersTablePreview({
       <div className="admin-table-wrap admin-only-desktop">
         <table className="admin-table admin-order-table">
           <thead>
-            <tr>
-              <th>Mã đơn</th>
-              <th>Khách hàng</th>
-              <th>Sản phẩm</th>
-              <th>Trạng thái</th>
-              <th>Ngày tạo</th>
-              <th style={{ textAlign: "right" }}>Tổng tiền</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 ? (
               <tr>
-                <td colSpan={6} className="admin-muted" style={{ textAlign: "center", padding: 18 }}>
-                  Không có kết quả
-                </td>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Products</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th style={{ textAlign: "right" }}>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="admin-muted" style={{ textAlign: "center", padding: 18 }}>
+                      No results
+                    </td>
               </tr>
             ) : (
               filtered.map((order) => {
                 const email = order.user_id ? emailByUserId.get(order.user_id) : null;
                 const fallbackUserId = order.user_id ? order.user_id.slice(0, 8) : null;
                 const customerName =
-                  String(order.shipping_full_name ?? "").trim() || "Khách lẻ";
+                  String(order.shipping_full_name ?? "").trim() || "Guest";
                 const customerPhone =
                   String(order.shipping_phone ?? "").trim() || "";
                 return (
@@ -204,13 +204,13 @@ export function OrdersTablePreview({
       <div className="admin-order-mobile-list admin-only-mobile">
         {filtered.length === 0 ? (
           <p className="admin-muted" style={{ textAlign: "center", padding: 18 }}>
-            Không có kết quả
+            No results
           </p>
         ) : (
           filtered.map((order) => {
             const email = order.user_id ? emailByUserId.get(order.user_id) : null;
             const customerName =
-              String(order.shipping_full_name ?? "").trim() || "Khách lẻ";
+              String(order.shipping_full_name ?? "").trim() || "Guest";
             const customerPhone = String(order.shipping_phone ?? "").trim();
             return (
               <article key={order.id} className="admin-mobile-card" style={{ cursor: "default" }}>

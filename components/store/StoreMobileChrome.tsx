@@ -79,31 +79,31 @@ export function StoreMobileChrome({
       },
       {
         id: "search",
-        label: "Tìm kiếm",
+        label: "Search",
         iconClass: "fas fa-search",
         onClick: openSearch,
       },
       {
         id: "cart",
-        label: "Giỏ hàng",
+        label: "Cart",
         iconClass: "fas fa-shopping-bag",
         onClick: openCart,
         badge: itemCount > 0 ? itemCount : undefined,
         ariaLabel:
           itemCount > 0
-            ? `Giỏ hàng, ${itemCount} sản phẩm`
-            : "Giỏ hàng",
+            ? `Cart, ${itemCount} items`
+            : "Cart",
       },
       user
         ? {
             id: "account",
-            label: "Tài khoản",
+            label: "Account",
             iconClass: "far fa-user",
             onClick: openAccountMenu,
           }
         : {
             id: "login",
-            label: "Đăng nhập",
+            label: "Sign In",
             iconClass: "far fa-user",
             onClick: onLoginClick,
           },

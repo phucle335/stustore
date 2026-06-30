@@ -53,7 +53,7 @@ export function MobileNavDrawer({
       <button
         type="button"
         className={styles.backdrop}
-        aria-label="Đóng menu"
+        aria-label="Close menu"
         tabIndex={open ? 0 : -1}
         onClick={onClose}
       />
@@ -63,13 +63,13 @@ export function MobileNavDrawer({
         aria-modal="true"
         aria-labelledby={titleId}
       >
-        <MobileOverlayLogoHeader onClose={onClose} closeLabel="Đóng menu" />
+        <MobileOverlayLogoHeader onClose={onClose} closeLabel="Close menu" />
         <div className={styles.header}>
           <h2 id={titleId} className={styles.title}>
-            Danh mục
+            Categories
           </h2>
         </div>
-        <nav className={styles.nav} aria-label="Danh mục">
+        <nav className={styles.nav} aria-label="Categories">
           <ul className={styles.list}>
             {links.map((link) => (
               <li key={link.href} className={styles.listItem}>

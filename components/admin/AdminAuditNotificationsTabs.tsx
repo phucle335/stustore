@@ -50,14 +50,14 @@ export function AdminAuditNotificationsTabs({
           className={`admin-tab-btn${tab === "admin" ? " is-active" : ""}`}
           onClick={() => setTab("admin")}
         >
-          Admin — thao tác
+          Admin actions
         </button>
         <button
           type="button"
           className={`admin-tab-btn${tab === "support" ? " is-active" : ""}`}
           onClick={() => setTab("support")}
         >
-          Khách hàng & đơn
+          Customers & Orders
         </button>
       </div>
 
@@ -68,16 +68,16 @@ export function AdminAuditNotificationsTabs({
               <thead>
                 <tr>
                   <th>Admin</th>
-                  <th>Thao tác</th>
-                  <th>Đối tượng</th>
-                  <th style={{ textAlign: "right" }}>Thời gian</th>
+                  <th>Action</th>
+                  <th>Target</th>
+                  <th style={{ textAlign: "right" }}>Time</th>
                 </tr>
               </thead>
               <tbody>
                 {adminAudit.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="admin-muted" style={{ textAlign: "center", padding: 18 }}>
-                      Chưa có log
+                      No logs yet
                     </td>
                   </tr>
                 ) : (
@@ -107,7 +107,7 @@ export function AdminAuditNotificationsTabs({
           <div className="admin-log-list admin-only-mobile" style={{ marginTop: 12 }}>
             {adminAudit.length === 0 ? (
               <p className="admin-muted" style={{ textAlign: "center", padding: 18 }}>
-                Chưa có log
+                No logs yet
               </p>
             ) : (
               adminAudit.map((log) => {
@@ -141,15 +141,15 @@ export function AdminAuditNotificationsTabs({
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Nội dung</th>
-                  <th style={{ textAlign: "right" }}>Thời gian</th>
+                  <th>Content</th>
+                  <th style={{ textAlign: "right" }}>Time</th>
                 </tr>
               </thead>
               <tbody>
                 {supportAndOrderNotifications.length === 0 ? (
                   <tr>
                     <td colSpan={2} className="admin-muted" style={{ textAlign: "center", padding: 18 }}>
-                      Chưa có thông báo
+                      No notifications yet
                     </td>
                   </tr>
                 ) : (
@@ -179,7 +179,7 @@ export function AdminAuditNotificationsTabs({
           <div className="admin-log-list admin-only-mobile" style={{ marginTop: 12 }}>
             {supportAndOrderNotifications.length === 0 ? (
               <p className="admin-muted" style={{ textAlign: "center", padding: 18 }}>
-                Chưa có thông báo
+                No notifications yet
               </p>
             ) : (
               supportAndOrderNotifications.map((n) => (

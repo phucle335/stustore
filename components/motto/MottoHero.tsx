@@ -150,7 +150,7 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
               href="#services"
               className={`${styles.btn} ${styles.btnPill} ${styles.btnLight}`}
             >
-              <span>Khám phá sản phẩm</span>
+              <span>Explore Products</span>
               <span className={styles.ctaHint}>(Scroll)</span>
             </Link>
           </div>
@@ -160,7 +160,7 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
           <div
             className={styles.thumbs}
             role="tablist"
-            aria-label="Chọn ảnh banner"
+            aria-label="Select banner image"
           >
             {slidesToUse.map((slide, thumbIndex) => (
               <button
@@ -168,7 +168,7 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
                 type="button"
                 role="tab"
                 aria-selected={thumbIndex === index}
-                aria-label={`Ảnh ${thumbIndex + 1}`}
+                aria-label={`Image ${thumbIndex + 1}`}
                 className={`${styles.thumb}${thumbIndex === index ? ` ${styles.thumbActive}` : ""}`}
                 onClick={() => goTo(thumbIndex)}
               >
@@ -189,7 +189,7 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
               type="button"
               className={styles.arrow}
               onClick={goPrev}
-              aria-label="Ảnh trước"
+              aria-label="Previous image"
             >
               ←
             </button>
@@ -197,7 +197,7 @@ export function MottoHero({ ready, slides, rotatingWords }: MottoHeroProps) {
               type="button"
               className={styles.arrow}
               onClick={goNext}
-              aria-label="Ảnh tiếp theo"
+              aria-label="Next image"
             >
               →
             </button>

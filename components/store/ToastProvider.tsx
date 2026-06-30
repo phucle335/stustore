@@ -92,7 +92,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 type="button"
                 className={styles.toastClose}
                 onClick={() => removeToast(toast.id)}
-                aria-label="Đóng thông báo"
+                aria-label="Dismiss notification"
               >
                 &times;
               </button>
@@ -125,7 +125,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 type="button"
                 className={styles.toastClose}
                 onClick={() => removeToast(toast.id)}
-                aria-label="Đóng thông báo"
+                aria-label="Dismiss notification"
               >
                 &times;
               </button>

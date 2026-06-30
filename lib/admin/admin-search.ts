@@ -20,14 +20,14 @@ export type AdminSearchResult = {
 };
 
 const VIEW_KEYWORDS: Record<AdminView, string[]> = {
-  overview: ["dashboard", "tổng quan", "overview", "thống kê"],
-  analytics: ["analytics", "phân tích", "traffic"],
-  products: ["sản phẩm", "product", "hàng hóa"],
-  orders: ["đơn hàng", "order", "đơn"],
-  customers: ["khách hàng", "customer", "user", "tài khoản"],
-  coupons: ["phiếu", "coupon", "mã giảm", "voucher"],
-  site_content: ["site", "nội dung", "content"],
-  blog_cms: ["blog", "bài viết", "cms"],
+  overview: ["dashboard", "overview"],
+  analytics: ["analytics", "traffic"],
+  products: ["product"],
+  orders: ["order"],
+  customers: ["customer", "user"],
+  coupons: ["coupon", "voucher"],
+  site_content: ["site", "content"],
+  blog_cms: ["blog", "cms"],
 };
 
 function includesQuery(haystack: string, query: string): boolean {
@@ -63,7 +63,7 @@ export function buildAdminSearchResults(
         view,
         kind: "view",
         label,
-        subtitle: "Mở trang quản trị",
+        subtitle: "Open admin page",
       });
     }
   }
@@ -82,7 +82,7 @@ export function buildAdminSearchResults(
         id: `order-${order.id}`,
         view: "orders",
         kind: "order",
-        label: `Đơn #${order.id}`,
+        label: `Order #${order.id}`,
         subtitle: order.shipping_full_name || order.shipping_phone || undefined,
         focusId: String(order.id),
       });
@@ -99,7 +99,7 @@ export function buildAdminSearchResults(
         view: "products",
         kind: "product",
         label: product.name || `SP #${getProductManageCode(product)}`,
-        subtitle: `Mã ${getProductManageCode(product)}`,
+        subtitle: `Code ${getProductManageCode(product)}`,
         focusId: String(product.id),
       });
     }
@@ -116,7 +116,7 @@ export function buildAdminSearchResults(
         view: "customers",
         kind: "user",
         label: user.email,
-        subtitle: user.role === "admin" ? "Admin" : "Khách hàng",
+        subtitle: user.role === "admin" ? "Admin" : "Customer",
         focusId: user.id,
       });
     }

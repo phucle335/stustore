@@ -43,7 +43,7 @@ export function getDefaultSiteContent(): SiteContent {
       mottoMarqueeItems: [...MOTTO_MARQUEE_ITEMS],
       mottoInsights: {
         introText:
-          "Gợi ý phối đồ, xu hướng sneaker và mẹo chăm sóc đồ thể thao từ Stusport.",
+          "Outfit suggestions, sneaker trends, and sports gear care tips from Stusport.",
         cards: MOTTO_INSIGHTS.map((i) => ({ title: i.title, href: i.href })),
         banner: null,
       },
@@ -66,7 +66,7 @@ function safeArray(value: unknown): unknown[] {
 
 /**
  * Merge partial content (from DB) into defaults.
- * DB có thể chưa có key, hoặc admin mới cập nhật một phần.
+ * DB may not have the key yet, or admin only partially updated.
  */
 export function mergeSiteContent(
   partial: Partial<SiteContent> | null | undefined,
@@ -112,8 +112,8 @@ export function mergeSiteContent(
           ? (insightsPartial.cards as { title: string; href: string }[])
           : base.motto.mottoInsights.cards,
       banner: (() => {
-        // Nếu admin không gửi `banner` thì giữ giá trị mặc định hiện tại.
-        // Nếu gửi `null` => tắt banner.
+        // If admin doesn't send `banner`, keep current default.
+        // If admin sends `null` => disable banner.
         const bannerPartial = (insightsPartial as unknown as {
           banner?: SiteContent["motto"]["mottoInsights"]["banner"];
         }).banner;
@@ -156,4 +156,3 @@ export function mergeSiteContent(
 
   return { motto, pages };
 }
-

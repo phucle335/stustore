@@ -12,7 +12,7 @@ export async function fetchProductStockMap(): Promise<
   inflight = fetch("/api/store/product-stock", { cache: "no-store" })
     .then(async (res) => {
       if (!res.ok) {
-        throw new Error("Không tải được tồn kho sản phẩm");
+        throw new Error("Could not load product stock");
       }
       return res.json() as Promise<Record<string, ProductStockSnapshot>>;
     })

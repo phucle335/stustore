@@ -22,7 +22,7 @@ export function isStoreCategory(value: string): value is ProductCategory {
   return (STORE_CATEGORIES as string[]).includes(value);
 }
 
-/** brand_tag DB → định dạng "/Nike/" trên storefront */
+/** DB brand_tag → "/Nike/" format on storefront */
 export function brandTagToDisplay(brandTag: string): string {
   const label = brandTag
     .trim()
@@ -69,7 +69,7 @@ export function mapDbProductToDetail(row: Record<string, unknown>): ProductDetai
   const salePrice = hasSale
     ? Math.round(basePrice * (1 - salePercent / 100))
     : basePrice;
-  const name = String(row.name ?? "Sản phẩm");
+  const name = String(row.name ?? "Product");
   const brandTag = String(row.brand_tag ?? row.brand ?? "stusport");
 
   return {
@@ -91,6 +91,6 @@ export function mapDbProductToDetail(row: Record<string, unknown>): ProductDetai
     category,
     description:
       (row.description == null ? "" : String(row.description)).trim() ||
-      `Sản phẩm chính hãng ${name}. Chất lượng cao, phù hợp phong cách thể thao và streetwear hàng ngày.`,
+      `Authentic ${name}. High quality, perfect for sports and everyday streetwear.`,
   };
 }

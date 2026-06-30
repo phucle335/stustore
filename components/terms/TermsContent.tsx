@@ -7,14 +7,14 @@ import styles from "@/styles/components/store/StoreStatic.module.css";
 export function TermsContent() {
   return (
     <>
-      <h1 className={styles.staticPageTitle}>Điều khoản và Điều kiện</h1>
+      <h1 className={styles.staticPageTitle}>Terms & Conditions</h1>
       <p className={styles.staticPageIntro}>
-        Vui lòng đọc kỹ các điều khoản dưới đây trước khi sử dụng website{" "}
-        <strong>{STORE_NAME}</strong>.
+        Please read the terms below carefully before using the{" "}
+        <strong>{STORE_NAME}</strong> website.
       </p>
 
-      <nav className={styles.termsToc} aria-label="Mục lục">
-        <p className={styles.termsTocTitle}>Nội dung</p>
+      <nav className={styles.termsToc} aria-label="Table of contents">
+        <p className={styles.termsTocTitle}>Contents</p>
         <ol>
           {TERMS_SECTIONS.map((section) => (
             <li key={section.id}>

@@ -33,7 +33,7 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
       supabase = getSupabaseClient();
     } catch {
       setChecking(false);
-      setError("Thiếu cấu hình Supabase.");
+      setError("Missing Supabase configuration.");
       return;
     }
 
@@ -59,11 +59,11 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
     setError(null);
 
     if (password.length < 6) {
-      setError("Mật khẩu phải có ít nhất 6 ký tự.");
+      setError("Password must be at least 6 characters.");
       return;
     }
     if (password !== confirmPassword) {
-      setError("Mật khẩu xác nhận không khớp.");
+      setError("Passwords do not match.");
       return;
     }
 
@@ -75,7 +75,7 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
     } catch (err) {
       setLoading(false);
       setError(
-        err instanceof Error ? err.message : "Thiếu cấu hình Supabase.",
+        err instanceof Error ? err.message : "Missing Supabase configuration.",
       );
       return;
     }
@@ -98,7 +98,7 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
         await supabase.auth.signOut();
         setLoading(false);
         setError(
-          "Mật khẩu đã đổi nhưng tài khoản không có quyền admin.",
+          "Password changed, but the account does not have admin privileges.",
         );
         return;
       }
@@ -116,7 +116,7 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
     if (checking) {
       return (
         <div className="admin-auth-card">
-          <p className="admin-auth-card__subtitle">Đang xác thực link…</p>
+          <p className="admin-auth-card__subtitle">Verifying link…</p>
         </div>
       );
     }
@@ -132,14 +132,14 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
               className="stusport-logo--compact"
             />
           </div>
-          <h1 className="admin-auth-card__title">Link không hợp lệ</h1>
+          <h1 className="admin-auth-card__title">Invalid Link</h1>
           <p className="admin-auth-card__subtitle">
-            Link đặt lại mật khẩu đã hết hạn hoặc đã được dùng. Yêu cầu gửi
-            lại email mới.
+            The password reset link has expired or already been used. Please request
+            a new one.
           </p>
           <p className="admin-auth-back">
             <Link href={getForgotPasswordPath(audience)}>
-              Gửi lại link đặt lại mật khẩu
+              Send New Reset Link
             </Link>
           </p>
         </div>
@@ -156,13 +156,13 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
             className="stusport-logo--compact"
           />
         </div>
-        <h1 className="admin-auth-card__title">Đặt lại mật khẩu</h1>
+        <h1 className="admin-auth-card__title">Reset Password</h1>
         <p className="admin-auth-card__subtitle">
-          Nhập mật khẩu mới cho tài khoản admin.
+          Enter your new password for the admin account.
         </p>
 
         <label className="admin-auth-field">
-          Mật khẩu mới
+          New Password
           <input
             type="password"
             required
@@ -176,7 +176,7 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
         </label>
 
         <label className="admin-auth-field">
-          Xác nhận mật khẩu
+          Confirm Password
           <input
             type="password"
             required
@@ -194,11 +194,11 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
         ) : null}
 
         <button type="submit" disabled={loading} className="admin-auth-submit">
-          {loading ? "Đang lưu…" : "Lưu mật khẩu mới"}
+          {loading ? "Saving…" : "Save New Password"}
         </button>
 
         <p className="admin-auth-back">
-          <Link href={getLoginPath(audience)}>← Quay lại đăng nhập</Link>
+          <Link href={getLoginPath(audience)}>← Back to Login</Link>
         </p>
       </form>
     );
@@ -207,7 +207,7 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
   if (checking) {
     return (
       <div className={styles.customerAuthForm}>
-        <p className={styles.customerAuthSubtitle}>Đang xác thực link…</p>
+        <p className={styles.customerAuthSubtitle}>Verifying link…</p>
       </div>
     );
   }
@@ -223,14 +223,14 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
             className="stusport-logo--compact"
           />
         </div>
-        <h1 className={styles.customerAuthTitle}>Link không hợp lệ</h1>
+        <h1 className={styles.customerAuthTitle}>Invalid Link</h1>
         <p className={styles.customerAuthSubtitle}>
-          Link đặt lại mật khẩu đã hết hạn hoặc đã được dùng. Yêu cầu gửi lại
-          email mới.
+          The password reset link has expired or already been used. Please request a new
+          one.
         </p>
         <p className={styles.customerAuthSwitch}>
           <Link href={getForgotPasswordPath(audience)}>
-            Gửi lại link đặt lại mật khẩu
+            Send New Reset Link
           </Link>
         </p>
       </div>
@@ -247,13 +247,13 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
           className="stusport-logo--compact"
         />
       </div>
-      <h1 className={styles.customerAuthTitle}>Đặt lại mật khẩu</h1>
+      <h1 className={styles.customerAuthTitle}>Reset Password</h1>
       <p className={styles.customerAuthSubtitle}>
-        Nhập mật khẩu mới cho tài khoản của bạn.
+        Enter your new password for your account.
       </p>
 
       <label className={styles.customerAuthLabel}>
-        Mật khẩu mới
+        New Password
         <input
           type="password"
           required
@@ -267,7 +267,7 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
       </label>
 
       <label className={styles.customerAuthLabel}>
-        Xác nhận mật khẩu
+        Confirm Password
         <input
           type="password"
           required
@@ -283,11 +283,11 @@ export function ResetPasswordForm({ audience }: ResetPasswordFormProps) {
       {error ? <p className={styles.customerAuthError}>{error}</p> : null}
 
       <button type="submit" disabled={loading} className={styles.customerAuthSubmit}>
-        {loading ? "Đang lưu…" : "Lưu mật khẩu mới"}
+        {loading ? "Saving…" : "Save New Password"}
       </button>
 
       <p className={styles.customerAuthSwitch}>
-        <Link href={getLoginPath(audience)}>← Quay lại đăng nhập</Link>
+        <Link href={getLoginPath(audience)}>← Back to Login</Link>
       </p>
     </form>
   );

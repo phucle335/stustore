@@ -17,7 +17,7 @@ async function uploadAdminImage(file: File): Promise<string> {
   });
   const json = (await res.json()) as { data?: { url: string }; error?: string };
   if (!res.ok || !json.data?.url) {
-    throw new Error(json.error ?? "Upload ảnh thất bại.");
+    throw new Error(json.error ?? "Image upload failed.");
   }
   return json.data.url;
 }
@@ -169,7 +169,7 @@ export function SiteContentManager() {
         updateBanner({ imageUrl: url });
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Upload ảnh thất bại.");
+      setError(e instanceof Error ? e.message : "Image upload failed.");
     } finally {
       setUploadingKey(null);
     }
@@ -188,10 +188,10 @@ export function SiteContentManager() {
 
       const json = (await res.json()) as { data?: unknown; error?: string };
       if (!res.ok) {
-        setError(json.error ?? "Không lưu được site content.");
+        setError(json.error ?? "Could not save site content.");
         return;
       }
-      setMessage("Đã lưu site content.");
+      setMessage("Site content saved.");
     });
   }
 
@@ -207,7 +207,7 @@ export function SiteContentManager() {
         <div>
           <h2 className="text-lg font-semibold admin-text">Motto / Home CMS</h2>
           <p className="mt-1 text-sm admin-muted">
-            Chỉnh hero, chữ xoay, marquee và MottoInsights. Lưu sẽ cập nhật trực tiếp.
+            Edit hero, rotating words, marquee and MottoInsights. Saving will update the site live.
           </p>
         </div>
 
@@ -228,7 +228,7 @@ export function SiteContentManager() {
             onClick={handleSave}
           >
             <Save className="h-4 w-4" />
-            Lưu thay đổi
+            Save Changes
           </button>
         </div>
       </div>
@@ -237,7 +237,7 @@ export function SiteContentManager() {
       <div className="admin-card">
         <h3 className="text-base font-semibold admin-text">Rotating words (DOMINATION…)</h3>
         <p className="mt-1 text-sm admin-muted">
-          Các chữ sẽ xoay liên tục ở khu vực hero.
+          Words that rotate continuously in the hero area.
         </p>
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {rotatingWords.map((w, i) => (
@@ -256,9 +256,9 @@ export function SiteContentManager() {
 
       {/* Hero slides */}
       <div className="admin-card">
-        <h3 className="text-base font-semibold admin-text">Hero slides (5 ảnh)</h3>
+        <h3 className="text-base font-semibold admin-text">Hero slides (5 images)</h3>
         <p className="mt-1 text-sm admin-muted">
-          Nhập URL ảnh hoặc chọn file từ máy. Ảnh sẽ là nền carrousel full-bleed.
+          Enter an image URL or select a file from your device. Images will be full-bleed carousel backgrounds.
         </p>
 
         <div className="mt-5 space-y-6">
@@ -301,7 +301,7 @@ export function SiteContentManager() {
                     )}
                     <label className="mt-2 inline-flex items-center gap-2 admin-btn">
                       <ImageUp className="h-4 w-4" />
-                      {busy ? "Đang tải…" : "Chọn ảnh"}
+                      {busy ? "Uploading…" : "Choose image"}
                       <input
                         type="file"
                         accept="image/jpeg,image/png,image/webp,image/gif"
@@ -325,7 +325,7 @@ export function SiteContentManager() {
 
       {/* Marquee */}
       <div className="admin-card">
-        <h3 className="text-base font-semibold admin-text">Marquee (3 dòng)</h3>
+        <h3 className="text-base font-semibold admin-text">Marquee (3 lines)</h3>
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {marqueeItems.map((item, i) => (
             <label key={i} className="block text-sm admin-text">
@@ -357,7 +357,7 @@ export function SiteContentManager() {
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <div>
-            <h4 className="text-sm font-semibold admin-text">Banner (tuỳ chọn)</h4>
+            <h4 className="text-sm font-semibold admin-text">Banner (optional)</h4>
 
             <label className="mt-3 flex items-center gap-2 text-sm admin-text">
               <input
@@ -365,7 +365,7 @@ export function SiteContentManager() {
                 checked={banner?.enabled ?? false}
                 onChange={(e) => setBannerEnabled(e.target.checked)}
               />
-              Bật banner trong MottoInsights
+              Enable banner in MottoInsights
             </label>
 
             {banner?.enabled ? (
@@ -414,7 +414,7 @@ export function SiteContentManager() {
                   <div className="flex-1">
                     <label className="admin-btn inline-flex items-center gap-2">
                       <Upload className="h-4 w-4" />
-                      {uploadingKey === "banner" ? "Đang tải…" : "Chọn ảnh"}
+                      {uploadingKey === "banner" ? "Uploading…" : "Choose image"}
                       <input
                         type="file"
                         accept="image/jpeg,image/png,image/webp,image/gif"

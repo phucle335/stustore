@@ -125,7 +125,7 @@ export function AnalyticsTracker() {
             type: "click",
             sessionId,
             path: pathname,
-            label: `Mở sản phẩm: ${name}`,
+            label: `Opened product: ${name}`,
             productId,
           });
         }

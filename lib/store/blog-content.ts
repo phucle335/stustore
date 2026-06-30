@@ -6,9 +6,9 @@ export type BlogPost = {
   excerpt: string;
   image: string;
   date: string;
-  /** Chuỗi nội dung (chia đoạn bằng \\n\\n) */
+  /** Body content (paragraphs split by \n\n) */
   body: string;
-  /** Nhóm hiển thị trên trang blog (Tips, Sneaker, …) */
+  /** Display group on blog page (Tips, Sneakers, ...) */
   category?: BlogCategoryId;
 };
 
@@ -16,108 +16,108 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     id: "blog-1",
     category: "sneakers",
-    title: "Cách chọn sneaker phù hợp phong cách streetwear",
+    title: "How to Choose Sneakers That Match Your Streetwear Style",
     excerpt:
-      "Streetwear không có công thức cố định — nhưng bạn vẫn có thể chọn sneaker đúng phom dáng, tông màu và chất liệu để outfit “khớp gu” hơn mỗi ngày.",
+      "Streetwear has no fixed formula — but you can still pick the right silhouette, colorway, and material so your outfit feels cohesive every day.",
     image:
       "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800&q=80",
-    date: "12 Tháng 3, 2026",
+    date: "March 12, 2026",
     body: [
-      "Streetwear là sự tự do trong phối đồ. Vì vậy, chọn sneaker phù hợp không phải để “đúng bài”, mà để đôi giày hỗ trợ đúng tinh thần outfit bạn đang theo đuổi.",
-      "1) Cân bằng phom dáng: Sneaker chunky hợp khi bạn mix layer dày, quần ống rộng/cargo. Ngược lại, low-top hoặc silhouette gọn sẽ cân tốt với jeans slim/straight fit hoặc quần lửng.",
-      "2) Chọn màu để outfit dễ sống chung: Nếu bạn mặc nhiều chi tiết, ưu tiên tông trung tính (trắng/đen/xám). Nếu outfit đơn sắc, sneaker màu nổi (đỏ/cam/xanh lá…) sẽ trở thành điểm nhấn.",
-      "3) Chất liệu quyết định “vibe”: Canvas thường nhẹ, thoáng và hợp nhịp dạo phố. Da lộn/dạ tổng hợp cho cảm giác cá tính, vintage hơn. Với nhu cầu vận động, chất liệu bền và giữ form sẽ giúp bạn ít phải “đi sửa” sau thời gian dài.",
-      "Checklist nhanh trước khi mua: (i) form chân bạn—ôm vừa hay cần thoải mái, (ii) chiều dài/không gian mũi giày, (iii) màu có phối được đa số đồ sẵn có hay không, (iv) chất liệu có hợp mùa và mục đích dùng.",
-      "Chọn đúng sneaker streetwear sẽ giúp outfit trông “có chủ đích” hơn, dù bạn chỉ mặc một chiếc áo thun và một chiếc quần đơn giản. Quan trọng nhất: bạn thấy tự tin và thoải mái khi đi."
+      "Streetwear is all about freedom in styling. That's why picking the right sneaker isn't about \"following the script\" — it's about choosing a shoe that supports the vibe of the outfit you're going for.",
+      "1) Balance your silhouette: Chunky sneakers work well when you're layering with heavy pieces, wide-leg or cargo pants. Conversely, low-top or sleek silhouettes pair better with slim/straight-fit jeans or shorts.",
+      "2) Pick colors so your outfit ages well together: If you're wearing lots of details, lean toward neutral tones (white/black/gray). If your outfit is monochrome, a bold sneaker (red/orange/green…) becomes the focal point.",
+      "3) Material sets the vibe: Canvas is usually lightweight, breathable, and great for casual walks. Suede/leather gives a more individual, vintage feel. For active use, durable materials that hold their shape will save you from needing repairs down the line.",
+      "Quick checklist before buying: (i) your foot shape—snug or relaxed fit, (ii) toe-box length/space, (iii) whether the colorway works with your existing wardrobe, (iv) whether the material suits the season and intended use.",
+      "Choosing the right streetwear sneaker makes your outfit look intentional, even if you're just wearing a plain tee and simple pants. Most importantly: you feel confident and comfortable.",
     ].join("\n\n"),
   },
   {
     id: "blog-2",
     category: "accessories",
-    title: "Xu hướng kính mát thể thao 2026",
+    title: "Sports Sunglasses Trends 2026",
     excerpt:
-      "2026 chứng kiến sự giao thoa giữa hiệu năng và thời trang: kính ôm sát khuôn mặt, tròng phân cực, và các tùy chọn thích ứng ánh sáng để dùng từ tập luyện đến dạo phố.",
+      "2026 marks the convergence of performance and fashion: wraparound frames, polarized lenses, and adaptive light lenses for use from training to street.",
     image:
       "https://images.unsplash.com/photo-1577803645773-f96470509666?w=800&q=80",
-    date: "5 Tháng 3, 2026",
+    date: "March 5, 2026",
     body: [
-      "Kính mát thể thao 2026 không còn chia tách rõ ràng giữa “kính để chạy” và “kính để đi chơi”. Người mua ngày càng muốn một cặp kính: nhìn đẹp, đỡ chói và dùng được trong nhiều bối cảnh.",
-      "1) Trào lưu form wrap/ôm sát: Các dáng wraparound hoặc shield tạo cảm giác bảo vệ vùng mắt rộng hơn, đồng thời tạo điểm nhấn thời trang mạnh mẽ. Kiểu dáng này đặc biệt hợp với lối chơi street + outdoor.",
-      "2) Polarized (phân cực) vẫn là “điểm cộng”: Khi đi đường nắng gắt, lái xe, hoặc hoạt động gần mặt nước, tròng phân cực giúp giảm chói và tăng độ tương phản.",
-      "3) Tính linh hoạt của tròng: Xu hướng tròng có khả năng tự thích ứng theo ánh sáng (photochromic) đang được quan tâm vì giảm nhu cầu thay kính khi chuyển môi trường.",
-      "4) Vật liệu gọng và cảm giác đeo: Gọng nhẹ, bền và giữ form lâu sẽ giúp bạn đeo lâu hơn mà ít mỏi. Thêm nữa, lớp hoàn thiện/hoàn màu (gradient, mirrored…) giúp trang phục “lên level” nhanh hơn.",
-      "Gợi ý chọn nhanh: Nếu bạn ưu tiên hiệu năng khi vận động—chọn tròng phân cực + form ôm. Nếu bạn ưu tiên thời trang hằng ngày—ưu tiên dáng cổ điển/retro nhưng vẫn có tính năng chống UV."
+      "Sports sunglasses in 2026 no longer split cleanly between \"running glasses\" and \"going-out glasses.\" Buyers increasingly want one pair that looks good, reduces glare, and works across contexts.",
+      "1) Wrap/shield trend: Wraparound or shield-style frames create a wider sense of eye protection while making a strong style statement. These shapes pair especially well with street + outdoor vibes.",
+      "2) Polarized is still a \"nice-to-have\": When driving in bright sun, near water, or in bright outdoor conditions, polarized lenses cut glare and improve contrast.",
+      "3) Adaptive lens flexibility: Photochromic lenses that adjust to ambient light are gaining traction as they reduce the need to swap glasses when moving between environments.",
+      "4) Frame materials and fit: Lightweight, durable frames that hold their shape let you wear them longer without fatigue. Plus, finishing touches like gradient or mirrored coatings help your outfit level up fast.",
+      "Quick pick guide: If you prioritize performance during activity—go polarized + wrap style. If you prioritize daily fashion—lean toward classic/retro shapes that still offer UV protection.",
     ].join("\n\n"),
   },
   {
     id: "blog-3",
     category: "tips",
-    title: "Chăm sóc giày da và vải đúng cách",
+    title: "How to Care for Leather and Fabric Shoes Properly",
     excerpt:
-      "Da và vải cần “đúng cách” mới bền màu. Bài viết này tóm tắt quy trình làm sạch – làm khô – dưỡng và bảo quản theo từng chất liệu.",
+      "Leather and fabric need \"the right care\" to stay looking good. This article outlines cleaning, drying, conditioning, and storage by material type.",
     image:
       "https://images.unsplash.com/photo-1460353589841-61cb21bbe436?w=800&q=80",
-    date: "28 Tháng 2, 2026",
+    date: "February 28, 2026",
     body: [
-      "Để giày luôn đẹp lâu, nguyên tắc số 1 là: làm sạch nhẹ nhàng và xử lý đúng chất liệu. Đừng ngâm nước, đừng chà mạnh “bằng cảm giác” vì sẽ làm bay màu hoặc biến dạng bề mặt.",
-      "Giày da (leather):\n- Dùng khăn khô hoặc bàn chải mềm để loại bụi.\n- Lau vết bẩn bằng khăn ẩm vắt khô; với vết khó, dùng dung dịch chuyên cho da và chỉ thoa lượng nhỏ.\n- Đợi giày khô tự nhiên nơi thoáng mát, tránh nắng gắt và máy sấy.",
-      "Sau khi sạch và khô: bổ sung dưỡng/conditioner cho da để giảm nứt nẻ và giữ độ mềm. Dưỡng định kỳ sẽ giúp màu giày ổn định hơn theo thời gian.",
-      "Giày da lộn/suede: tránh nước. Nếu cần làm sạch, dùng bàn chải chuyên và các sản phẩm làm sạch dạng gôm/tẩy phù hợp.",
-      "Giày vải/canvas: có thể dùng dung dịch nhẹ (xà phòng loãng) và chà nhẹ theo chiều bề mặt. Sau đó lau lại bằng khăn sạch và để khô tự nhiên.",
-      "Bảo quản đúng: để giày nơi khô ráo, có thông gió. Nhét giấy giữ form giúp hạn chế nhăn và hạn chế mùi ẩm."
+      "To keep your shoes looking good longer, rule #1 is: clean gently and handle each material correctly. Don't soak in water, don't scrub hard \"by feel\" — this will strip color or deform the surface.",
+      "Leather shoes:\n- Use a dry cloth or soft brush to remove dust.\n- Wipe stains with a wrung-out damp cloth; for stubborn marks, use a leather-specific cleaner applied sparingly.\n- Let shoes air-dry naturally in a cool, well-ventilated spot, away from direct sunlight and heat.",
+      "After cleaning and drying: apply conditioner to moisturize the leather, reduce cracking, and maintain suppleness. Regular conditioning helps color stay even over time.",
+      "Suede / nubuck: avoid water. For cleaning, use a dedicated suede brush and rubber eraser-type cleaners.",
+      "Canvas / fabric shoes: can be cleaned with a mild solution (diluted soap) and gently scrubbed with the surface grain. Wipe with a clean cloth afterward and let air-dry.",
+      "Proper storage: keep shoes in a dry, ventilated area. Stuffing them with paper helps retain shape and reduces odor from moisture.",
     ].join("\n\n"),
   },
   {
     id: "blog-4",
     category: "clothing",
-    title: "5 outfit với áo hoodie basic cho nam",
+    title: "5 Outfit Ideas with Basic Hoodies for Men",
     excerpt:
-      "Hoodie basic dễ phối nhưng muốn đẹp “đúng chất streetwear” thì bạn cần chọn phom quần phù hợp và cân bằng màu sắc. Dưới đây là 5 công thức dễ áp dụng.",
+      "Basic hoodies are easy to style, but looking properly streetwear comes down to matching the right pants silhouette and balancing colors. Here are 5 formulas you can apply easily.",
     image:
       "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80",
-    date: "20 Tháng 2, 2026",
+    date: "February 20, 2026",
     body: [
-      "Hoodie basic có lợi thế: mặc nhanh, lên dáng dễ và “cân” được nhiều hoàn cảnh. Điểm khác nhau là bạn phối quần/giày thế nào để outfit không bị xuề xòa.",
-      "1) Hoodie + quần jogger\nCông thức an toàn nhất cho dạo phố: hoodie phom vừa + jogger gọn ở gấu. Thêm sneaker trắng và một phụ kiện nhỏ là đủ chất.",
-      "2) Hoodie + quần jeans\nChọn jeans straight hoặc baggy vừa phải để cân với phom hoodie. Màu trung tính (đen/xám/blue tối) giúp tổng thể sạch và dễ nhìn.",
-      "3) Hoodie + quần cargo\nCargo túi hộp tạo đúng tinh thần streetwear. Gợi ý: chọn hoodie đơn sắc, để cargo là điểm nhấn form.",
-      "4) Hoodie + layering áo khoác\nKéo outfit lên mức “có chiều sâu”: khoác bomber/denim/áo khoác ngoài cùng tông màu. Mẹo nhỏ là giữ đường viền cổ và tay áo gọn để outfit không rối.",
-      "5) Hoodie + quần short\nPhù hợp thời tiết mát: chọn short vừa không quá ngắn và đi sneaker phù hợp để tổng thể không bị “lệch nhịp”.",
-      "Gợi ý màu sắc: Nếu bạn muốn phối dễ, cứ ưu tiên đen/xám/trắng/be. Khi muốn nổi bật, hãy chọn 1 món nhấn (giày hoặc phụ kiện) thay vì nhồi nhiều màu."
+      "Basic hoodies have an advantage: quick to throw on, easy to style, and work for many occasions. The difference is how you pair them with pants and shoes so the look doesn't fall flat.",
+      "1) Hoodie + joggers\nThe safest street formula: a relaxed-fit hoodie with tapered joggers. Add white sneakers and a small accessory and you're set.",
+      "2) Hoodie + jeans\nPick straight or moderately baggy jeans to balance the hoodie's volume. Neutral colors (black/gray/dark blue) keep the whole look clean and cohesive.",
+      "3) Hoodie + cargo pants\nCargo pockets hit the right streetwear note. Tip: go with a solid-color hoodie and let the cargo pants be the focal point.",
+      "4) Hoodie + outer layering\nElevate the outfit with a bomber/denim/light jacket on top in a coordinating tone. Small tip: keep the collar and sleeve edges neat so the look doesn't feel cluttered.",
+      "5) Hoodie + shorts\nGreat for cooler weather: pick shorts that aren't too short and pair with appropriate sneakers so the whole look stays balanced.",
+      "Color tips: If you want easy coordination, lean toward black/gray/white/beige. When you want to stand out, pick one statement piece (shoes or accessory) instead of loading up on colors.",
     ].join("\n\n"),
   },
   {
     id: "blog-5",
     category: "tips",
-    title: "Dép slide: chọn đôi nào cho mùa hè?",
+    title: "Slides: Which Pair for Summer?",
     excerpt:
-      "Dép slide hợp hè vì tiện và nhẹ. Nhưng để đi lâu mà không đau chân, bạn cần để ý chất liệu, độ êm và độ hỗ trợ vòm bàn chân.",
+      "Slides are great for summer — convenient and lightweight. But to walk comfortably for extended periods, pay attention to material, cushioning, and arch support.",
     image:
       "https://images.unsplash.com/photo-1603487742131-4160ec999306?w=800&q=80",
-    date: "14 Tháng 2, 2026",
+    date: "February 14, 2026",
     body: [
-      "Mùa hè thường cần một đôi dép có thể mang nhanh, dễ vệ sinh và hợp hoàn cảnh. Dép slide đáp ứng tốt phần “tiện”, nhưng mức độ thoải mái sẽ khác nhau tùy thiết kế và chất liệu.",
-      "Yeezy Slide (phong cách tối giản streetwear):\n- Ưu điểm: nhẹ, form tối giản, dễ phối đồ casual.\n- Lưu ý: nếu bạn đi bộ nhiều, hãy cân nhắc cảm giác ôm và hỗ trợ vòm.",
-      "Crocs slide (tính thực dụng):\n- Ưu điểm: bền bỉ, dễ làm sạch và thường hợp với hoạt động gần nước.\n- Lưu ý: ưu tiên size đúng để không bị lỏng khi di chuyển.",
-      "Birkenstock (comfort và hỗ trợ):\n- Ưu điểm: thiết kế công thái học thiên về hỗ trợ chân, hợp người muốn mang lâu.\n- Lưu ý: có thể cần thời gian làm quen với form.",
-      "Cách chọn nhanh trước khi mua: \n1) thử đi vài phút xem có cấn chỗ nào không,\n2) ưu tiên bề mặt dễ vệ sinh,\n3) chọn độ êm vừa đủ cho nhu cầu (đi loanh quanh hay đi bộ cả ngày)."
+      "Summer usually calls for a slide that's quick to slip on, easy to clean, and appropriate for most settings. Slides handle the \"convenience\" part well, but comfort levels vary by design and material.",
+      "Yeezy Slide (minimalist streetwear style):\n- Pros: lightweight, minimalist shape, easy to pair with casual outfits.\n- Note: if you walk a lot, consider the fit and arch support feel.",
+      "Crocs Slide (practical option):\n- Pros: durable, easy to clean, and great for water-adjacent activities.\n- Note: pick the right size so the fit isn't loose when moving.",
+      "Birkenstock (comfort and support):\n- Pros: ergonomically designed with a focus on foot support, great for those who want to wear them for longer periods.\n- Note: may need a break-in period to get used to the shape.",
+      "Quick pick guide before buying:\n1) try walking in them for a few minutes to check for any pressure points,\n2) prioritize easy-to-clean surfaces,\n3) pick the right cushioning level for your needs (casual strolls or all-day walking).",
     ].join("\n\n"),
   },
   {
     id: "blog-6",
     category: "accessories",
-    title: "Túi backpack: size và chất liệu cần biết",
+    title: "Backpacks: Size and Materials You Should Know",
     excerpt:
-      "Chọn backpack không chỉ là mua theo “20L/30L”. Bạn cần hiểu dung tích thực dùng, ngăn laptop, và chất liệu chống nước để balo đi bền trong điều kiện Việt Nam.",
+      "Picking a backpack isn't just about \"20L/30L.\" You need to understand real usable capacity, laptop compartments, and water resistance so your bag lasts in Vietnam's conditions.",
     image:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
-    date: "8 Tháng 2, 2026",
+    date: "February 8, 2026",
     body: [
-      "Backpack size phù hợp sẽ giúp bạn sắp xếp gọn hơn và đỡ mỏi vai lưng. Trên thị trường, cùng một con số dung tích có thể cảm giác khác nhau tùy thiết kế ngăn.",
-      "1) Chọn dung tích theo nhu cầu\n- 20L: phù hợp đi học/đi làm hoặc chuyến đi ngắn ngày.\n- 30L: hợp các chuyến đi 2–4 ngày, mang thêm thiết bị và đồ cá nhân.",
-      "2) Chất liệu và độ chống nước\nBạn nên ưu tiên vải có phủ lớp chống thấm như PU/TPU/DWR trên polyester hoặc nylon. Nếu muốn chịu mưa tốt hơn, dòng tarpaulin (hoặc vật liệu tương tự) thường bền và dễ làm sạch.",
-      "3) Ngăn laptop và cấu trúc\nKiểm tra kích thước ngăn laptop phù hợp máy bạn, thêm đệm lưng và dây đeo êm sẽ quyết định cảm giác mang cả ngày.",
-      "Checklist trước khi chọn: (i) laptop size, (ii) cần mang bao nhiêu đồ, (iii) gặp thời tiết mưa thường xuyên hay không, (iv) bạn thích gọn hay thích nhiều ngăn chia."
+      "A properly sized backpack helps you stay organized and reduces shoulder and back fatigue. On the market, the same liter capacity can feel quite different depending on compartment layout.",
+      "1) Choose capacity by need\n- 20L: great for school, work, or short trips.\n- 30L: suited for 2–4 day trips with extra gear and personal items.",
+      "2) Materials and water resistance\nPrioritize fabrics with a water-resistant coating such as PU/TPU/DWR on polyester or nylon. For better rain protection, tarpaulin (or similar) options are usually more durable and easier to clean.",
+      "3) Laptop compartment and structure\nCheck the laptop compartment fits your device, and padded back plus cushioned straps will determine how it feels over a full day of wear.",
+      "Checklist before choosing: (i) laptop size, (ii) how much gear you need to carry, (iii) do you frequently encounter rainy weather, (iv) do you prefer a minimalist or multi-compartment layout.",
     ].join("\n\n"),
   },
 ];

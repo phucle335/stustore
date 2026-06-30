@@ -54,13 +54,13 @@ export function ProductImageFields({
       };
 
       if (!res.ok || !json.data?.url) {
-        setUploadError(json.error ?? "Upload thất bại.");
+        setUploadError(json.error ?? "Upload failed.");
         return;
       }
 
       setSlot(key, json.data.url);
     } catch {
-      setUploadError("Không upload được ảnh. Kiểm tra mạng hoặc bucket Storage.");
+      setUploadError("Could not upload image. Check your network or storage bucket.");
     } finally {
       setUploadingSlot(null);
       const input = fileRefs.current[key];
@@ -71,9 +71,9 @@ export function ProductImageFields({
   return (
     <div className="admin-product-images">
       <div className="mb-2">
-        <h3 className="text-sm font-semibold admin-text">Hình ảnh sản phẩm</h3>
+        <h3 className="text-sm font-semibold admin-text">Product Images</h3>
         <p className="text-xs admin-muted">
-          Dán link ảnh hoặc chọn file từ máy (tối đa 5 ảnh, ảnh 1 là ảnh chính).
+          Paste an image URL or select a file from your device (max 5 images, image 1 is the main).
         </p>
       </div>
 
@@ -104,7 +104,7 @@ export function ProductImageFields({
                       className="admin-image-slot-clear"
                       disabled={disabled || busy}
                       onClick={() => setSlot(key, "")}
-                      aria-label="Xóa ảnh"
+                      aria-label="Remove image"
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
@@ -128,13 +128,13 @@ export function ProductImageFields({
                   value={value[key] ?? ""}
                   disabled={disabled || busy}
                   onChange={(e) => setSlot(key, e.target.value)}
-                  placeholder="https://… hoặc /images/…"
+                  placeholder="https://… or /images/…"
                   className="admin-input"
                 />
               </div>
 
-              <label className="admin-btn admin-image-upload-btn">
-                {busy ? "Đang tải lên…" : "Chọn ảnh từ máy"}
+                <label className="admin-btn admin-image-upload-btn">
+                {busy ? "Uploading…" : "Choose image from device"}
                 <input
                   ref={(el) => {
                     fileRefs.current[key] = el;

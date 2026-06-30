@@ -11,26 +11,26 @@ type PolicyItem = {
 const POLICIES: PolicyItem[] = [
   {
     icon: "fa-truck",
-    text: "Miễn phí giao hàng đơn từ 799k",
+    text: "Free shipping on orders from 799k",
     detailHref: "#product-policies",
   },
   {
     icon: "fa-undo",
-    text: "Đổi trả miễn phí đến 14 ngày",
+    text: "Free returns within 14 days",
     detailHref: "#product-description",
   },
   {
     icon: "fa-percent",
-    text: "Trả góp 0% lãi suất từ 3.000.000 VNĐ",
+    text: "0% installment from 3,000,000 VND",
     detailHref: "#product-policies",
   },
   {
     icon: "fa-credit-card",
-    text: "Thanh toán trực tuyến nhanh chóng và an toàn.",
+    text: "Fast and secure online payment.",
   },
   {
     icon: "fa-shield-alt",
-    text: `100% chính hãng. Giới thiệu về ${STORE_NAME}`,
+    text: `100% authentic. Learn more about ${STORE_NAME}`,
     detailHref: "#product-about",
   },
 ];
@@ -47,7 +47,7 @@ export function ProductPurchasePolicies() {
               <>
                 {" "}
                 <Link href={policy.detailHref} className={styles.policyDetailLink}>
-                  Xem chi tiết
+                  See details
                 </Link>
               </>
             ) : null}

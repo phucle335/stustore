@@ -151,15 +151,15 @@ export function AdminDashboardClient({
 
   const subtitle =
     view === "overview"
-      ? "Chào mừng trở lại — tổng quan hoạt động cửa hàng Stusport hôm nay."
-      : `Quản lý ${ADMIN_VIEW_LABELS[view].toLowerCase()} — dữ liệu thời gian thực từ Supabase.`;
+      ? "Welcome back — Stusport store activity overview for today."
+      : `Manage ${ADMIN_VIEW_LABELS[view]} — real-time data from Supabase.`;
 
   return (
     <div className="admin-app">
       <button
         type="button"
         className={`admin-sidebar-backdrop${mobileSidebarOpen ? " is-visible" : ""}`}
-        aria-label="Đóng menu"
+        aria-label="Close menu"
         aria-hidden={!mobileSidebarOpen}
         tabIndex={mobileSidebarOpen ? 0 : -1}
         onClick={() => setMobileSidebarOpen(false)}
@@ -202,15 +202,15 @@ export function AdminDashboardClient({
             {view === "overview" ? (
               <div className="admin-toolbar">
                 <button type="button" className="admin-btn">
-                  30 ngày qua
+                  Last 30 days
                 </button>
                 <button type="button" className="admin-btn">
                   <RefreshCw className="h-4 w-4" />
-                  Làm mới
+                  Refresh
                 </button>
                 <button type="button" className="admin-btn">
                   <Download className="h-4 w-4" />
-                  Xuất
+                  Export
                 </button>
                 <button
                   type="button"
@@ -218,7 +218,7 @@ export function AdminDashboardClient({
                   onClick={() => handleViewChange("products")}
                 >
                   <Plus className="h-4 w-4" />
-                  Thêm sản phẩm
+                  Add Product
                 </button>
               </div>
             ) : null}

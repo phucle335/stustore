@@ -30,7 +30,7 @@ export function AnalyticsTablePagination({
   return (
     <div className="admin-analytics-pagination">
       <p className="admin-analytics-pagination__meta">
-        {from}–{to} / {total} · Trang {page}/{totalPages}
+        {from}–{to} / {total} · Page {page}/{totalPages}
       </p>
       <div className="admin-analytics-pagination__actions">
         <button
@@ -38,19 +38,19 @@ export function AnalyticsTablePagination({
           className="admin-btn admin-btn--sm"
           onClick={onPrev}
           disabled={!hasPrev}
-          aria-label="Trang trước"
+          aria-label="Previous page"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
-          Trước
+          Prev
         </button>
         <button
           type="button"
           className="admin-btn admin-btn--sm"
           onClick={onNext}
           disabled={!hasNext}
-          aria-label="Trang sau"
+          aria-label="Next page"
         >
-          Sau
+          Next
           <ChevronRight className="h-4 w-4" aria-hidden />
         </button>
       </div>

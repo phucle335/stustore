@@ -18,7 +18,7 @@ export async function GET() {
       .maybeSingle();
 
     if (error) {
-      // Nếu bảng chưa tồn tại hoặc query lỗi, fallback để không crash trang.
+      // If table doesn't exist or query fails, fallback so the page doesn't crash.
       return NextResponse.json({ data: getDefaultSiteContent() }, { status: 200 });
     }
 

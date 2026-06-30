@@ -120,36 +120,35 @@ export default function SuccessClient() {
           <span className={successStyles.successBadgeIcon} aria-hidden>
             ✓
           </span>
-          Đã thanh toán cọc thành công
+          Deposit payment successful
         </div>
 
-        <h1 className={customerStyles.customerPageTitle}>Thanh toán thành công</h1>
+        <h1 className={customerStyles.customerPageTitle}>Payment Successful</h1>
         <p className={customerStyles.customerPageSubtitle}>
-          Đơn hàng đã được ghi nhận. Vui lòng kiểm tra Zalo/Email để nhận hướng
-          dẫn tiếp theo.
+          Your order has been received. Please check Zalo/Email for next steps.
         </p>
 
         <section className={successStyles.panel} aria-labelledby="success-order-summary">
           <h2 id="success-order-summary" className={successStyles.panelTitle}>
-            Thông tin đơn hàng
+            Order Details
           </h2>
           <dl className={successStyles.summaryGrid}>
             <div className={successStyles.summaryItem}>
-              <dt>Mã đơn</dt>
+              <dt>Order ID</dt>
               <dd>#{orderId || "—"}</dd>
             </div>
             <div
               className={`${successStyles.summaryItem} ${successStyles.summaryItemHighlight}`}
             >
-              <dt>Đã thanh toán (cọc)</dt>
+              <dt>Paid (Deposit)</dt>
               <dd>{formatPriceVnd(deposit)}</dd>
             </div>
             <div className={successStyles.summaryItem}>
-              <dt>Còn lại</dt>
+              <dt>Remaining</dt>
               <dd>{formatPriceVnd(remaining)}</dd>
             </div>
             <div className={successStyles.summaryItem}>
-              <dt>Tổng đơn</dt>
+              <dt>Order Total</dt>
               <dd>{formatPriceVnd(total)}</dd>
             </div>
           </dl>
@@ -161,7 +160,7 @@ export default function SuccessClient() {
             aria-labelledby="success-order-items"
           >
             <h2 id="success-order-items" className={successStyles.panelTitle}>
-              Sản phẩm đã mua
+              Purchased Products
             </h2>
             <ul className={successStyles.productList}>
               {orderItems.slice(0, 30).map((it, idx) => {
@@ -185,7 +184,7 @@ export default function SuccessClient() {
                     </p>
                     <span className={successStyles.productQty}>×{qty}</span>
                     <p className={successStyles.productPrice}>
-                      Đơn giá:{" "}
+                      Unit price:{" "}
                       <strong>{unit ? formatPriceVnd(unit) : "—"}</strong>
                     </p>
                   </li>
@@ -199,10 +198,10 @@ export default function SuccessClient() {
           className={`${checkoutStyles.checkoutPaymentActions} ${successStyles.actions}`}
         >
           <Link href="/tai-khoan" className={checkoutStyles.checkoutPrimaryBtn}>
-            Xem lịch sử đơn hàng
+            View Order History
           </Link>
           <Link href="/" className={checkoutStyles.checkoutSecondaryBtn}>
-            Tiếp tục mua sắm
+            Continue Shopping
           </Link>
         </div>
       </div>

@@ -23,9 +23,9 @@ export async function generateMetadata({ params }: BlogCategoryPageProps) {
   const { id } = await params;
   const category = getBlogCategoryById(id);
   if (!category) {
-    return { title: "Không tìm thấy — Stusport" };
+    return { title: "Not Found — Stusport" };
   }
-  return { title: `${category.label} — Blog Stusport` };
+  return { title: `${category.label} — Stusport Blog` };
 }
 
 export default async function BlogCategoryPage({ params }: BlogCategoryPageProps) {

@@ -67,14 +67,14 @@ export async function POST(request: Request) {
   try {
     body = (await request.json()) as CheckoutBody;
   } catch {
-    return NextResponse.json({ error: "Dữ liệu không hợp lệ." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid data." }, { status: 400 });
   }
 
   const paymentMethod = body.payment_method;
 
   if (!paymentMethod || !PAYMENT_METHODS.includes(paymentMethod)) {
     return NextResponse.json(
-      { error: "Vui lòng chọn phương thức thanh toán." },
+      { error: "Please select a payment method." },
       { status: 400 },
     );
   }
@@ -88,21 +88,21 @@ export async function POST(request: Request) {
 
   if (!profile.full_name?.trim() && !shippingName) {
     return NextResponse.json(
-      { error: "Vui lòng nhập họ tên người nhận." },
+      { error: "Please enter recipient name." },
       { status: 400 },
     );
   }
 
   if (!profile.address?.trim() && !shippingAddress) {
     return NextResponse.json(
-      { error: "Vui lòng nhập địa chỉ giao hàng chi tiết." },
+      { error: "Please enter a detailed delivery address." },
       { status: 400 },
     );
   }
 
   if (!shippingPhone) {
     return NextResponse.json(
-      { error: "Vui lòng nhập số di động." },
+      { error: "Please enter a phone number." },
       { status: 400 },
     );
   }
@@ -110,14 +110,14 @@ export async function POST(request: Request) {
   const subtotal = Number(body.subtotal ?? body.total_price);
   if (!Number.isFinite(subtotal) || subtotal <= 0) {
     return NextResponse.json(
-      { error: "Tổng đơn hàng không hợp lệ." },
+      { error: "Invalid order total." },
       { status: 400 },
     );
   }
 
   if (!Array.isArray(body.items) || body.items.length === 0) {
     return NextResponse.json(
-      { error: "Giỏ hàng trống hoặc thiếu dữ liệu sản phẩm." },
+      { error: "Cart is empty or product data is missing." },
       { status: 400 },
     );
   }
@@ -196,7 +196,7 @@ export async function POST(request: Request) {
       if (!isSchemaMissing) {
         return NextResponse.json(
           {
-            error: `Không kiểm tra được loại giao hàng: ${fulfillmentRes.error.message}`,
+            error: `Could not check fulfillment type: ${fulfillmentRes.error.message}`,
           },
           { status: 500 },
         );
@@ -224,7 +224,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "Đơn hàng có cả sản phẩm pre-order và hàng có sẵn. Vui lòng tách thành 2 đơn.",
+          "Order contains both pre-order and in-stock items. Please split into 2 orders.",
       },
       { status: 400 },
     );
@@ -240,14 +240,14 @@ export async function POST(request: Request) {
 
   if (isPreorder && paymentMethod !== "preorder_deposit") {
     return NextResponse.json(
-      { error: "Đơn pre-order chỉ thanh toán cọc 50% chuyển khoản." },
+      { error: "Pre-order items require 50% deposit via bank transfer." },
       { status: 400 },
     );
   }
 
   if (!isPreorder && paymentMethod === "preorder_deposit") {
     return NextResponse.json(
-      { error: "Phương thức cọc pre-order chỉ dùng cho đơn pre-order." },
+      { error: "Pre-order deposit payment method is only for pre-order items." },
       { status: 400 },
     );
   }
@@ -259,7 +259,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "Đơn hàng có sẵn chỉ hỗ trợ COD cọc 100.000đ hoặc chuyển khoản toàn bộ.",
+          "In-stock items only support COD 100k deposit or full bank transfer.",
       },
       { status: 400 },
     );
@@ -339,7 +339,7 @@ export async function POST(request: Request) {
   }
 
   if (insertError || !orderId) {
-    const msg = insertError?.message ?? "Không tạo được đơn hàng.";
+    const msg = insertError?.message ?? "Could not create order.";
     const needsRepair =
       /user_id|schema cache|column/i.test(msg) &&
       /user_id|could not find/i.test(msg);
@@ -347,7 +347,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error: needsRepair
-          ? `${msg} — Chạy supabase/repair-orders-table.sql trong Supabase SQL Editor, sau đó Reload schema (Settings → API).`
+          ? `${msg} — Run supabase/repair-orders-table.sql in Supabase SQL Editor, then Reload schema (Settings → API).`
           : msg,
       },
       { status: 500 },
@@ -358,13 +358,13 @@ export async function POST(request: Request) {
   try {
     await supabase.from("notifications").insert({
       type: "order_event",
-      title: "Có đơn hàng mới",
-      body: `Mã đơn: ${orderId}`,
+      title: "New order",
+      body: `Order ID: ${orderId}`,
       entity_type: "order",
       entity_id: String(orderId),
     });
   } catch (e) {
-    // best-effort; notification không chặn checkout
+    // best-effort; notification doesn't block checkout
     console.warn("[checkout][notification]", e);
   }
 

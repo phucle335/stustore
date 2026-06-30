@@ -5,6 +5,7 @@ import { useAdminAnalytics } from "@/lib/admin/analytics/useAdminAnalytics";
 import { ButtonClicksList } from "./ButtonClicksList";
 import { EngagementMetricCards } from "./EngagementMetricCards";
 import { LiveVisitorsDetail } from "./LiveVisitorsDetail";
+import { OrderProfitCard } from "./OrderProfitCard";
 import { RealtimeVisitorsCard } from "./RealtimeVisitorsCard";
 import { RecentInteractionsTable } from "./RecentInteractionsTable";
 import { SessionsLineChart } from "./SessionsLineChart";
@@ -17,14 +18,14 @@ export function AnalyticsOverviewClient() {
 
   if (loading && !data) {
     return (
-      <p className="text-sm admin-muted">Đang tải dữ liệu analytics…</p>
+      <p className="text-sm admin-muted">Loading analytics data…</p>
     );
   }
 
   if (!data) {
     return (
       <div className="admin-card p-5">
-        <p className="text-sm text-red-400">{error || "Không có dữ liệu"}</p>
+        <p className="text-sm text-red-400">{error || "No data available"}</p>
       </div>
     );
   }
@@ -37,21 +38,21 @@ export function AnalyticsOverviewClient() {
             {data.vercel.note}
           </p>
           <p className="mt-2 text-xs admin-muted">
-            Chạy <code className="text-xs">analytics.sql</code> và{" "}
-            <code className="text-xs">analytics-v2.sql</code> trong Supabase.
+            Run <code className="text-xs">analytics.sql</code> and{" "}
+            <code className="text-xs">analytics-v2.sql</code> in Supabase.
           </p>
         </div>
       ) : null}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-xs admin-muted">
-          Cập nhật:{" "}
+          Updated:{" "}
           {new Date(data.lastUpdated).toLocaleTimeString("vi-VN")}
           {data.configured ? " · realtime ~5s" : ""}
         </p>
         <button type="button" className="admin-btn" onClick={() => void refresh()}>
           <RefreshCw className="h-4 w-4" />
-          Làm mới
+          Refresh
         </button>
       </div>
 
@@ -67,7 +68,7 @@ export function AnalyticsOverviewClient() {
             rel="noopener noreferrer"
             className="admin-btn admin-btn--primary inline-flex shrink-0 items-center gap-2"
           >
-            Mở Vercel Analytics
+            Open Vercel Analytics
             <ExternalLink className="h-4 w-4" />
           </a>
         </div>
@@ -90,7 +91,7 @@ export function AnalyticsOverviewClient() {
 
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide admin-muted">
-          Sản phẩm & tương tác
+          Products & interactions
         </h3>
         <div className="admin-grid-2">
           <TopProductsTable products={data.topProducts} />
@@ -100,7 +101,7 @@ export function AnalyticsOverviewClient() {
 
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide admin-muted">
-          Tìm hiểu về khách truy cập
+          Understanding your visitors
         </h3>
         <div className="admin-grid-2">
           <SessionsLineChart data={data.sessionsOverTime} />
@@ -110,13 +111,21 @@ export function AnalyticsOverviewClient() {
 
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide admin-muted">
-          Khám phá mức độ tương tác
+          Exploring engagement levels
         </h3>
         <div className="space-y-4">
           <EngagementMetricCards metrics={data.engagement} />
           <TopPagesTable pages={data.topPages} />
         </div>
       </div>
+
+      <OrderProfitCard
+        rows={data.orderProfit.rows}
+        totalProfit={data.orderProfit.totalProfit}
+        totalRevenue={data.orderProfit.totalRevenue}
+        totalOrders={data.orderProfit.totalOrders}
+        totalItems={data.orderProfit.totalItems}
+      />
     </div>
   );
 }

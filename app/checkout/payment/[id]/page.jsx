@@ -225,15 +225,15 @@ export default function CheckoutPaymentPage() {
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-10 sm:px-6">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
           <StusportLogo variant="mark" href="/" className="stusport-logo--compact" />
-          <h1 className="mt-3 text-2xl font-semibold sm:text-3xl">Thanh toán tiền cọc</h1>
+          <h1 className="mt-3 text-2xl font-semibold sm:text-3xl">Deposit Payment</h1>
           <p className="mt-2 text-sm text-slate-300">
-            Hệ thống sẽ tự động xác nhận đơn hàng sau khi bạn quét mã thành công,
-            vui lòng không tắt trang này.
+            The system will automatically confirm your order after a successful QR scan.
+            Please do not close this page.
           </p>
           {success ? (
             <p className="mt-3 rounded-xl bg-emerald-500/15 px-4 py-3 text-sm text-emerald-200">
-              Thanh toán thành công! STUSPORT đã ghi nhận đơn hàng, vui lòng kiểm
-              tra Zalo/Email để nhận thông tin tiếp theo.
+              Payment successful! STUSPORT has recorded your order. Please check your
+              Zalo/Email for further instructions.
             </p>
           ) : null}
         </div>
@@ -241,26 +241,26 @@ export default function CheckoutPaymentPage() {
         <div className="grid gap-6 md:grid-cols-2">
           <section className="rounded-2xl border border-white/10 bg-white p-5 text-slate-900">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500">
-              Thông tin đơn hàng
+              Order Details
             </h2>
 
             {loading ? (
-              <p className="mt-4 text-sm text-slate-500">Đang tải dữ liệu…</p>
+              <p className="mt-4 text-sm text-slate-500">Loading…</p>
             ) : error ? (
               <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>
             ) : (
               <div className="mt-4 space-y-3 text-sm">
                 <p>
-                  Mã đơn: <strong>#{order?.id}</strong>
+                  Order ID: <strong>#{order?.id}</strong>
                 </p>
                 <p>
-                  Tổng đơn: <strong>{formatVnd(order?.total_price)}</strong>
+                  Total: <strong>{formatVnd(order?.total_price)}</strong>
                 </p>
                 <p>
-                  Tiền cọc cần thanh toán: <strong>{formatVnd(depositAmount)}</strong>
+                  Deposit amount: <strong>{formatVnd(depositAmount)}</strong>
                 </p>
                 <p className="text-xs text-slate-500">
-                  Vui lòng hoàn tất thanh toán qua PayOS để hệ thống tự động cập nhật trạng thái.
+                  Please complete payment via PayOS. The system will automatically update the order status.
                 </p>
               </div>
             )}
@@ -268,11 +268,11 @@ export default function CheckoutPaymentPage() {
 
           <section className="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-5">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-emerald-200">
-              VietQR động
+              VietQR (Dynamic)
             </h2>
 
             {loading ? (
-              <p className="mt-4 text-sm text-emerald-100">Đang khởi tạo mã thanh toán…</p>
+              <p className="mt-4 text-sm text-emerald-100">Initializing payment…</p>
             ) : checkoutUrl ? (
               <div className="mt-4 space-y-4">
                 <a
@@ -281,18 +281,18 @@ export default function CheckoutPaymentPage() {
                   rel="noreferrer"
                   className="inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
                 >
-                  Mở trang thanh toán PayOS
+                  Open PayOS Payment Page
                 </a>
                 <button
                   type="button"
                   onClick={() => setModalOpen(true)}
                   className="inline-flex w-full items-center justify-center rounded-xl border border-emerald-300/40 px-4 py-3 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-500/20"
                 >
-                  Mở QR thanh toán tại chỗ
+                  Open QR Payment
                 </button>
               </div>
             ) : (
-              !error && <p className="mt-4 text-sm text-emerald-100">Chưa có link thanh toán.</p>
+              !error && <p className="mt-4 text-sm text-emerald-100">No payment link available.</p>
             )}
           </section>
         </div>
@@ -302,7 +302,7 @@ export default function CheckoutPaymentPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
           <div className="w-full max-w-lg rounded-2xl border border-white/15 bg-slate-950 p-5 shadow-2xl">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-white">Quét mã QR để thanh toán</h3>
+              <h3 className="text-lg font-semibold text-white">Scan QR Code to Pay</h3>
               <span className="rounded-full border border-orange-400/40 bg-orange-500/10 px-3 py-1 text-sm font-semibold text-orange-200">
                 {formattedCountdown}
               </span>
@@ -317,7 +317,7 @@ export default function CheckoutPaymentPage() {
             ) : qrCode ? (
               <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3">
                 <p className="mb-2 text-xs text-slate-300">
-                  Mã QR text (copy để xử lý nếu app ngân hàng hỗ trợ):
+                  QR text code (copy if your banking app supports it):
                 </p>
                 <p className="break-all text-xs text-slate-100">{qrCode}</p>
               </div>
@@ -330,7 +330,7 @@ export default function CheckoutPaymentPage() {
             />
 
             <p className="mt-3 text-xs text-slate-300">
-              Nếu quá 05:00 mà chưa thanh toán, hệ thống sẽ tự đóng mã và hủy đơn.
+              If payment is not completed within 05:00, the code will expire and the order will be cancelled.
             </p>
 
             <div className="mt-4 flex justify-end gap-2">
@@ -339,7 +339,7 @@ export default function CheckoutPaymentPage() {
                 onClick={() => setModalOpen(false)}
                 className="rounded-xl border border-white/20 px-4 py-2 text-sm text-slate-200"
               >
-                Đóng
+                Close
               </button>
               <button
                 type="button"
@@ -347,7 +347,7 @@ export default function CheckoutPaymentPage() {
                 disabled={cancelling}
                 className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
               >
-                {cancelling ? "Đang hủy..." : "Hủy đơn"}
+                {cancelling ? "Cancelling…" : "Cancel Order"}
               </button>
             </div>
           </div>

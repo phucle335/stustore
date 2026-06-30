@@ -9,13 +9,13 @@ import { MottoAbout } from "./MottoAbout";
 import { MottoBigIdea } from "./MottoBigIdea";
 import { MottoHeader } from "./MottoHeader";
 import { MottoHero } from "./MottoHero";
-import { MottoInsights } from "./MottoInsights";
 import { MottoLoader } from "./MottoLoader";
 import { MottoMarquee } from "./MottoMarquee";
 import { MottoBetweenBanner } from "./MottoBetweenBanner";
 import { MottoSmoothScroll } from "./MottoSmoothScroll";
 import { MottoTrusted } from "./MottoTrusted";
 import { MottoWork } from "./MottoWork";
+import { BlogSection } from "@/components/store/BlogSection";
 
 const INTRO_FAILSAFE_MS = 4000;
 
@@ -31,7 +31,7 @@ export function MottoHomePage() {
     return () => document.documentElement.classList.remove("motto-page");
   }, []);
 
-  /** Tránh kẹt loader/hero khi quay lại tab (bfcache) hoặc timer bị hủy */
+  /** Prevent loader/hero stuck on back (bfcache) or cancelled timer */
   useEffect(() => {
     const onPageShow = (event: PageTransitionEvent) => {
       if (event.persisted) {
@@ -66,12 +66,7 @@ export function MottoHomePage() {
           <MottoBigIdea />
           <MottoTrusted />
           <MottoWork />
-          <MottoBetweenBanner banner={motto.mottoInsights.banner} />
-          <MottoInsights
-            introText={motto.mottoInsights.introText}
-            cards={motto.mottoInsights.cards}
-          />
-          <MottoAbout />
+          <BlogSection />
         </main>
         <SiteFooter className={styles.footerOnMotto} />
       </div>

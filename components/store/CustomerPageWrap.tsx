@@ -4,19 +4,28 @@ import staticStyles from "@/styles/components/store/StoreStatic.module.css";
 
 type CustomerPageWrapProps = {
   children: ReactNode;
-  /** Form đăng nhập / thanh toán — cột hẹp */
+  /** Login / checkout form — narrow column */
   narrow?: boolean;
   theme?: "light" | "dark";
+  pageClassName?: string;
 };
 
 export function CustomerPageWrap({
   children,
   narrow = false,
   theme = "light",
+  pageClassName,
 }: CustomerPageWrapProps) {
   return (
     <div
-      className={`${staticStyles.staticPageWrap} ${customerStyles.customerPageWrap}${theme === "dark" ? ` ${customerStyles.customerPageWrapDark}` : ""}`}
+      className={[
+        staticStyles.staticPageWrap,
+        customerStyles.customerPageWrap,
+        theme === "dark" ? customerStyles.customerPageWrapDark : "",
+        pageClassName,
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <div
         className={[

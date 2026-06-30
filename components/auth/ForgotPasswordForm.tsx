@@ -32,7 +32,7 @@ export function ForgotPasswordForm({ audience }: ForgotPasswordFormProps) {
     const trimmed = email.trim().toLowerCase();
     if (!trimmed.includes("@")) {
       setLoading(false);
-      setError("Vui lòng nhập email hợp lệ.");
+      setError("Please enter a valid email.");
       return;
     }
 
@@ -42,7 +42,7 @@ export function ForgotPasswordForm({ audience }: ForgotPasswordFormProps) {
     } catch (err) {
       setLoading(false);
       setError(
-        err instanceof Error ? err.message : "Thiếu cấu hình Supabase.",
+        err instanceof Error ? err.message : "Missing Supabase configuration.",
       );
       return;
     }
@@ -60,7 +60,7 @@ export function ForgotPasswordForm({ audience }: ForgotPasswordFormProps) {
     }
 
     setInfo(
-      "Nếu email tồn tại trong hệ thống, bạn sẽ nhận link đặt lại mật khẩu trong vài phút. Kiểm tra cả hộp thư spam.",
+      "If the email exists in our system, you will receive a password reset link in a few minutes. Check your spam folder too.",
     );
   }
 
@@ -75,9 +75,9 @@ export function ForgotPasswordForm({ audience }: ForgotPasswordFormProps) {
             className="stusport-logo--compact"
           />
         </div>
-        <h1 className="admin-auth-card__title">Quên mật khẩu</h1>
+        <h1 className="admin-auth-card__title">Forgot Password</h1>
         <p className="admin-auth-card__subtitle">
-          Nhập email admin để nhận link đặt lại mật khẩu.
+          Enter your admin email to receive a password reset link.
         </p>
 
         <label className="admin-auth-field">
@@ -101,11 +101,11 @@ export function ForgotPasswordForm({ audience }: ForgotPasswordFormProps) {
         ) : null}
 
         <button type="submit" disabled={loading} className="admin-auth-submit">
-          {loading ? "Đang gửi…" : "Gửi link đặt lại mật khẩu"}
+          {loading ? "Sending…" : "Send Password Reset Link"}
         </button>
 
         <p className="admin-auth-back">
-          <Link href={getLoginPath(audience)}>← Quay lại đăng nhập</Link>
+          <Link href={getLoginPath(audience)}>← Back to Login</Link>
         </p>
       </form>
     );
@@ -121,9 +121,9 @@ export function ForgotPasswordForm({ audience }: ForgotPasswordFormProps) {
           className="stusport-logo--compact"
         />
       </div>
-      <h1 className={styles.customerAuthTitle}>Quên mật khẩu</h1>
+      <h1 className={styles.customerAuthTitle}>Forgot Password</h1>
       <p className={styles.customerAuthSubtitle}>
-        Nhập email đã đăng ký để nhận link đặt lại mật khẩu.
+        Enter your registered email to receive a password reset link.
       </p>
 
       <label className={styles.customerAuthLabel}>
@@ -143,11 +143,11 @@ export function ForgotPasswordForm({ audience }: ForgotPasswordFormProps) {
       {info ? <p className={styles.customerAuthInfo}>{info}</p> : null}
 
       <button type="submit" disabled={loading} className={styles.customerAuthSubmit}>
-        {loading ? "Đang gửi…" : "Gửi link đặt lại mật khẩu"}
+        {loading ? "Sending…" : "Send Password Reset Link"}
       </button>
 
       <p className={styles.customerAuthSwitch}>
-        <Link href={getLoginPath(audience)}>← Quay lại đăng nhập</Link>
+        <Link href={getLoginPath(audience)}>← Back to Login</Link>
       </p>
     </form>
   );

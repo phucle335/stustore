@@ -8,8 +8,8 @@ type ProductImageProps = Omit<ImageProps, "src" | "alt"> & {
 };
 
 /**
- * Ảnh sản phẩm từ DB/Admin — dùng `next/image` khi host đã cấu hình,
- * ngược lại `<img>` để tránh lỗi hostname chưa whitelist.
+ * Product image from DB/Admin — uses `next/image` when host is configured,
+ * otherwise `<img>` to avoid unlisted hostname errors.
  */
 export function ProductImage({
   src,

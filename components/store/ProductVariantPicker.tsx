@@ -28,7 +28,7 @@ export function ProductVariantPicker({
         <div
           className={styles.productVariantOptions}
           role="group"
-          aria-label="Chọn size"
+          aria-label="Select size"
         >
           {sizes.map((size) => {
             const qty = sizeStock?.[size];

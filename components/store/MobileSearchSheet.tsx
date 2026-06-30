@@ -68,7 +68,7 @@ export function MobileSearchSheet({
       <button
         type="button"
         className={styles.backdrop}
-        aria-label="Đóng tìm kiếm"
+        aria-label="Close search"
         tabIndex={open ? 0 : -1}
         onClick={onClose}
       />
@@ -80,7 +80,7 @@ export function MobileSearchSheet({
       >
         <MobileOverlayLogoHeader
           onClose={onClose}
-          closeLabel="Đóng tìm kiếm"
+          closeLabel="Close search"
         />
         <div className={styles.sheetInner}>
           <form
@@ -89,7 +89,7 @@ export function MobileSearchSheet({
             onSubmit={handleSubmit}
           >
             <label htmlFor="mobile-search-input" className={styles.srOnly}>
-              Tìm kiếm sản phẩm
+              Search products
             </label>
             <input
               ref={inputRef}
@@ -98,16 +98,16 @@ export function MobileSearchSheet({
               name="q"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Tìm kiếm sản phẩm, danh mục..."
+              placeholder="Search products, categories..."
               autoComplete="off"
             />
-            <button type="submit" aria-label="Tìm kiếm">
+            <button type="submit" aria-label="Search">
               <i className="fas fa-search" aria-hidden="true" />
             </button>
           </form>
         </div>
         <span id={titleId} className={styles.srOnly}>
-          Tìm kiếm
+          Search
         </span>
       </div>
     </div>

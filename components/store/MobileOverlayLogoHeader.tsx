@@ -10,7 +10,7 @@ type MobileOverlayLogoHeaderProps = {
 
 export function MobileOverlayLogoHeader({
   onClose,
-  closeLabel = "Đóng",
+  closeLabel = "Close",
 }: MobileOverlayLogoHeaderProps): React.ReactElement {
   return (
     <div className={styles.bar}>

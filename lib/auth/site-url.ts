@@ -1,4 +1,4 @@
-/** URL gốc site (dùng redirect Supabase Auth). */
+/** Site root URL (used for Supabase Auth redirects). */
 export function getSiteUrl(): string {
   const fromEnv =
     process.env.NEXT_PUBLIC_SITE_URL?.trim() ||

@@ -55,6 +55,6 @@ export function deviceLabel(device: string | null | undefined): string {
     case "desktop":
       return "Desktop";
     default:
-      return "Không rõ";
+      return "Unknown";
   }
 }

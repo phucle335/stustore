@@ -6,8 +6,8 @@ export function resolveDisplayName(
   if (trimmed) return trimmed;
 
   const mail = email?.trim();
-  if (!mail) return "Khách hàng";
+  if (!mail) return "Customer";
 
   const local = mail.split("@")[0];
-  return local.length > 0 ? local : "Khách hàng";
+  return local.length > 0 ? local : "Customer";
 }

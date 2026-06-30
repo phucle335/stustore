@@ -25,20 +25,19 @@ export function MottoMethod() {
       <MottoMethodMarquee />
       <div className={styles.container}>
         <MottoReveal as="h2" className={styles.methodTitle}>
-          <MottoLine>Cam kết</MottoLine>
-          <MottoLine>chất lượng.</MottoLine>
+          <MottoLine>Quality</MottoLine>
+          <MottoLine>commitment.</MottoLine>
         </MottoReveal>
         <MottoReveal
           as="p"
           className={`${styles.body} ${styles.methodText}`}
           splitLines={false}
         >
-          Hàng chính hãng, miễn phí giao hàng đơn từ 799k và đổi trả đến 14
-          ngày — Stusport đặt trải nghiệm khách hàng lên hàng đầu trong mọi đơn
-          hàng.
+          100% Authentic products, free shipping on orders from 799k, and returns
+          up to 14 days — Stusport puts customer experience first in every order.
         </MottoReveal>
         <Link href="/ho-tro" className={styles.btnLink}>
-          <span>Xem chính sách hỗ trợ</span>
+          <span>View Support Policies</span>
           <span aria-hidden>→</span>
         </Link>
       </div>

@@ -9,17 +9,17 @@ export type ProductSpecRow = {
 };
 
 const CATEGORY_OCCASION: Record<ProductCategory, string> = {
-  sneakers: "Đi chơi, tập luyện",
-  sunglasses: "Đi chơi, du lịch",
-  clothing: "Đi chơi, tập luyện",
-  bags: "Đi học, đi làm, du lịch",
-  watches: "Công sở, thời trang",
+  sneakers: "Casual, Training",
+  sunglasses: "Casual, Travel",
+  clothing: "Casual, Training",
+  bags: "School, Work, Travel",
+  watches: "Office, Fashion",
 };
 
 const CATEGORY_SPORT: Record<ProductCategory, string> = {
-  sneakers: "Chạy bộ, lifestyle",
+  sneakers: "Running, Lifestyle",
   sunglasses: "Lifestyle",
-  clothing: "Tập luyện, lifestyle",
+  clothing: "Training, Lifestyle",
   bags: "Lifestyle",
   watches: "—",
 };
@@ -27,71 +27,71 @@ const CATEGORY_SPORT: Record<ProductCategory, string> = {
 function materialForCategory(category: ProductCategory): string {
   switch (category) {
     case "sneakers":
-      return "Da tổng hợp / vải mesh";
+      return "Synthetic leather / Mesh";
     case "clothing":
       return "Cotton / Polyester";
     case "sunglasses":
-      return "Acetate / Kim loại";
+      return "Acetate / Metal";
     case "bags":
-      return "Polyester / Da PU";
+      return "Polyester / PU Leather";
     case "watches":
-      return "Thép không gỉ / Silicone";
+      return "Stainless steel / Silicone";
     default:
-      return "Chất liệu cao cấp";
+      return "Premium material";
   }
 }
 
 export function getProductSpecs(product: ProductDetail): ProductSpecRow[] {
   const brand = formatBrandDisplay(product.brand);
   const base: ProductSpecRow[] = [
-    { label: "Thương hiệu", value: brand },
-    { label: "Dịp sử dụng", value: CATEGORY_OCCASION[product.category] },
-    { label: "Danh mục", value: product.category },
-    { label: "Chất liệu", value: materialForCategory(product.category) },
+    { label: "Brand", value: brand },
+    { label: "Occasion", value: CATEGORY_OCCASION[product.category] },
+    { label: "Category", value: product.category },
+    { label: "Material", value: materialForCategory(product.category) },
   ];
 
   if (product.category === "clothing") {
     return [
       ...base,
-      { label: "Môn thể thao", value: CATEGORY_SPORT[product.category] },
-      { label: "Công nghệ", value: "Vải co giãn 4 chiều" },
+      { label: "Sport", value: CATEGORY_SPORT[product.category] },
+      { label: "Technology", value: "4-way stretch fabric" },
       {
-        label: "Tính năng nổi bật",
-        value: "Nhanh khô, thoáng khí, nhẹ, co giãn",
+        label: "Key Features",
+        value: "Quick-dry, breathable, lightweight, stretchable",
       },
-      { label: "Kiểu dáng", value: "Regular fit" },
-      { label: "Họa tiết", value: "Trơn / logo thương hiệu" },
+      { label: "Fit", value: "Regular fit" },
+      { label: "Pattern", value: "Solid / Brand logo" },
     ];
   }
 
   if (product.category === "sneakers") {
     return [
       ...base,
-      { label: "Môn thể thao", value: CATEGORY_SPORT[product.category] },
-      { label: "Công nghệ", value: "Đệm êm, bám sàn tốt" },
+      { label: "Sport", value: CATEGORY_SPORT[product.category] },
+      { label: "Technology", value: "Soft cushion, good grip" },
       {
-        label: "Tính năng nổi bật",
-        value: "Thoáng khí, nhẹ, bền form",
+        label: "Key Features",
+        value: "Breathable, lightweight, shape-retaining",
       },
-      { label: "Kiểu dáng", value: "Unisex" },
+      { label: "Fit", value: "Unisex" },
     ];
   }
 
   if (product.category === "watches") {
     return [
       ...base,
-      { label: "Máy", value: "Quartz / Automatic" },
-      { label: "Mặt kính", value: "Kính cứng chống trầy" },
-      { label: "Chống nước", value: "3ATM - 10ATM" },
+      { label: "Movement", value: "Quartz / Automatic" },
+      { label: "Glass", value: "Scratch-resistant mineral glass" },
+      { label: "Water resistance", value: "3ATM - 10ATM" },
     ];
   }
 
   return [
     ...base,
-    { label: "Môn thể thao", value: CATEGORY_SPORT[product.category] },
+    { label: "Sport", value: CATEGORY_SPORT[product.category] },
     {
-      label: "Tính năng nổi bật",
-      value: "Chính hãng, bền đẹp, dễ phối đồ",
+      label: "Key Features",
+      value: "Authentic, durable, easy to style",
     },
   ];
 }
@@ -99,22 +99,22 @@ export function getProductSpecs(product: ProductDetail): ProductSpecRow[] {
 export function getProductDetailBullets(product: ProductDetail): string[] {
   const brand = formatBrandDisplay(product.brand);
   return [
-    `Sản phẩm chính hãng ${brand}, phân phối tại ${STORE_NAME}.`,
-    "Chất liệu và hoàn thiện cao cấp, phù hợp sử dụng hàng ngày.",
-    "Thiết kế hiện đại, dễ phối với streetwear và phong cách thể thao.",
+    `Authentic ${brand}, distributed by ${STORE_NAME}.`,
+    "Premium material and finish, suitable for everyday use.",
+    "Modern design, easy to pair with streetwear and sports style.",
     product.sizes
-      ? `Có sẵn nhiều lựa chọn size: ${product.sizes.join(", ")}.`
-      : "Số lượng có hạn — đặt hàng sớm để giữ size/mẫu ưa thích.",
-    `Mã sản phẩm: ${product.id.toUpperCase()}.`,
+      ? `Available in multiple sizes: ${product.sizes.join(", ")}.`
+      : "Limited quantity — order early to secure your preferred size/style.",
+    `Product code: ${product.id.toUpperCase()}.`,
   ];
 }
 
-export const PRODUCT_RETURN_POLICY = `Quý khách có thể đổi size hoặc đổi mẫu trong vòng 14 ngày kể từ ngày nhận hàng (sản phẩm còn nguyên tem, chưa qua sử dụng). ${STORE_NAME} hỗ trợ đổi trả miễn phí tại cửa hàng hoặc qua đơn vị vận chuyển đối tác. Không áp dụng đổi trả với hàng giảm giá sâu hoặc sản phẩm đã qua sử dụng.`;
+export const PRODUCT_RETURN_POLICY = `You may exchange size or style within 14 days of receiving your order (item must have original tags and be unused). ${STORE_NAME} offers free exchanges in-store or via our shipping partner. Special-discounted items or used products are not eligible for returns.`;
 
-export const PRODUCT_CARE_GUIDE = `Giặt tay hoặc giặt máy chế độ nhẹ với nước lạnh; tránh tẩy chất mạnh. Phơi trong mát, tránh ánh nắng trực tiếp. Với giày: vệ sinh bằng khăn ẩm, không ngâm nước lâu. Kính mắt: lau bằng vải microfiber. Đồng hồ: tránh va đập mạnh và hóa chất.`;
+export const PRODUCT_CARE_GUIDE = `Hand wash or machine wash on gentle cycle with cold water; avoid harsh chemicals. Air dry in shade, away from direct sunlight. For shoes: clean with a damp cloth, avoid prolonged water soaking. For sunglasses: wipe with a microfiber cloth. For watches: avoid strong impacts and chemicals.`;
 
-export const PRODUCT_STORAGE_GUIDE = `Bảo quản nơi khô ráo, thoáng mát. Giày và túi nên nhồi giấy báo giữ form. Đồng hồ nên cất hộp riêng, tránh ẩm mốc.`;
+export const PRODUCT_STORAGE_GUIDE = `Store in a dry, cool place. Stuff shoes and bags with paper to retain shape. Watches should be kept in a separate box to avoid moisture damage.`;
 
 export function getAboutStoreContent(): string {
-  return `${STORE_NAME} là cửa hàng sneaker, streetwear và phụ kiện chính hãng tại Việt Nam. Chúng tôi cam kết 100% hàng authentic, tư vấn size chuẩn và hỗ trợ đổi trả minh bạch. Mua sắm tại ${STORE_NAME} để trải nghiệm dịch vụ tận tâm và bộ sưu tập cập nhật theo xu hướng.`;
+  return `${STORE_NAME} is a sneaker, streetwear, and accessories store in Vietnam. We guarantee 100% authentic products, accurate size consultation, and transparent returns. Shop at ${STORE_NAME} for dedicated service and trend-forward collections.`;
 }

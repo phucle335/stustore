@@ -33,8 +33,8 @@ export async function createCouponAction(input: CreateCouponInput) {
           },
           {
             type: "admin_action",
-            title: "Admin tạo phiếu giảm giá",
-            body: `Tạo coupon ${result.data.code}`,
+            title: "Admin created coupon",
+            body: `Created coupon ${result.data.code}`,
             entityType: "coupon",
             entityId: result.data.id,
           },
@@ -62,8 +62,8 @@ export async function updateCouponAction(id: string, input: UpdateCouponInput) {
           },
           {
             type: "admin_action",
-            title: "Admin cập nhật phiếu giảm giá",
-            body: `Cập nhật coupon ${id}`,
+            title: "Admin updated coupon",
+            body: `Updated coupon ${id}`,
             entityType: "coupon",
             entityId: id,
           },
@@ -91,8 +91,8 @@ export async function deleteCouponAction(id: string) {
           },
           {
             type: "admin_action",
-            title: "Admin xóa phiếu giảm giá",
-            body: `Xóa coupon ${id}`,
+            title: "Admin deleted coupon",
+            body: `Deleted coupon ${id}`,
             entityType: "coupon",
             entityId: id,
           },

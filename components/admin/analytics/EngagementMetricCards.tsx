@@ -11,7 +11,7 @@ type EngagementMetricCardsProps = {
 const metricDefs = [
   {
     key: "pages",
-    label: "Số trang trung bình mỗi phiên",
+    label: "Avg. pages per session",
     sub: "Avg. Pages per Session",
     field: "avgPagesPerSession" as const,
     icon: FileText,
@@ -20,7 +20,7 @@ const metricDefs = [
   },
   {
     key: "duration",
-    label: "Thời lượng phiên trung bình",
+    label: "Avg. session duration",
     sub: "Avg. Session Duration",
     field: "avgSessionDuration" as const,
     icon: Clock,
@@ -29,7 +29,7 @@ const metricDefs = [
   },
   {
     key: "bounce",
-    label: "Tỷ lệ bỏ trang",
+    label: "Bounce rate",
     sub: "Bounce Rate",
     field: "bounceRate" as const,
     icon: TrendingDown,

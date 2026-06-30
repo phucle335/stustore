@@ -15,6 +15,17 @@ export type TopProductRow = {
   clicks: number;
 };
 
+export type OrderProfitRow = {
+  orderId: string;
+  productId: string | null;
+  productName: string | null;
+  sellingPrice: number;
+  originPrice: number | null;
+  profit: number;
+  quantity: number;
+  totalProfit: number;
+};
+
 export type InteractionRow = {
   at: string;
   kind: "click" | "product_view";
@@ -44,6 +55,13 @@ export type AnalyticsDashboard = {
   topProducts: TopProductRow[];
   buttonClicks: { label: string; clicks: number }[];
   recentInteractions: InteractionRow[];
+  orderProfit: {
+    rows: OrderProfitRow[];
+    totalProfit: number;
+    totalRevenue: number;
+    totalOrders: number;
+    totalItems: number;
+  };
   vercel: {
     enabled: boolean;
     dashboardUrl: string | null;

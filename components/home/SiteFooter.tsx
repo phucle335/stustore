@@ -19,10 +19,10 @@ export function SiteFooter({ className = "" }: SiteFooterProps) {
             <StusportLogo variant="footer" />
           </p>
           <p className={styles.text}>
-            {STORE_NAME} — phân phối Sneaker, Sportswear và phụ kiện chính hãng
+            {STORE_NAME} — distributing Sneakers, Sportswear and genuine accessories
           </p>
           <p className={styles.text}>
-           Online store
+           Online Store
             <br />
             0901 234 567
             <br />
@@ -31,42 +31,42 @@ export function SiteFooter({ className = "" }: SiteFooterProps) {
         </div>
 
         <div className={styles.col}>
-          <h3>Về {STORE_NAME}</h3>
+          <h3>About {STORE_NAME}</h3>
           <ul>
             <li>
-              <Link href="/">Giới thiệu</Link>
+              <Link href="/gioi-thieu">About Us</Link>
             </li>
             <li>
-              <Link href={PAGE_ROUTES.terms}>Điều khoản và Điều kiện</Link>
+              <Link href={PAGE_ROUTES.terms}>Terms & Conditions</Link>
             </li>
             <li>
-              <Link href="#">Hệ thống cửa hàng</Link>
+              <Link href="#">Store Locations</Link>
             </li>
           </ul>
         </div>
 
         <div className={styles.col}>
-          <h3>Hỗ trợ khách hàng</h3>
+          <h3>Customer Support</h3>
           <ul>
             <li>
               <Link href={PAGE_ROUTES.support}>
-                Hỗ trợ và giải đáp thắc mắc
+                Help & FAQ
               </Link>
             </li>
             <li>
-              <Link href={PAGE_ROUTES.terms}>Chính sách đổi trả</Link>
+              <Link href="/chinh-sach-doi-tra">Return Policy</Link>
             </li>
             <li>
-              <Link href={PAGE_ROUTES.terms}>Chính sách vận chuyển</Link>
+              <Link href={PAGE_ROUTES.terms}>Shipping Policy</Link>
             </li>
             <li>
-              <Link href="#">Hướng dẫn mua hàng</Link>
+              <Link href="#">Shopping Guide</Link>
             </li>
           </ul>
         </div>
 
         <div className={styles.col}>
-          <h3>Danh mục</h3>
+          <h3>Categories</h3>
           <ul>
             {NAV_LINKS.filter(
               (link) => link.id !== "home" && link.id !== "blog",

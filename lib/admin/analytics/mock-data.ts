@@ -1,8 +1,8 @@
-/** Dữ liệu mẫu — Tổng quan nổi bật (preview UI) */
+/** Mock data — Featured Highlights (preview UI) */
 
 export const MOCK_LIVE_VISITORS = {
   onlineNow: 24,
-  hint: "Hoạt động của khách truy cập sẽ hiển thị tại đây theo thời gian thực.",
+  hint: "Visitor activity will appear here in real time.",
 };
 
 export const MOCK_SESSIONS_OVER_TIME = [
@@ -23,7 +23,7 @@ export const MOCK_SESSIONS_OVER_TIME = [
 ];
 
 export const MOCK_TRAFFIC_SOURCES = [
-  { name: "Trực tiếp (Direct)", value: 42, fill: "#34d399" },
+  { name: "Direct", value: 42, fill: "#34d399" },
   { name: "Google Ads", value: 35, fill: "#38bdf8" },
   { name: "Facebook Ads", value: 23, fill: "#a78bfa" },
 ];
@@ -35,19 +35,19 @@ export const MOCK_ENGAGEMENT_METRICS = {
 };
 
 export const MOCK_TOP_PAGES = [
-  { path: "/", title: "Trang chủ", views: 4820 },
-  { path: "/sneakers", title: "Sneaker", views: 2910 },
+  { path: "/", title: "Home", views: 4820 },
+  { path: "/sneakers", title: "Sneakers", views: 2910 },
   { path: "/products/sneaker-1", title: "Nike Air Force 1", views: 1640 },
-  { path: "/clothing", title: "Clothes", views: 1320 },
-  { path: "/checkout", title: "Thanh toán", views: 890 },
+  { path: "/clothing", title: "Clothing", views: 1320 },
+  { path: "/checkout", title: "Checkout", views: 890 },
 ];
 
 export const MOCK_BUTTON_CLICKS = [
-  { label: 'Nút "Mua ngay" / Thêm giỏ', clicks: 150 },
-  { label: 'Nút "Đăng ký"', clicks: 85 },
-  { label: "Icon giỏ hàng (Header)", clicks: 312 },
-  { label: 'Nút "Thanh toán"', clicks: 64 },
-  { label: "Yêu thích sản phẩm", clicks: 41 },
+  { label: 'Buy Now / Add to Cart button', clicks: 150 },
+  { label: 'Register button', clicks: 85 },
+  { label: 'Cart icon (Header)', clicks: 312 },
+  { label: 'Checkout button', clicks: 64 },
+  { label: 'Favorite product', clicks: 41 },
 ];
 
 export const MOCK_FOOTER_PRESENCE = {
@@ -58,30 +58,30 @@ export const MOCK_FOOTER_PRESENCE = {
 export const MOCK_RECENT_ACTIVITY = [
   {
     id: "1",
-    name: "Khách hàng",
-    initials: "KH",
-    action: "đặt đơn hàng mới #4287",
-    time: "2 giờ trước",
+    name: "Customer",
+    initials: "CU",
+    action: "placed new order #4287",
+    time: "2 hours ago",
   },
   {
     id: "2",
     name: "Admin",
     initials: "AD",
-    action: "cập nhật sản phẩm Sneaker",
-    time: "5 giờ trước",
+    action: "updated product Sneaker",
+    time: "5 hours ago",
   },
   {
     id: "3",
-    name: "Hệ thống",
-    initials: "ST",
-    action: "đồng bộ tồn kho theo size",
-    time: "Hôm qua",
+    name: "System",
+    initials: "SY",
+    action: "synced inventory by size",
+    time: "Yesterday",
   },
   {
     id: "4",
-    name: "Khách VIP",
+    name: "VIP Customer",
     initials: "VIP",
-    action: "áp dụng mã giảm giá STU10",
-    time: "2 ngày trước",
+    action: "applied coupon STU10",
+    time: "2 days ago",
   },
 ];

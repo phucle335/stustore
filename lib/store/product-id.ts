@@ -21,7 +21,7 @@ export function canQueryProductIdInDatabase(id: string): boolean {
   return isNumericProductId(trimmed) || isUuidProductId(trimmed);
 }
 
-/** Mã tự đặt trong admin — chữ, số, gạch ngang, gạch dưới (vd. SP001, air-max-01). */
+/** Admin product code — letters, numbers, hyphens, underscores (e.g. SP001, air-max-01). */
 export function normalizeProductCode(raw?: string | null): string | undefined {
   const trimmed = raw?.trim();
   if (!trimmed) return undefined;
@@ -34,7 +34,7 @@ export function isValidProductCode(raw?: string | null): boolean {
 }
 
 export function productCodeValidationMessage(): string {
-  return "Mã sản phẩm gồm 1–64 ký tự: chữ, số, gạch ngang (-) hoặc gạch dưới (_). Ví dụ: SP001, air-max-01.";
+  return "Product code: 1–64 characters: letters, numbers, hyphens (-), or underscores (_). Example: SP001, air-max-01.";
 }
 
 export function getProductManageCode(product: {

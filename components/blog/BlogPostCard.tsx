@@ -39,7 +39,7 @@ export function BlogPostCard({
         </time>
         <p className={styles.blogSectionCardExcerpt}>{excerpt}</p>
         <Link href={getBlogPostHref(id)} className={styles.blogSectionCardLink}>
-          [Đọc thêm]
+          [Read more]
         </Link>
       </div>
     </article>

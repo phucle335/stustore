@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Blog — Stusport",
-  description: "Tin tức, xu hướng sneaker và streetwear từ Stusport",
+  description: "Latest sneaker and streetwear news from Stusport",
 };
 
 export default function BlogPage() {

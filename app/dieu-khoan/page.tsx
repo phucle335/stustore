@@ -6,7 +6,7 @@ import { getSiteContentServer } from "@/lib/site-content/get-site-content-server
 import { STORE_NAME } from "@/lib/store/site";
 
 export const metadata = {
-  title: `Điều khoản và Điều kiện — ${STORE_NAME}`,
+  title: `Terms & Conditions — ${STORE_NAME}`,
 };
 
 export default async function TermsPage() {

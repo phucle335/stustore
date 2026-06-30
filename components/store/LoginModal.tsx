@@ -41,7 +41,7 @@ export function LoginModal({
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Đóng"
+          aria-label="Close"
         >
           &times;
         </button>
@@ -55,7 +55,7 @@ export function LoginModal({
         </div>
         <h2>{membershipTitle}</h2>
         <p className={styles.noPassword} style={{ marginBottom: "1rem", color: "#555" }}>
-          Đăng ký hoặc đăng nhập để thanh toán đơn hàng.
+          Register or sign in to complete your order.
         </p>
         <Link
           href="/dang-ky?redirect=%2Fcheckout"
@@ -69,7 +69,7 @@ export function LoginModal({
           }}
           onClick={onClose}
         >
-          Đăng ký tài khoản
+          Create Account
         </Link>
         <Link
           href="/quen-mat-khau?redirect=%2Fcheckout"
@@ -85,7 +85,7 @@ export function LoginModal({
           }}
           onClick={onClose}
         >
-          Quên mật khẩu?
+          Forgot password?
         </Link>
         <Link
           href="/dang-nhap?redirect=%2Fcheckout"
@@ -100,7 +100,7 @@ export function LoginModal({
           }}
           onClick={onClose}
         >
-          Đăng nhập
+          Sign In
         </Link>
       </div>
     </div>

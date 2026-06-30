@@ -30,7 +30,7 @@ export function parseOrdersCsv(
 ): ParseOrdersResult {
   const objects = csvToObjects(csvText);
   if (objects.length === 0) {
-    return { ok: false, errors: ["File trống hoặc thiếu dòng tiêu đề (header)."] };
+    return { ok: false, errors: ["File is empty or missing header row."] };
   }
 
   const rows: ParsedOrderRow[] = [];
@@ -43,7 +43,7 @@ export function parseOrdersCsv(
     const total_price = parseNumber(totalRaw, "total_price", rowNumber);
 
     if (total_price == null) {
-      errors.push(`Dòng ${rowNumber}: thiếu hoặc sai total_price (tổng tiền).`);
+      errors.push(`Row ${rowNumber}: missing or invalid total_price.`);
       return;
     }
 
@@ -52,7 +52,7 @@ export function parseOrdersCsv(
       user_id = emailToUserId.get(email) ?? null;
       if (!user_id) {
         errors.push(
-          `Dòng ${rowNumber}: không tìm thấy user với email "${email}" trong public.users.`,
+          `Row ${rowNumber}: user with email "${email}" not found in public.users.`,
         );
         return;
       }
@@ -92,7 +92,7 @@ export function parseOrdersCsv(
   }
 
   if (rows.length === 0) {
-    return { ok: false, errors: ["Không có dòng dữ liệu hợp lệ."] };
+    return { ok: false, errors: ["No valid data rows found."] };
   }
 
   return { ok: true, rows };

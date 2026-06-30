@@ -8,7 +8,7 @@ import { getForgotPasswordPath } from "@/lib/auth/password-reset";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
 const NOT_ADMIN_MESSAGE =
-  "Tài khoản này không có quyền admin. Dùng email admin hoặc chạy SQL gán role admin trong Supabase.";
+  "This account does not have admin permissions. Use an admin email or run SQL to assign the admin role in Supabase.";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
@@ -21,12 +21,12 @@ export function LoginForm() {
   const [error, setError] = useState<string | null>(() => {
     if (queryError === "not_admin") return NOT_ADMIN_MESSAGE;
     if (queryError === "reset_link_invalid") {
-      return "Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.";
+      return "Password reset link is invalid or has expired.";
     }
     return null;
   });
   const [info, setInfo] = useState<string | null>(
-    resetSuccess ? "Đặt lại mật khẩu thành công. Đăng nhập bằng mật khẩu mới." : null,
+    resetSuccess ? "Password reset successful. Sign in with your new password." : null,
   );
   const [loading, setLoading] = useState(false);
 
@@ -43,7 +43,7 @@ export function LoginForm() {
       setError(
         err instanceof Error
           ? err.message
-          : "Thiếu cấu hình Supabase. Kiểm tra NEXT_PUBLIC_SUPABASE_URL và ANON_KEY trong .env.",
+          : "Missing Supabase configuration. Check NEXT_PUBLIC_SUPABASE_URL and ANON_KEY in .env.",
       );
       return;
     }
@@ -63,7 +63,7 @@ export function LoginForm() {
     const userId = signInData.user?.id;
     if (!userId) {
       setLoading(false);
-      setError("Đăng nhập thất bại — không lấy được thông tin phiên.");
+      setError("Login failed — could not retrieve session information.");
       return;
     }
 
@@ -78,7 +78,7 @@ export function LoginForm() {
       setLoading(false);
       setError(
         syncBody.error ??
-          "Không đồng bộ được hồ sơ. Chạy supabase/admin-schema.sql trong Supabase SQL Editor.",
+          "Could not sync profile. Run supabase/admin-schema.sql in the Supabase SQL Editor.",
       );
       return;
     }
@@ -103,9 +103,9 @@ export function LoginForm() {
           className="stusport-logo--compact"
         />
       </div>
-      <h1 className="admin-auth-card__title">Đăng nhập Admin</h1>
+      <h1 className="admin-auth-card__title">Admin Login</h1>
       <p className="admin-auth-card__subtitle">
-        Chỉ tài khoản có quyền admin mới truy cập được dashboard Stusport.
+        Only accounts with admin permissions can access the Stusport dashboard.
       </p>
 
       <label className="admin-auth-field">
@@ -122,7 +122,7 @@ export function LoginForm() {
       </label>
 
       <label className="admin-auth-field">
-        Mật khẩu
+        Password
         <input
           type="password"
           required
@@ -135,7 +135,7 @@ export function LoginForm() {
       </label>
 
       <p className="admin-auth-forgot">
-        <Link href={getForgotPasswordPath("admin")}>Quên mật khẩu?</Link>
+        <Link href={getForgotPasswordPath("admin")}>Forgot password?</Link>
       </p>
 
       {info ? (
@@ -148,18 +148,18 @@ export function LoginForm() {
           {queryError === "reset_link_invalid" ? (
             <>
               {" "}
-              <Link href={getForgotPasswordPath("admin")}>Gửi lại email</Link>
+              <Link href={getForgotPasswordPath("admin")}>Resend email</Link>
             </>
           ) : null}
         </p>
       ) : null}
 
       <button type="submit" disabled={loading} className="admin-auth-submit">
-        {loading ? "Đang đăng nhập…" : "Vào Dashboard"}
+        {loading ? "Signing in…" : "Go to Dashboard"}
       </button>
 
       <p className="admin-auth-back">
-        <Link href="/">← Về cửa hàng</Link>
+        <Link href="/">← Back to store</Link>
       </p>
     </form>
   );

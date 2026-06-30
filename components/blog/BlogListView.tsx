@@ -30,11 +30,11 @@ export function BlogListView({ posts }: BlogListViewProps) {
     <section className={styles.blogPage}>
       <header className={styles.blogPageHero}>
         <h1 className={styles.blogPageHeroTitle}>
-          Xu hướng, thời trang &amp; lifestyle từ Stusport
+          Trends, fashion &amp; lifestyle from Stusport
         </h1>
       </header>
 
-      <nav className={styles.blogCategoryNav} aria-label="Danh mục blog">
+        <nav className={styles.blogCategoryNav} aria-label="Blog categories">
         {sections.map(({ category }) => (
           <button
             key={category.id}
@@ -68,7 +68,7 @@ export function BlogListView({ posts }: BlogListViewProps) {
                     href={getBlogCategoryHref(category.id)}
                     className={styles.blogSectionSeeAll}
                   >
-                    [ Xem tất cả ]
+                    [ View all ]
                   </Link>
                 ) : null}
               </div>

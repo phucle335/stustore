@@ -17,13 +17,13 @@ export function ButtonClicksList({ clicks }: ButtonClicksListProps) {
 
   return (
     <AnalyticsCard
-      title="Tổng hợp click nút"
-      subtitle="Mua ngay, thêm giỏ, CTA… — chi tiết từng khách ở bảng realtime phía trên"
+      title="Button clicks summary"
+      subtitle="Buy now, add to cart, CTA… — individual visitor events in the realtime table above"
     >
       {clicks.length === 0 ? (
         <p className="text-sm admin-muted">
-          Chưa có click nào. Ví dụ:{" "}
-          <code className="text-xs">data-track=&quot;Mua ngay&quot;</code>
+          No clicks recorded yet. Example:{" "}
+          <code className="text-xs">data-track=&quot;Buy Now&quot;</code>
         </p>
       ) : (
         <>

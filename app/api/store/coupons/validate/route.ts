@@ -15,13 +15,13 @@ export async function POST(request: Request) {
   try {
     body = (await request.json()) as Body;
   } catch {
-    return NextResponse.json({ error: "Dữ liệu không hợp lệ." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid data." }, { status: 400 });
   }
 
   const subtotal = Number(body.subtotal);
   if (!body.code?.trim() || !Number.isFinite(subtotal) || subtotal <= 0) {
     return NextResponse.json(
-      { error: "Mã phiếu hoặc tổng đơn không hợp lệ." },
+      { error: "Invalid coupon code or order subtotal." },
       { status: 400 },
     );
   }

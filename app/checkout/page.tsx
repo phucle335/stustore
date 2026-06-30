@@ -9,7 +9,7 @@ import { createAuthServerClient } from "@/lib/supabase/auth-server";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Thanh toán | Stusport",
+  title: "Checkout | Stusport",
 };
 
 export default async function CheckoutPage() {

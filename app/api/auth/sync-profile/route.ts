@@ -7,7 +7,7 @@ type SyncBody = {
   full_name?: string;
 };
 
-/** Tạo/cập nhật public.users cho user Auth vừa đăng nhập (backfill khi thiếu trigger). */
+/** Create/update public.users for newly logged-in Auth user (backfill when trigger is missing). */
 export async function POST(request: Request) {
   const supabase = await createAuthServerClient();
   const {

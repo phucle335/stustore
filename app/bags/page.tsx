@@ -6,7 +6,7 @@ import { getProductsByCategory } from "@/lib/store/catalog";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Túi Xách — Stusport",
+  title: "Handbags — Stusport",
 };
 
 type BagsPageProps = {
@@ -20,7 +20,7 @@ export default async function BagsPage({ searchParams }: BagsPageProps) {
   return (
     <StoreShell activeNav="bags">
       <FeaturedSection
-        title="TÚI XÁCH"
+        title="HANDBAGS"
         products={products}
         initialSort={
           sort === "price_asc" || sort === "price_desc" || sort === "name_asc" || sort === "name_desc"

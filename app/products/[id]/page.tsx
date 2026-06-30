@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: ProductPageProps) {
   const product = await getProductById(id);
 
   if (!product) {
-    return { title: "Không tìm thấy — Stusport" };
+    return { title: "Not Found — Stusport" };
   }
 
   return { title: `${product.name} — Stusport` };

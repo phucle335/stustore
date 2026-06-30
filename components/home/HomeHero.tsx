@@ -6,7 +6,7 @@ import styles from "@/styles/components/home/HomeLegacy.module.css";
 
 export function HomeHero() {
   return (
-    <section className={styles.homeHero} aria-label="Trang chủ Stusport">
+    <section className={styles.homeHero} aria-label="Stusport Home">
       <HomeHeroCarousel />
 
       <div className={styles.homeHeroIntro}>

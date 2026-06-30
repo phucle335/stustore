@@ -18,7 +18,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Stusport",
   description:
-    "Stusport — Giày sneaker, quần áo, nước hoa, đồng hồ và phụ kiện thể thao",
+    "Stusport — Sneakers, streetwear, fragrances, watches, and sports accessories",
 };
 
 export default function RootLayout({

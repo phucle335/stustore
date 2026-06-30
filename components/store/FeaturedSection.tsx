@@ -87,7 +87,7 @@ export function FeaturedSection({
       />
       <div className={styles.featuredControls}>
         <label className={styles.featuredFulfillmentFilter}>
-          <span>Lọc trạng thái</span>
+          <span>Filter by status</span>
           <select
             value={fulfillmentFilter}
             onChange={(event) =>
@@ -96,26 +96,26 @@ export function FeaturedSection({
               )
             }
           >
-            <option value="all">Tất cả</option>
-            <option value="in_stock">Hàng có sẵn</option>
+            <option value="all">All</option>
+            <option value="in_stock">In stock</option>
             <option value="pre_order">Pre-order</option>
           </select>
         </label>
 
         <label className={styles.featuredFulfillmentFilter}>
-          <span>Sắp xếp</span>
+          <span>Sort by</span>
           <select value={sort} onChange={(e) => updateSort(e.target.value as ProductSort)}>
-            <option value="price_desc">Giá: cao → thấp</option>
-            <option value="price_asc">Giá: thấp → cao</option>
-            <option value="name_asc">Tên: A → Z</option>
-            <option value="name_desc">Tên: Z → A</option>
+            <option value="price_desc">Price: high → low</option>
+            <option value="price_asc">Price: low → high</option>
+            <option value="name_asc">Name: A → Z</option>
+            <option value="name_desc">Name: Z → A</option>
           </select>
         </label>
       </div>
       {filteredProducts.length === 0 ? (
         <p className={staticStyles.searchEmpty}>
-          Chưa có sản phẩm trong danh mục này. Thêm sản phẩm trong Admin và chọn
-          đúng danh mục.
+          No products in this category yet. Add products in Admin and select
+          the correct category.
         </p>
       ) : (
         <ProductGrid products={sortedProducts} pageSize={pageSize} />

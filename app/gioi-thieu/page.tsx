@@ -4,7 +4,7 @@ import { AboutUsPage } from "@/components/store/AboutUsPage";
 import { STORE_NAME } from "@/lib/store/site";
 
 export const metadata: Metadata = {
-  title: `Giới thiệu — ${STORE_NAME}`,
+  title: `About Us — ${STORE_NAME}`,
 };
 
 export default function GioiThieuPage() {

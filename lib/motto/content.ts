@@ -1,6 +1,6 @@
 import { NAV_LINKS } from "@/lib/store/navigation";
 
-/** Homepage / Motto header, drawer, footer — same links as store nav (incl. Trang chủ). */
+/** Homepage / Motto header, drawer, footer — same links as store nav. */
 export const MOTTO_NAV = NAV_LINKS.map((link) => ({
   label: link.label,
   href: link.href,
@@ -17,17 +17,17 @@ export const MOTTO_HERO_SLIDES: MottoHeroSlide[] = [
   {
     id: "hero-1",
     image: "/images/hero/slide-1.jpg",
-    alt: "Kính mắt thời trang — A Vision of Style",
+    alt: "Fashion eyewear — A Vision of Style",
   },
   {
     id: "hero-2",
     image: "/images/hero/slide-2.jpg",
-    alt: "Sneaker iconic — Iconic in Every Step",
+    alt: "Iconic sneaker — Iconic in Every Step",
   },
   {
     id: "hero-3",
     image: "/images/hero/slide-3.jpg",
-    alt: "Eyewear thiết kế — Designed for Sunlight",
+    alt: "Designer eyewear — Designed for Sunlight",
   },
   {
     id: "hero-4",
@@ -37,41 +37,41 @@ export const MOTTO_HERO_SLIDES: MottoHeroSlide[] = [
   {
     id: "hero-5",
     image: "/images/hero/slide-5.jpg",
-    alt: "Hot picks — Sneaker và phụ kiện thể thao",
+    alt: "Hot picks — Sneakers and sports accessories",
   },
 ];
 
 export const MOTTO_MARQUEE_ITEMS = [
-  "Hàng chính hãng",
-  "Miễn phí giao hàng",
-  "Đổi trả đến 14 ngày",
+  "100% Authentic",
+  "Free Shipping",
+  "7-Day Returns",
 ] as const;
 
 export const MOTTO_CASE_STUDIES = [
   {
     title: "Sneaker",
-    subtitle: "Giày thể thao & streetwear",
+    subtitle: "Sports shoes & streetwear",
     image:
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200&q=80",
     href: "/sneakers",
   },
   {
     title: "Clothes",
-    subtitle: "Quần áo thể thao",
+    subtitle: "Sports apparel",
     image:
       "https://images.unsplash.com/photo-1606105961732-6332674f4ee6?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     href: "/clothing",
   },
   {
     title: "Sunglasses",
-    subtitle: "Kính mát thể thao",
+    subtitle: "Sports sunglasses",
     image:
       "https://images.unsplash.com/photo-1605813808456-26c16c0dfb77?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     href: "/sunglasses",
   },
   {
     title: "Watches",
-    subtitle: "Đồng hồ thể thao",
+    subtitle: "Sports watches",
     image:
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&q=80",
     href: "/watches",
@@ -80,27 +80,27 @@ export const MOTTO_CASE_STUDIES = [
 
 export const MOTTO_INSIGHTS = [
   {
-    title: "Cách chọn sneaker phù hợp phong cách streetwear",
+    title: "How to choose sneakers that match your streetwear style",
     href: "/blog",
   },
   {
-    title: "Xu hướng kính mát thể thao 2026",
+    title: "Sports sunglasses trends 2026",
     href: "/blog",
   },
   {
-    title: "Chăm sóc giày da và vải đúng cách",
+    title: "Proper care tips for leather and fabric shoes",
     href: "/blog",
   },
   {
-    title: "Phối đồ training & lifestyle cùng Stusport",
+    title: "Mixing training & lifestyle outfits with Stusport",
     href: "/blog",
   },
   {
-    title: "Đồng hồ thể thao — gợi ý chọn theo lifestyle",
+    title: "Sports watches — choosing based on lifestyle",
     href: "/blog",
   },
   {
-    title: "Hướng dẫn chọn size giày chuẩn khi mua online",
+    title: "Guide to getting the right shoe size when shopping online",
     href: "/blog",
   },
 ] as const;
@@ -108,63 +108,63 @@ export const MOTTO_INSIGHTS = [
 export const MOTTO_TESTIMONIALS = [
   {
     name: "Minh Anh",
-    company: "Khách hàng Sneaker",
+    company: "Sneaker Customer",
     quote:
-      "Giày chính hãng, đóng gói cẩn thận. Giao hàng nhanh và tư vấn size rất chu đáo.",
+      "Stusport, carefully packaged. Fast delivery and very helpful size advice.",
   },
   {
-    name: "Hoàng Long",
-    company: "Khách hàng Clothes",
+    name: "Hoang Long",
+    company: "Clothes Customer",
     quote:
-      "Đồ đẹp, form chuẩn. Mình hay mua đồ training ở đây vì chất lượng ổn định.",
+      "Beautiful clothes, perfect fit. I always buy training gear here because the quality is consistent.",
   },
   {
-    name: "Thu Hà",
-    company: "Khách hàng Bags",
+    name: "Thu Ha",
+    company: "Bags Customer",
     quote:
-      "Túi đẹp, chất lượng tốt. Giao hàng nhanh và đóng gói cẩn thận như mô tả.",
+      "Nice bag, good quality. Fast delivery and carefully packaged as described.",
   },
   {
-    name: "Quốc Bảo",
-    company: "Khách hàng Watches",
+    name: "Quoc Bao",
+    company: "Watches Customer",
     quote:
-      "Đồng hồ đẹp, đúng mô tả. Stusport là địa chỉ mình tin tưởng cho phụ kiện thể thao.",
+      "Beautiful watch, exactly as described. Stusport is my trusted address for sports accessories.",
   },
   {
     name: "Lan Chi",
-    company: "Khách hàng mới",
+    company: "New Customer",
     quote:
-      "Trải nghiệm mua sắm mượt, đổi size nhanh. Sẽ ủng hộ tiếp các drop mới.",
+      "Smooth shopping experience, quick size exchange. Will support new drops.",
   },
   {
-    name: "Đức Phát",
-    company: "Khách VIP",
+    name: "Duc Phat",
+    company: "VIP Customer",
     quote:
-      "Từ sneaker đến kính mát đều có đủ thương hiệu lớn. Dịch vụ hậu mãi rất tốt.",
+      "From sneakers to sunglasses, all major brands available. Excellent after-sales service.",
   },
   {
-    name: "Ngọc Trâm",
-    company: "Khách hàng Sunglasses",
+    name: "Ngoc Tram",
+    company: "Sunglasses Customer",
     quote:
-      "Kính đẹp, chống UV tốt. Nhân viên tư vấn nhiệt tình qua chat.",
+      "Beautiful glasses, good UV protection. Staff gave helpful advice via chat.",
   },
   {
-    name: "Văn Hùng",
-    company: "Khách hàng Sneaker",
+    name: "Van Hung",
+    company: "Sneaker Customer",
     quote:
-      "Mình săn được đôi Jordan limited giá tốt. Packaging và chứng từ rõ ràng.",
+      "Got a limited Jordan pair at a great price. Clear packaging and documentation.",
   },
   {
-    name: "Phương Linh",
-    company: "Khách hàng Blog",
+    name: "Phuong Linh",
+    company: "Blog Reader",
     quote:
-      "Blog Stusport gợi ý phối đồ hay, giúp mình chọn outfit nhanh hơn rất nhiều.",
+      "Stusport blog suggests great outfit combinations, helping me choose outfits much faster.",
   },
   {
-    name: "Tiến Đạt",
-    company: "Khách quen",
+    name: "Tien Dat",
+    company: "Regular Customer",
     quote:
-      "Mua nhiều lần vẫn hài lòng. Free ship đơn lớn và chính sách đổi trả minh bạch.",
+      "Still satisfied after many purchases. Free shipping on large orders and transparent return policy.",
   },
 ] as const;
 
@@ -177,7 +177,7 @@ export const MOTTO_TRUSTED_LOGOS = [
   "Ray-Ban",
 ] as const;
 
-/** Logo thương hiệu — marquee trang chủ (phần Thương hiệu) */
+/** Brand logo — marquee homepage (Brand section) */
 export const PARTNER_BRAND_LOGO_URLS = [
   "https://assets.storims.com/storims_cdn/storims/uploads/117c7de16d9ba3dce8fda35c53d59993.png",
   "https://cdn.storims.com/api/v2/image/resize?path=https://storage.googleapis.com/storims_cdn/storims/uploads/d7a3438d43978c766a6cad2c62f9bab1.png",

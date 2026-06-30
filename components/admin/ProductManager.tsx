@@ -37,11 +37,11 @@ import {
 } from "@/lib/store/product-category-rules";
 
 const CATEGORY_OPTIONS: { value: StoreProductCategory; label: string }[] = [
-  { value: "sneakers", label: "Giày Sneaker" },
-  { value: "sunglasses", label: "Kính mát" },
-  { value: "clothing", label: "Quần áo" },
-  { value: "bags", label: "Túi xách" },
-  { value: "watches", label: "Đồng hồ" },
+  { value: "sneakers", label: "Sneakers" },
+  { value: "sunglasses", label: "Sunglasses" },
+  { value: "clothing", label: "Clothing" },
+  { value: "bags", label: "Bags" },
+  { value: "watches", label: "Watches" },
 ];
 
 type ProductManagerProps = {
@@ -58,6 +58,7 @@ type ProductFormState = {
   fulfillment_type: "in_stock" | "pre_order";
   product_status: ProductStatus;
   price: string;
+  origin_price: string;
   sale_percent: string;
   description: string;
   images: ProductImageFormState;
@@ -73,6 +74,7 @@ const emptyForm = (): ProductFormState => ({
   fulfillment_type: "in_stock",
   product_status: "selling",
   price: "",
+  origin_price: "",
   sale_percent: "0",
   description: "",
   images: emptyImageFields(),
@@ -94,6 +96,7 @@ function productToForm(product: DbProduct): ProductFormState {
         ? product.product_status
         : "selling",
     price: String(product.price ?? ""),
+    origin_price: String(product.origin_price ?? ""),
     sale_percent: String(product.sale_percent ?? 0),
     description: product.description ?? "",
     images: productToImageFields(product),
@@ -103,9 +106,9 @@ function productToForm(product: DbProduct): ProductFormState {
 
 const PRODUCT_PAGE_SIZE = 12;
 const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
-  selling: "Đang bán",
-  out_of_stock: "Hết hàng",
-  paused: "Tạm ngưng",
+  selling: "Active",
+  out_of_stock: "Out of Stock",
+  paused: "Paused",
 };
 
 function getProductStock(product: DbProduct): { stock: number; variants: number } {
@@ -331,7 +334,7 @@ export function ProductManager({
   function handleBulkDelete() {
     const ids = [...selectedIds];
     if (ids.length === 0) return;
-    if (!window.confirm(`Xóa ${ids.length} sản phẩm đã chọn?`)) return;
+    if (!window.confirm(`Delete ${ids.length} selected products?`)) return;
 
     startTransition(async () => {
       setError(null);
@@ -348,7 +351,7 @@ export function ProductManager({
         resetForm();
       }
       setSelectedIds(new Set());
-      setMessage(`Đã xóa ${result.data.count} sản phẩm.`);
+      setMessage(`${result.data.count} products deleted.`);
     });
   }
 
@@ -378,7 +381,7 @@ export function ProductManager({
       }
       setSelectedIds(new Set());
       setMessage(
-        `Đã cập nhật trạng thái ${result.data.count} sản phẩm → ${PRODUCT_STATUS_LABELS[bulkStatus]}.`,
+        `Updated status of ${result.data.count} products → ${PRODUCT_STATUS_LABELS[bulkStatus]}.`,
       );
     });
   }
@@ -458,12 +461,15 @@ export function ProductManager({
           fulfillment_type: "in_stock" | "pre_order";
           product_status: ProductStatus;
           price: number;
+          origin_price: number | null;
           sale_percent: number;
           description: string | null;
           sizes: ProductSizeStock[];
         } & ReturnType<typeof imageFieldsToDbPayload>;
       } {
     const price = Number(form.price);
+    const originPriceRaw = form.origin_price.trim();
+    const origin_price = originPriceRaw ? Number(originPriceRaw) : null;
     const salePercentRaw = Number(form.sale_percent);
     if (
       !form.name.trim() ||
@@ -471,7 +477,10 @@ export function ProductManager({
       Number.isNaN(price) ||
       Number.isNaN(salePercentRaw)
     ) {
-      return { error: "Vui lòng nhập tên, thương hiệu, giá hợp lệ và % sale." };
+      return { error: "Please enter a valid name, brand, price, and discount %." };
+    }
+    if (originPriceRaw && Number.isNaN(origin_price)) {
+      return { error: "Invalid origin price." };
     }
     const sale_percent = Math.max(0, Math.min(50, salePercentRaw));
     const rawCode = form.product_id.trim();
@@ -488,12 +497,12 @@ export function ProductManager({
         return existing === productCode.toLowerCase();
       });
       if (duplicated) {
-        return { error: `Mã sản phẩm "${productCode}" đã tồn tại. Vui lòng chọn mã khác.` };
+        return { error: `Product code "${productCode}" already exists. Please choose a different code.` };
       }
     }
 
     if (imageFieldsToArray(form.images).length === 0) {
-      return { error: "Cần ít nhất một ảnh (ảnh 1)." };
+      return { error: "At least one image is required (image 1)." };
     }
 
     const sizes = sizesToDbPayload(form.category, form.sizes);
@@ -502,7 +511,7 @@ export function ProductManager({
       stock <= 0 ? "out_of_stock" : form.product_status;
 
     if (!isCategoryWithoutSizes(form.category) && sizes.length === 0) {
-      return { error: "Vui lòng nhập ít nhất một size và số lượng." };
+      return { error: "Please enter at least one size and quantity." };
     }
 
     return {
@@ -514,6 +523,7 @@ export function ProductManager({
         fulfillment_type: form.fulfillment_type,
         product_status: productStatus,
         price,
+        origin_price,
         sale_percent,
         description: form.description.trim() || null,
         sizes,
@@ -551,13 +561,13 @@ export function ProductManager({
         return [result.data, ...current];
       });
       setForm(productToForm(result.data));
-      setMessage(form.id ? "Đã cập nhật sản phẩm." : "Đã thêm sản phẩm mới.");
+      setMessage(form.id ? "Product updated." : "New product added.");
     });
   }
 
   function handleDelete() {
     if (!form.id) return;
-    if (!window.confirm("Xóa sản phẩm này?")) return;
+    if (!window.confirm("Delete this product?")) return;
 
     startTransition(async () => {
       setError(null);
@@ -571,7 +581,7 @@ export function ProductManager({
 
       setProducts((current) => current.filter((item) => item.id !== form.id));
       resetForm();
-      setMessage("Đã xóa sản phẩm.");
+      setMessage("Product deleted.");
     });
   }
 
@@ -579,17 +589,17 @@ export function ProductManager({
     <section className="admin-panel">
       <div className="mb-5 flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold admin-text">Danh sách sản phẩm</h2>
+          <h2 className="text-lg font-semibold admin-text">Product List</h2>
           <p className="text-sm admin-muted">
-            Sắp xếp và quản lý toàn bộ sản phẩm theo layout bảng mới.
+            Arrange and manage all products in the new table layout.
           </p>
         </div>
       </div>
 
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" className="admin-btn">Xuất file</button>
-          <button type="button" className="admin-btn">Nhập file</button>
+          <button type="button" className="admin-btn">Export</button>
+          <button type="button" className="admin-btn">Import</button>
           <button
             type="button"
             className="admin-btn"
@@ -603,7 +613,7 @@ export function ProductManager({
               setQuery("");
             }}
           >
-            Reset lọc
+            Reset Filters
           </button>
         </div>
         <button
@@ -611,7 +621,7 @@ export function ProductManager({
           onClick={resetForm}
           className="admin-btn admin-btn--primary"
         >
-          + Thêm sản phẩm
+          + Add Product
         </button>
       </div>
 
@@ -621,14 +631,14 @@ export function ProductManager({
           className={`admin-btn ${tab === "all" ? "admin-btn--primary" : ""}`}
           onClick={() => setTab("all")}
         >
-          Tất cả sản phẩm
+          All Products
         </button>
         <button
           type="button"
           className={`admin-btn ${tab === "in_stock" ? "admin-btn--primary" : ""}`}
           onClick={() => setTab("in_stock")}
         >
-          Hàng có sẵn
+          In Stock
         </button>
         <button
           type="button"
@@ -643,7 +653,7 @@ export function ProductManager({
         <div className="flex flex-wrap items-center gap-2">
           <input
             className="admin-input flex-1 min-w-[240px] max-md:min-w-full"
-            placeholder="Tìm kiếm sản phẩm"
+            placeholder="Search products"
             value={queryInput}
             onChange={(e) => setQueryInput(e.target.value)}
           />
@@ -654,7 +664,7 @@ export function ProductManager({
               setCategoryFilter(e.target.value as StoreProductCategory | "all")
             }
           >
-            <option value="all">Loại sản phẩm</option>
+            <option value="all">Product Type</option>
             {CATEGORY_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
@@ -666,8 +676,8 @@ export function ProductManager({
             value={dateSort}
             onChange={(e) => setDateSort(e.target.value as "newest" | "oldest")}
           >
-            <option value="newest">Ngày tạo mới</option>
-            <option value="oldest">Ngày tạo cũ</option>
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
           </select>
           <select
             className="admin-input w-[160px] max-md:w-full"
@@ -684,19 +694,19 @@ export function ProductManager({
               )
             }
           >
-            <option value="created_newest">Mới nhất</option>
-            <option value="created_oldest">Cũ nhất</option>
-            <option value="price_asc">Giá thấp tới cao</option>
-            <option value="price_desc">Giá cao tới thấp</option>
-            <option value="name_asc">Tên A tới Z</option>
-            <option value="name_desc">Tên Z tới A</option>
+            <option value="created_newest">Newest</option>
+            <option value="created_oldest">Oldest</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="name_asc">Name: A to Z</option>
+            <option value="name_desc">Name: Z to A</option>
           </select>
           <select
             className="admin-input w-[140px] max-md:w-full"
             value={brandFilter}
             onChange={(e) => setBrandFilter(e.target.value)}
           >
-            <option value="all">Nhãn hiệu</option>
+            <option value="all">Brand</option>
             {brandOptions.map((brand) => (
               <option key={brand} value={brand}>
                 {brand}
@@ -712,13 +722,13 @@ export function ProductManager({
               )
             }
           >
-            <option value="all">Tất cả tồn kho</option>
-            <option value="in_stock">Còn hàng</option>
-            <option value="out_stock">Hết hàng</option>
-            <option value="low_stock">Sắp hết (&le;5)</option>
+            <option value="all">All Stock</option>
+            <option value="in_stock">In Stock</option>
+            <option value="out_stock">Out of Stock</option>
+            <option value="low_stock">Low Stock (&le;5)</option>
           </select>
           <button type="button" className="admin-btn" onClick={() => setQuery(queryInput)}>
-            Tìm
+            Search
           </button>
           <button
             type="button"
@@ -737,11 +747,11 @@ export function ProductManager({
                   }),
                 );
               }
-              setMessage("Đã lưu bộ lọc.");
+              setMessage("Filters saved.");
               setError(null);
             }}
           >
-            Lưu bộ lọc
+            Save Filters
           </button>
         </div>
       </div>
@@ -749,7 +759,7 @@ export function ProductManager({
       {selectedIds.size > 0 ? (
         <div className="admin-card admin-bulk-bar mb-4">
           <span className="text-sm admin-text">
-            Đã chọn <strong>{selectedIds.size}</strong> sản phẩm
+            <strong>{selectedIds.size}</strong> products selected
           </span>
           <select
             className="admin-input"
@@ -769,7 +779,7 @@ export function ProductManager({
             onClick={handleBulkStatusApply}
             disabled={isPending}
           >
-            Áp dụng trạng thái
+            Apply Status
           </button>
           <button
             type="button"
@@ -778,7 +788,7 @@ export function ProductManager({
             disabled={isPending}
           >
             <Trash2 className="mr-1 inline h-4 w-4" />
-            Xóa đã chọn
+            Delete Selected
           </button>
           <button
             type="button"
@@ -786,7 +796,7 @@ export function ProductManager({
             onClick={() => setSelectedIds(new Set())}
             disabled={isPending}
           >
-            Bỏ chọn
+            Deselect
           </button>
         </div>
       ) : null}
@@ -803,17 +813,17 @@ export function ProductManager({
                     if (el) el.indeterminate = somePageSelected;
                   }}
                   onChange={toggleSelectAllOnPage}
-                  aria-label="Chọn tất cả trên trang"
+                  aria-label="Select all on page"
                 />
               </th>
-              <th>Ảnh</th>
-              <th>Sản phẩm</th>
-              <th>Tồn kho</th>
-              <th>Có thể bán</th>
-              <th>Ngày khởi tạo</th>
-              <th>Loại</th>
-              <th>Nhãn hiệu</th>
-              <th>Trạng thái</th>
+              <th>Image</th>
+              <th>Product</th>
+              <th>Stock</th>
+              <th>Available to Sell</th>
+              <th>Created</th>
+              <th>Type</th>
+              <th>Brand</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -833,7 +843,7 @@ export function ProductManager({
                       checked={selectedIds.has(product.id)}
                       onChange={() => toggleSelectId(product.id)}
                       onClick={(e) => e.stopPropagation()}
-                      aria-label={`Chọn ${product.name}`}
+                      aria-label={`Select ${product.name}`}
                     />
                   </td>
                   <td>
@@ -848,20 +858,20 @@ export function ProductManager({
                     <div className="flex flex-col">
                       <strong className="admin-text">{product.name}</strong>
                       <span className="admin-muted text-xs">
-                        Mã: {getProductManageCode(product)}
+                        Code: {getProductManageCode(product)}
                       </span>
                     </div>
                   </td>
                   <td>
                     <div className="flex flex-col">
                       <strong className="admin-text">{stock}</strong>
-                      <span className="admin-muted text-xs">({variants} phiên bản)</span>
+                      <span className="admin-muted text-xs">({variants} variants)</span>
                     </div>
                   </td>
                   <td>
                     <div className="flex flex-col">
                       <strong className="admin-text">{stock}</strong>
-                      <span className="admin-muted text-xs">({variants} phiên bản)</span>
+                      <span className="admin-muted text-xs">({variants} variants)</span>
                     </div>
                   </td>
                   <td>{new Date(product.created_at).toLocaleDateString("vi-VN")}</td>
@@ -891,7 +901,7 @@ export function ProductManager({
             }}
             onChange={toggleSelectAllOnPage}
           />
-          Chọn tất cả trên trang ({pageIds.length})
+          Select all on page ({pageIds.length})
         </label>
       </div>
 
@@ -911,7 +921,7 @@ export function ProductManager({
                   type="checkbox"
                   checked={isSelected}
                   onChange={() => toggleSelectId(product.id)}
-                  aria-label={`Chọn ${product.name}`}
+                  aria-label={`Select ${product.name}`}
                 />
               </div>
               <button
@@ -919,11 +929,11 @@ export function ProductManager({
                 className="admin-mobile-select-card__body"
                 onClick={() => selectProduct(product)}
               >
-                <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start justify-between gap-2">
                   <div>
                     <p className="admin-text text-sm font-semibold">{product.name}</p>
                     <p className="admin-muted text-xs">
-                      Mã: {getProductManageCode(product)}
+                      Code: {getProductManageCode(product)}
                     </p>
                   </div>
                   <span
@@ -933,13 +943,13 @@ export function ProductManager({
                   </span>
                 </div>
                 <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
-                  <p className="admin-muted">Loại: <span className="admin-text">{product.category}</span></p>
-                  <p className="admin-muted">Nhãn hiệu: <span className="admin-text">{product.brand_tag}</span></p>
-                  <p className="admin-muted">Tồn kho: <span className="admin-text">{stock}</span></p>
-                  <p className="admin-muted">Biến thể: <span className="admin-text">{variants}</span></p>
-                  <p className="admin-muted">Giá: <span className="admin-text">{formatCurrency(product.price)}</span></p>
+                  <p className="admin-muted">Type: <span className="admin-text">{product.category}</span></p>
+                  <p className="admin-muted">Brand: <span className="admin-text">{product.brand_tag}</span></p>
+                  <p className="admin-muted">Stock: <span className="admin-text">{stock}</span></p>
+                  <p className="admin-muted">Variants: <span className="admin-text">{variants}</span></p>
+                  <p className="admin-muted">Price: <span className="admin-text">{formatCurrency(product.price)}</span></p>
                   <p className="admin-muted">
-                    Ngày tạo:{" "}
+                    Created:{" "}
                     <span className="admin-text">
                       {new Date(product.created_at).toLocaleDateString("vi-VN")}
                     </span>
@@ -953,7 +963,7 @@ export function ProductManager({
 
       <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
         <p className="text-xs admin-muted">
-          Trang {page}/{totalPages} - {productRows.length} sản phẩm
+          Page {page}/{totalPages} - {productRows.length} items
         </p>
         <div className="flex items-center gap-2">
           <button
@@ -962,7 +972,7 @@ export function ProductManager({
             onClick={() => setPage((current) => Math.max(1, current - 1))}
             disabled={page <= 1}
           >
-            Trang trước
+            Previous
           </button>
           <button
             type="button"
@@ -970,7 +980,7 @@ export function ProductManager({
             onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
             disabled={page >= totalPages}
           >
-            Trang sau
+            Next
           </button>
         </div>
       </div>
@@ -978,32 +988,32 @@ export function ProductManager({
       <div className="mb-5">
         <p className="text-sm admin-muted">
             {noSizeCategory
-              ? "+ Tồn kho"
-              : "Tăng/giảm tồn kho theo từng size"}{" "}
-            — tổng:{" "}
+              ? "+ Stock"
+              : "Adjust stock per size"}{" "}
+            — total:{" "}
             <span className="font-medium admin-text">{totalStock}</span>{" "}
-            {noSizeCategory ? "sản phẩm" : "đôi"}
+            {noSizeCategory ? "items" : "pairs"}
           </p>
       </div>
 
       <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block text-sm admin-text">
-              Mã sản phẩm (Product ID)
+              Product Code
               <input
                 value={form.product_id}
                 onChange={(e) =>
                   setForm((current) => ({ ...current, product_id: e.target.value }))
                 }
                 className="admin-input mt-1.5"
-                placeholder="VD: SP001, air-max-01"
+                placeholder="e.g. SP001, air-max-01"
               />
               <span className="mt-1 block text-xs admin-muted">
-                {productCodeValidationMessage()} Có thể để trống — hệ thống vẫn tạo UUID nội bộ.
+                {productCodeValidationMessage()} Can be left blank — system will generate internal UUID.
               </span>
             </label>
             <label className="block text-sm admin-text">
-              Tên sản phẩm
+              Product Name
               <input
                 value={form.name}
                 onChange={(e) =>
@@ -1013,7 +1023,7 @@ export function ProductManager({
               />
             </label>
             <label className="block text-sm admin-text">
-              Thương hiệu (brand_tag)
+              Brand
               <input
                 value={form.brand_tag}
                 onChange={(e) =>
@@ -1027,7 +1037,7 @@ export function ProductManager({
               />
             </label>
             <label className="block text-sm admin-text">
-              Danh mục
+              Category
               <select
                 value={form.category}
                 onChange={(e) =>
@@ -1044,7 +1054,7 @@ export function ProductManager({
             </label>
 
             <label className="block text-sm admin-text">
-              Loại fulfillment
+              Fulfillment Type
               <select
                 value={form.fulfillment_type}
                 onChange={(e) =>
@@ -1055,12 +1065,12 @@ export function ProductManager({
                 }
                 className="admin-input mt-1.5"
               >
-                <option value="in_stock">Hàng có sẵn</option>
+                <option value="in_stock">In Stock</option>
                 <option value="pre_order">Pre-order</option>
               </select>
             </label>
             <label className="block text-sm admin-text">
-              Trạng thái sản phẩm
+              Product Status
               <select
                 value={totalStock <= 0 ? "out_of_stock" : form.product_status}
                 onChange={(e) =>
@@ -1072,13 +1082,13 @@ export function ProductManager({
                 className="admin-input mt-1.5"
                 disabled={totalStock <= 0}
               >
-                <option value="selling">Đang bán</option>
-                <option value="out_of_stock">Hết hàng</option>
-                <option value="paused">Tạm ngưng</option>
+                <option value="selling">Active</option>
+                <option value="out_of_stock">Out of Stock</option>
+                <option value="paused">Paused</option>
               </select>
             </label>
             <label className="block text-sm admin-text">
-              Giá gốc (VND)
+              Selling Price (VND)
               <input
                 type="number"
                 min={0}
@@ -1091,7 +1101,23 @@ export function ProductManager({
             </label>
 
             <label className="block text-sm admin-text">
-              % sale (0-50)
+              Origin Price (VND)
+              <input
+                type="number"
+                min={0}
+                value={form.origin_price}
+                onChange={(e) =>
+                  setForm((current) => ({ ...current, origin_price: e.target.value }))
+                }
+                className="admin-input mt-1.5"
+              />
+              <span className="mt-1 block text-xs admin-muted">
+                Cost price — profit per item = selling price − origin price
+              </span>
+            </label>
+
+            <label className="block text-sm admin-text">
+              % discount (0-50)
               <input
                 type="number"
                 min={0}
@@ -1115,7 +1141,7 @@ export function ProductManager({
           />
 
           <label className="block text-sm admin-text">
-            Mô tả
+            Description
             <textarea
               rows={3}
               value={form.description}
@@ -1132,7 +1158,7 @@ export function ProductManager({
           <div>
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-sm font-semibold admin-text">
-                {noSizeCategory ? "Tồn kho" : "Tồn kho theo size"}
+                {noSizeCategory ? "Stock" : "Stock by Size"}
               </h3>
               {!noSizeCategory ? (
                 <button
@@ -1140,7 +1166,7 @@ export function ProductManager({
                   onClick={addSizeRow}
                   className="text-sm font-medium text-emerald-400 hover:text-emerald-300"
                 >
-                  + Thêm size
+                  + Add Size
                 </button>
               ) : null}
             </div>
@@ -1148,11 +1174,11 @@ export function ProductManager({
             {noSizeCategory ? (
               <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] p-4">
                 <label className="text-sm admin-text">
-                  Số lượng còn lại
+                  Remaining Quantity
                   <div className="mt-2 flex items-center gap-2">
                     <button
                       type="button"
-                      aria-label="Giảm số lượng"
+                      aria-label="Decrease Quantity"
                       onClick={() => adjustQuantity(0, -1)}
                       className="admin-icon-btn"
                     >
@@ -1160,13 +1186,13 @@ export function ProductManager({
                     </button>
                     <span
                       className="min-w-[4rem] text-center text-lg font-semibold tabular-nums admin-text"
-                      aria-label="Số lượng hiện tại"
+                      aria-label="Current Quantity"
                     >
                       {form.sizes[0]?.quantity ?? 0}
                     </span>
                     <button
                       type="button"
-                      aria-label="Tăng số lượng"
+                      aria-label="Increase Quantity"
                       onClick={() => adjustQuantity(0, 1)}
                       className="admin-icon-btn"
                     >
@@ -1194,7 +1220,7 @@ export function ProductManager({
                     <div className="flex items-center gap-1 rounded-lg border border-[var(--admin-border)] bg-[var(--admin-surface)] p-1">
                       <button
                         type="button"
-                        aria-label={`Giảm size ${row.size}`}
+                        aria-label={`Decrease size ${row.size}`}
                         onClick={() => adjustQuantity(index, -1)}
                         className="admin-icon-btn !h-9 !w-9"
                       >
@@ -1205,7 +1231,7 @@ export function ProductManager({
                       </span>
                       <button
                         type="button"
-                        aria-label={`Tăng size ${row.size}`}
+                        aria-label={`Increase size ${row.size}`}
                         onClick={() => adjustQuantity(index, 1)}
                         className="admin-icon-btn !h-9 !w-9"
                       >
@@ -1217,7 +1243,7 @@ export function ProductManager({
                       type="button"
                       onClick={() => removeSizeRow(index)}
                       className="admin-icon-btn ml-auto !h-9 !w-9"
-                      aria-label="Xóa size"
+                      aria-label="Remove size"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -1245,7 +1271,7 @@ export function ProductManager({
               onClick={handleSave}
               className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:opacity-60"
             >
-              {isPending ? "Đang lưu…" : form.id ? "Cập nhật" : "Tạo sản phẩm"}
+              {isPending ? "Saving…" : form.id ? "Update" : "Create Product"}
             </button>
             {form.id ? (
               <button
@@ -1254,7 +1280,7 @@ export function ProductManager({
                 onClick={handleDelete}
                 className="rounded-lg border border-red-500/40 px-5 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-500/10 disabled:opacity-60"
               >
-                Xóa
+                Delete
               </button>
             ) : null}
           </div>

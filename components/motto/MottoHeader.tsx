@@ -79,31 +79,31 @@ export function MottoHeader({ theme = "light" }: { theme?: "light" | "dark" }) {
       },
       {
         id: "search",
-        label: "Tìm kiếm",
+        label: "Search",
         iconClass: "fas fa-search",
         onClick: openSearch,
       },
       {
         id: "cart",
-        label: "Giỏ hàng",
+        label: "Cart",
         iconClass: "fas fa-shopping-bag",
         onClick: openCart,
         badge: itemCount > 0 ? itemCount : undefined,
         ariaLabel:
           itemCount > 0
-            ? `Giỏ hàng, ${itemCount} sản phẩm`
-            : "Giỏ hàng",
+            ? `Cart, ${itemCount} items`
+            : "Cart",
       },
       user
         ? {
             id: "account",
-            label: "Tài khoản",
+            label: "Account",
             iconClass: "far fa-user",
             onClick: openAccountMenu,
           }
         : {
             id: "login",
-            label: "Đăng nhập",
+            label: "Login",
             iconClass: "far fa-user",
             href: "/dang-nhap",
           },
@@ -140,10 +140,10 @@ export function MottoHeader({ theme = "light" }: { theme?: "light" | "dark" }) {
           <div className={styles.actions}>
             <Link
               href="/sneakers"
-              data-track="Mua ngay (header)"
+              data-track="Shop Now (header)"
               className={`${styles.btn} ${styles.btnPill} ${styles.headerCtaPill} ${styles.desktopCta}`}
             >
-              Mua ngay
+              Shop Now
             </Link>
           </div>
         </div>

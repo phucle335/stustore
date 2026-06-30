@@ -7,7 +7,7 @@ import { ResetPasswordForm } from "@/components/auth/ResetPasswordForm";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Đặt lại mật khẩu Admin | Stusport",
+  title: "Admin Reset Password | Stusport",
 };
 
 export default function AdminResetPasswordPage() {

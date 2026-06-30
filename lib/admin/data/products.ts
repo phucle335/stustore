@@ -102,6 +102,8 @@ function mapProduct(row: Record<string, unknown>): DbProduct | null {
         ? (row.product_status as ProductStatus)
         : "selling",
     price: Number(row.price),
+    origin_price:
+      row.origin_price == null ? null : Number(row.origin_price),
     sale_percent:
       row.sale_percent == null ? 0 : Number(row.sale_percent),
     description:
@@ -135,6 +137,7 @@ function buildDbRow(input: CreateProductInput | UpdateProductInput) {
     row.product_status = input.product_status;
   }
   if ("price" in input && input.price !== undefined) row.price = input.price;
+  if ("origin_price" in input) row.origin_price = input.origin_price ?? null;
   if ("sale_percent" in input && input.sale_percent !== undefined) {
     row.sale_percent = input.sale_percent;
   }
@@ -179,9 +182,9 @@ export async function getProduct(id: string): Promise<ActionResult<DbProduct>> {
   const { data, error } = await queryProductById(supabase, id.trim());
 
   if (error) return failure(error);
-  if (!data) return failure("Không tìm thấy sản phẩm.");
+  if (!data) return failure("Product not found.");
   const product = mapProduct(data);
-  if (!product) return failure("Dữ liệu sản phẩm không hợp lệ.");
+  if (!product) return failure("Invalid product data.");
   return success(product);
 }
 
@@ -199,11 +202,11 @@ export async function createProduct(
     const existing = await queryProductByCode(supabase, productCode);
     if (existing.error && isMissingProductCodeError(existing.error)) {
       return failure(
-        "Database chưa có cột product_code. Chạy file supabase/add-product-code.sql trong Supabase SQL Editor.",
+        "Database is missing the product_code column. Run supabase/add-product-code.sql in the Supabase SQL Editor.",
       );
     }
     if (existing.data) {
-      return failure(`Mã sản phẩm "${productCode}" đã tồn tại. Vui lòng chọn mã khác.`);
+      return failure(`Product code "${productCode}" already exists. Please choose a different code.`);
     }
   }
 
@@ -214,6 +217,7 @@ export async function createProduct(
     fulfillment_type: input.fulfillment_type ?? "in_stock",
     product_status: input.product_status ?? "selling",
     price: input.price,
+    origin_price: input.origin_price ?? null,
     sale_percent: input.sale_percent ?? 0,
     description: input.description ?? null,
     sizes: input.sizes ?? [],
@@ -245,17 +249,17 @@ export async function createProduct(
 
   if (error) {
     if (productCode && isDuplicateProductCodeError(error.message, productCode)) {
-      return failure(`Mã sản phẩm "${productCode}" đã tồn tại. Vui lòng chọn mã khác.`);
+      return failure(`Product code "${productCode}" already exists. Please choose a different code.`);
     }
     if (productCode && isMissingProductCodeError(error.message)) {
       return failure(
-        "Database chưa có cột product_code. Chạy file supabase/add-product-code.sql trong Supabase SQL Editor.",
+        "Database is missing the product_code column. Run supabase/add-product-code.sql in the Supabase SQL Editor.",
       );
     }
     return failure(error.message);
   }
   const product = mapProduct(data as Record<string, unknown>);
-  if (!product) return failure("Không đọc được sản phẩm vừa tạo.");
+  if (!product) return failure("Could not read the newly created product.");
   return success(product);
 }
 
@@ -274,11 +278,11 @@ export async function updateProduct(
     const existing = await queryProductByCode(supabase, productCode);
     if (existing.error && isMissingProductCodeError(existing.error)) {
       return failure(
-        "Database chưa có cột product_code. Chạy file supabase/add-product-code.sql trong Supabase SQL Editor.",
+        "Database is missing the product_code column. Run supabase/add-product-code.sql in the Supabase SQL Editor.",
       );
     }
     if (existing.data && String(existing.data.id) !== id) {
-      return failure(`Mã sản phẩm "${productCode}" đã tồn tại. Vui lòng chọn mã khác.`);
+      return failure(`Product code "${productCode}" already exists. Please choose a different code.`);
     }
   }
 
@@ -308,17 +312,17 @@ export async function updateProduct(
   if (error) {
     const productCode = normalizeProductCode(input.product_code);
     if (productCode && isDuplicateProductCodeError(error.message, productCode)) {
-      return failure(`Mã sản phẩm "${productCode}" đã tồn tại. Vui lòng chọn mã khác.`);
+      return failure(`Product code "${productCode}" already exists. Please choose a different code.`);
     }
     if (productCode && isMissingProductCodeError(error.message)) {
       return failure(
-        "Database chưa có cột product_code. Chạy file supabase/add-product-code.sql trong Supabase SQL Editor.",
+        "Database is missing the product_code column. Run supabase/add-product-code.sql in the Supabase SQL Editor.",
       );
     }
     return failure(error.message);
   }
   const product = mapProduct(data as Record<string, unknown>);
-  if (!product) return failure("Không đọc được sản phẩm sau cập nhật.");
+  if (!product) return failure("Could not read the product after update.");
   return success(product);
 }
 
@@ -335,7 +339,7 @@ export async function deleteProducts(
 ): Promise<ActionResult<{ ids: string[]; count: number }>> {
   const uniqueIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))];
   if (uniqueIds.length === 0) {
-    return failure("Không có sản phẩm nào được chọn.");
+    return failure("No items selected.");
   }
 
   const supabase = createAdminSupabaseClient();
@@ -351,7 +355,7 @@ export async function updateProductStatus(
 ): Promise<ActionResult<{ ids: string[]; count: number }>> {
   const uniqueIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))];
   if (uniqueIds.length === 0) {
-    return failure("Không có sản phẩm nào được chọn.");
+    return failure("No items selected.");
   }
 
   const supabase = createAdminSupabaseClient();
@@ -362,7 +366,7 @@ export async function updateProductStatus(
     .select("id");
 
   if (initialUpdate.error && isMissingProductStatusError(initialUpdate.error.message)) {
-    return failure("Cột product_status chưa có trên database.");
+    return failure("The product_status column does not exist in the database.");
   }
 
   if (initialUpdate.error) return failure(initialUpdate.error.message);

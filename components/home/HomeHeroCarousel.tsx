@@ -56,7 +56,7 @@ export function HomeHeroCarousel() {
           type="button"
           className={`${styles.homeHeroNav} ${styles.homeHeroNavPrev}`}
           onClick={goPrev}
-          aria-label="Ảnh trước"
+          aria-label="Previous image"
         >
           <i className="fas fa-chevron-left" aria-hidden="true" />
         </button>
@@ -64,19 +64,19 @@ export function HomeHeroCarousel() {
           type="button"
           className={`${styles.homeHeroNav} ${styles.homeHeroNavNext}`}
           onClick={goNext}
-          aria-label="Ảnh sau"
+          aria-label="Next image"
         >
           <i className="fas fa-chevron-right" aria-hidden="true" />
         </button>
 
-        <div className={styles.homeHeroDots} role="tablist" aria-label="Chọn ảnh banner">
+        <div className={styles.homeHeroDots} role="tablist" aria-label="Select banner image">
           {HERO_SLIDES.map((item, dotIndex) => (
             <button
               key={item.id}
               type="button"
               role="tab"
               aria-selected={dotIndex === index}
-              aria-label={`Ảnh ${dotIndex + 1}`}
+              aria-label={`Image ${dotIndex + 1}`}
               className={dotIndex === index ? styles.active : undefined}
               onClick={() => goTo(dotIndex)}
             />

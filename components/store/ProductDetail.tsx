@@ -24,14 +24,14 @@ export function ProductDetail({
   return (
     <section className={styles.productDetail}>
       <nav className={styles.productDetailBreadcrumb} aria-label="Breadcrumb">
-        <Link href="/">Trang chủ</Link>
+        <Link href="/">Home</Link>
         <span aria-hidden="true">/</span>
         <Link href={backLink.href}>{backLink.label}</Link>
       </nav>
 
       <Link href={backLink.href} className={styles.productDetailBack}>
         <i className="fas fa-arrow-left" aria-hidden="true" />
-        Quay lại cửa hàng
+        Back to store
       </Link>
 
       <div className={styles.productDetailGrid}>

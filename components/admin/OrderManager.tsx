@@ -271,7 +271,7 @@ export function OrderManager({
   function handleBulkDelete() {
     const ids = [...selectedIds];
     if (ids.length === 0) return;
-    if (!window.confirm(`Xóa ${ids.length} đơn hàng đã chọn?`)) return;
+    if (!window.confirm(`Delete ${ids.length} selected orders?`)) return;
 
     startTransition(async () => {
       setError(null);
@@ -289,7 +289,7 @@ export function OrderManager({
         setScreen("list");
       }
       setSelectedIds(new Set());
-      setMessage(`Đã xóa ${result.data.count} đơn hàng.`);
+      setMessage(`${result.data.count} orders deleted.`);
     });
   }
 
@@ -317,7 +317,7 @@ export function OrderManager({
       }
       setSelectedIds(new Set());
       setMessage(
-        `Đã cập nhật trạng thái ${result.data.count} đơn → ${ORDER_STATUS_LABELS[bulkStatus]}.`,
+        `Updated status of ${result.data.count} orders → ${ORDER_STATUS_LABELS[bulkStatus]}.`,
       );
     });
   }
@@ -338,9 +338,9 @@ export function OrderManager({
 
   function paymentStatusText(order: DbOrder) {
     if (["deposit_paid", "payment_verified", "delivered"].includes(order.status)) {
-      return "Đã thanh toán";
+      return "Paid";
     }
-    return "Chưa thanh toán";
+    return "Unpaid";
   }
 
   function productLines(order: DbOrder): string[] {
@@ -417,7 +417,7 @@ export function OrderManager({
     const product_unit_price = Math.max(0, Number(form.product_unit_price) || 0);
 
     if (Number.isNaN(total_price) || total_price < 0) {
-      setError("Giá trị đơn hàng không hợp lệ.");
+      setError("Invalid order value.");
       return;
     }
 
@@ -479,19 +479,19 @@ export function OrderManager({
         return [result.data, ...current];
       });
       setForm(orderToForm(result.data));
-      setMessage(form.id ? "Đã cập nhật đơn hàng." : "Đã tạo đơn hàng mới.");
+      setMessage(form.id ? "Order updated." : "New order created.");
     });
   }
 
   function lockShippingAndCreateWaybill() {
     setForm((current) => ({ ...current, shipping_locked: true }));
-    setMessage("Đã tạo vận đơn giả lập. Thông tin giao hàng đã bị khóa.");
+    setMessage("Mock waybill created. Shipping info is locked.");
     setError(null);
   }
 
   function handleDelete() {
     if (!form.id) return;
-    if (!window.confirm("Xóa đơn hàng này?")) return;
+    if (!window.confirm("Delete this order?")) return;
 
     startTransition(async () => {
       setError(null);
@@ -505,28 +505,28 @@ export function OrderManager({
 
       setOrders((current) => current.filter((item) => item.id !== form.id));
       resetForm();
-      setMessage("Đã xóa đơn hàng.");
+      setMessage("Order deleted.");
     });
   }
 
   return (
     <section className="admin-panel">
       <div className="admin-flex-between" style={{ marginBottom: 20 }}>
-        <h2 className="admin-card-title" style={{ margin: 0 }}>Đơn hàng</h2>
+        <h2 className="admin-card-title" style={{ margin: 0 }}>Orders</h2>
         <div className="admin-filter-row">
           <button
             type="button"
             className={`admin-btn ${screen === "list" ? "admin-btn--primary" : ""}`}
             onClick={() => setScreen("list")}
           >
-            Danh sách
+            List
           </button>
           <button
             type="button"
             className={`admin-btn ${screen === "detail" ? "admin-btn--primary" : ""}`}
             onClick={() => setScreen("detail")}
           >
-            Chi tiết
+            Details
           </button>
         </div>
       </div>
@@ -544,7 +544,7 @@ export function OrderManager({
                     setStatusFilter(e.target.value as OrderStatus | "all")
                   }
                 >
-                  <option value="all">Tất cả</option>
+                  <option value="all">All</option>
                   {ORDER_STATUSES.map((s) => (
                     <option key={s} value={s}>
                       {ORDER_STATUS_LABELS[s]}
@@ -556,13 +556,13 @@ export function OrderManager({
                   style={{ width: 260, maxWidth: "100%" }}
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
-                  placeholder="Tìm kiếm"
+                  placeholder="Search"
                 />
                 <button type="button" className="admin-btn">
-                  Lọc
+                  Filter
                 </button>
                 <button type="button" className="admin-btn">
-                  Tìm
+                  Search
                 </button>
               </div>
               <div className="admin-filter-row">
@@ -574,7 +574,7 @@ export function OrderManager({
                   className="admin-btn admin-btn--primary"
                   onClick={resetForm}
                 >
-                  + Tạo đơn
+                  + Create Order
                 </button>
               </div>
             </div>
@@ -583,7 +583,7 @@ export function OrderManager({
           {selectedIds.size > 0 ? (
             <div className="admin-card admin-bulk-bar">
               <span className="text-sm admin-text">
-                Đã chọn <strong>{selectedIds.size}</strong> đơn hàng
+                <strong>{selectedIds.size}</strong> orders selected
               </span>
               <select
                 className="admin-input"
@@ -603,7 +603,7 @@ export function OrderManager({
                 onClick={handleBulkStatusApply}
                 disabled={isPending}
               >
-                Áp dụng trạng thái
+                Apply Status
               </button>
               <button
                 type="button"
@@ -611,7 +611,7 @@ export function OrderManager({
                 onClick={handleBulkDelete}
                 disabled={isPending}
               >
-                Xóa đã chọn
+                Delete Selected
               </button>
               <button
                 type="button"
@@ -619,7 +619,7 @@ export function OrderManager({
                 onClick={() => setSelectedIds(new Set())}
                 disabled={isPending}
               >
-                Bỏ chọn
+                Deselect
               </button>
             </div>
           ) : null}
@@ -636,17 +636,17 @@ export function OrderManager({
                         if (el) el.indeterminate = somePageSelected;
                       }}
                       onChange={toggleSelectAllOnPage}
-                      aria-label="Chọn tất cả trên trang"
+                      aria-label="Select all on page"
                     />
                   </th>
-                  <th>Mã đơn</th>
-                  <th>Khách hàng</th>
-                  <th>Sản phẩm</th>
-                  <th>Trạng thái</th>
-                  <th>Ngày tạo</th>
-                  <th>Tổng tiền (VND)</th>
-                  <th>Ghi chú</th>
-                  <th>Trạng thái thanh toán</th>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Products</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Total (VND)</th>
+                  <th>Note</th>
+                  <th>Payment Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -665,7 +665,7 @@ export function OrderManager({
                           checked={selectedIds.has(order.id)}
                           onChange={() => toggleSelectId(order.id)}
                           onClick={(e) => e.stopPropagation()}
-                          aria-label={`Chọn đơn ${order.id}`}
+                          aria-label={`Select order ${order.id}`}
                         />
                       </td>
                       <td>
@@ -691,7 +691,7 @@ export function OrderManager({
                           </span>
                           <div>
                             <div className="admin-text">
-                              {order.shipping_full_name || "Khách lẻ"}
+                              {order.shipping_full_name || "Guest"}
                             </div>
                             <div className="admin-muted text-xs">
                               {order.shipping_phone || "—"}
@@ -755,7 +755,7 @@ export function OrderManager({
                 }}
                 onChange={toggleSelectAllOnPage}
               />
-              Chọn tất cả trên trang ({pageIds.length})
+              Select all on page ({pageIds.length})
             </label>
           </div>
 
@@ -774,7 +774,7 @@ export function OrderManager({
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => toggleSelectId(order.id)}
-                      aria-label={`Chọn đơn ${order.id}`}
+                      aria-label={`Select order ${order.id}`}
                     />
                   </div>
                   <button
@@ -790,7 +790,7 @@ export function OrderManager({
                     </div>
                     <div className="admin-mobile-card__body">
                       <p className="admin-text" style={{ marginBottom: 6 }}>
-                        {order.shipping_full_name || "Khách lẻ"} · {order.shipping_phone || "—"}
+                        {order.shipping_full_name || "Guest"} · {order.shipping_phone || "—"}
                       </p>
                       {productLines(order).slice(0, 2).map((line, idx) => (
                         <p key={idx}>{line}</p>
@@ -802,9 +802,9 @@ export function OrderManager({
                           minute: "2-digit",
                         })}
                       </p>
-                      <p>Tổng: <span className="admin-text">{formatCurrency(order.total_price)}</span></p>
-                      <p>Thanh toán: {paymentStatusText(order)}</p>
-                      {note ? <p>Ghi chú: {note}</p> : null}
+                      <p>Total: <span className="admin-text">{formatCurrency(order.total_price)}</span></p>
+                      <p>Payment: {paymentStatusText(order)}</p>
+                      {note ? <p>Note: {note}</p> : null}
                     </div>
                   </button>
                 </div>
@@ -813,7 +813,7 @@ export function OrderManager({
           </div>
           <div className="admin-flex-between" style={{ marginTop: 16 }}>
             <p className="admin-muted" style={{ fontSize: 12 }}>
-              Trang {page}/{totalPages} - {filteredOrders.length} đơn
+              Page {page}/{totalPages} - {filteredOrders.length} orders
             </p>
             <div className="admin-filter-row">
               <button
@@ -822,7 +822,7 @@ export function OrderManager({
                 disabled={page <= 1}
                 onClick={() => setPage((current) => Math.max(1, current - 1))}
               >
-                Trang trước
+                Previous
               </button>
               <button
                 type="button"
@@ -830,7 +830,7 @@ export function OrderManager({
                 disabled={page >= totalPages}
                 onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
               >
-                Trang sau
+                Next
               </button>
             </div>
           </div>
@@ -842,7 +842,7 @@ export function OrderManager({
               <div>
                 <div className="admin-filter-row">
                   <h3 className="admin-text font-semibold">
-                    Đơn hàng: #{form.id || "Mới"}
+                    Order: #{form.id || "New"}
                   </h3>
                   <span
                     className={orderStatusChipClass(form.status)}
@@ -851,28 +851,28 @@ export function OrderManager({
                   </span>
                   <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs text-emerald-300">
                     {form.status === "payment_verified" || form.status === "deposit_paid"
-                      ? "Đã thanh toán"
-                      : "Chưa thanh toán"}
+                      ? "Paid"
+                      : "Unpaid"}
                   </span>
                 </div>
                 <p className="admin-muted text-xs mt-1">
-                  Chỉnh sửa: {new Date().toLocaleString("vi-VN")}
+                  Edited: {new Date().toLocaleString("vi-VN")}
                 </p>
               </div>
               <div className="admin-detail-actions">
                 <button
                   type="button"
                   className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white"
-                  onClick={() => setMessage("Đã gửi biên lai cho khách.")}
+                  onClick={() => setMessage("Receipt sent to customer.")}
                 >
-                  Gửi biên lai
+                  Send Receipt
                 </button>
                 <button
                   type="button"
                   className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950"
                   onClick={() => window.print()}
                 >
-                  In đơn
+                  Print Order
                 </button>
                 <button
                   type="button"
@@ -880,7 +880,7 @@ export function OrderManager({
                   onClick={handleSave}
                   disabled={isPending}
                 >
-                  {isPending ? "Đang lưu…" : "Lưu"}
+                  {isPending ? "Saving…" : "Save"}
                 </button>
               </div>
             </div>
@@ -890,7 +890,7 @@ export function OrderManager({
             <div className="admin-stack">
               <div className="admin-panel" style={{ padding: 16 }}>
                 <h3 className="mb-3 text-sm font-semibold admin-text">
-                  THÔNG TIN SẢN PHẨM
+                  PRODUCT INFO
                 </h3>
 
                 <div className="admin-order-product-mobile admin-only-mobile">
@@ -907,7 +907,7 @@ export function OrderManager({
                     </span>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <label className="block text-sm admin-text">
-                        Tên sản phẩm
+                        Product Name
                         <input
                           value={form.product_name}
                           onChange={(e) =>
@@ -918,7 +918,7 @@ export function OrderManager({
                         />
                       </label>
                       <label className="block text-sm admin-text" style={{ marginTop: 10 }}>
-                        Mã sản phẩm
+                        Product Code
                         <input
                           placeholder="Product ID"
                           value={form.product_id}
@@ -934,7 +934,7 @@ export function OrderManager({
                   </div>
                   <div className="admin-order-product-mobile__fields">
                     <label className="admin-order-product-mobile__field">
-                      <span>Số lượng</span>
+                      <span>Quantity</span>
                       <input
                         type="number"
                         min={1}
@@ -946,7 +946,7 @@ export function OrderManager({
                       />
                     </label>
                     <label className="admin-order-product-mobile__field">
-                      <span>Giá bán</span>
+                      <span>Unit Price</span>
                       <input
                         type="number"
                         min={0}
@@ -958,7 +958,7 @@ export function OrderManager({
                       />
                     </label>
                     <label className="admin-order-product-mobile__field">
-                      <span>Giảm</span>
+                      <span>Discount</span>
                       <input
                         type="number"
                         min={0}
@@ -970,7 +970,7 @@ export function OrderManager({
                       />
                     </label>
                     <label className="admin-order-product-mobile__field">
-                      <span>Tổng tiền</span>
+                      <span>Total</span>
                       <strong className="admin-text" style={{ paddingTop: 8 }}>
                         {formatCurrency(Number(form.total_price || 0))}
                       </strong>
@@ -982,12 +982,12 @@ export function OrderManager({
                   <table className="admin-table">
                     <thead>
                       <tr>
-                        <th>Ảnh</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Số lượng</th>
-                        <th>Giá bán</th>
-                        <th>Giảm</th>
-                        <th>Tổng tiền</th>
+                        <th>Image</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Discount</th>
+                        <th>Total</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1066,12 +1066,12 @@ export function OrderManager({
 
               <div className="admin-panel" style={{ padding: 16 }}>
                 <h3 className="mb-3 text-sm font-semibold admin-text">
-                  THÔNG TIN THANH TOÁN
+                  PAYMENT INFO
                 </h3>
                 <div className="admin-stack">
                   <div className="admin-stack-sm">
                     <label className="block text-sm admin-text">
-                      Link thanh toán
+                      Payment Link
                       <input
                         className="admin-input mt-1.5"
                         value={form.source_page}
@@ -1082,7 +1082,7 @@ export function OrderManager({
                       />
                     </label>
                     <label className="block text-sm admin-text">
-                      Ghi chú
+                      Note
                       <textarea
                         className="admin-input mt-1.5"
                         rows={3}
@@ -1093,37 +1093,37 @@ export function OrderManager({
                   </div>
                   <div className="admin-payment-summary">
                     <div className="admin-payment-summary__row">
-                      <span>Tổng tiền</span>
+                      <span>Total</span>
                       <strong className="admin-text">
                         {formatCurrency(Number(form.total_price || 0))}
                       </strong>
                     </div>
                     <div className="admin-payment-summary__row">
-                      <span>Phụ thu</span>
+                      <span>Surcharge</span>
                       <span className="admin-text">
                         {formatCurrency(Number(form.surcharge_amount || 0))}
                       </span>
                     </div>
                     <div className="admin-payment-summary__row">
-                      <span>Giảm giá</span>
+                      <span>Discount</span>
                       <span className="admin-text">
                         {formatCurrency(Number(form.discount_amount || 0))}
                       </span>
                     </div>
                     <div className="admin-payment-summary__row">
-                      <span>Thu khách hàng</span>
+                      <span>Collected</span>
                       <strong className="admin-text">
                         {formatCurrency(Number(form.actual_collected_amount || 0))}
                       </strong>
                     </div>
                     <div className="admin-payment-summary__row">
-                      <span>Phương thức thanh toán</span>
+                      <span>Payment Method</span>
                       <span className="admin-text">
                         {form.payment_method || "—"}
                       </span>
                     </div>
                     <div className="admin-payment-summary__row">
-                      <span>Đã cọc</span>
+                      <span>Deposited</span>
                       <span className="admin-text">
                         {formatCurrency(
                           paidDepositForStatus(
@@ -1134,7 +1134,7 @@ export function OrderManager({
                       </span>
                     </div>
                     <div className="admin-payment-summary__row">
-                      <span>Còn lại</span>
+                      <span>Remaining</span>
                       <span className="admin-text">
                         {formatCurrency(Number(form.remaining_amount || 0))}
                       </span>
@@ -1144,8 +1144,8 @@ export function OrderManager({
               </div>
 
               <div className="admin-panel" style={{ padding: 16 }}>
-                <h3 className="mb-3 text-sm font-semibold admin-text">NGƯỜI GIAO</h3>
-                <p className="admin-muted text-sm">Chưa có thông tin giao hàng</p>
+                <h3 className="mb-3 text-sm font-semibold admin-text">COURIER</h3>
+                <p className="admin-muted text-sm">No shipping info yet</p>
                 <div className="mt-3">
                   <button
                     type="button"
@@ -1153,38 +1153,38 @@ export function OrderManager({
                     onClick={lockShippingAndCreateWaybill}
                     className="admin-btn"
                   >
-                    Người giao
+                    Courier
                   </button>
                 </div>
                 <div className="mt-4 flex gap-2">
                   <button type="button" className="admin-btn admin-btn--primary">
-                    Lịch sử vận đơn
+                    Tracking History
                   </button>
                   <button type="button" className="admin-btn">
-                    Lịch sử đặt hàng
+                    Order History
                   </button>
                 </div>
               </div>
 
               <div className="rounded-xl border border-[var(--admin-border)] p-4">
                 <h3 className="mb-3 text-sm font-semibold admin-text">
-                  Lịch sử cập nhật đơn hàng
+                  Order Update History
                 </h3>
                 <div className="admin-table-wrap">
                   <table className="admin-table">
                     <thead>
                       <tr>
-                        <th>Thời gian</th>
-                        <th>Người cập nhật</th>
-                        <th>Hành động</th>
-                        <th>Thay đổi</th>
+                        <th>Time</th>
+                        <th>Updated by</th>
+                        <th>Action</th>
+                        <th>Changes</th>
                       </tr>
                     </thead>
                     <tbody>
                       {orderHistory.length === 0 ? (
                         <tr>
                           <td colSpan={4} className="px-4 py-8 text-center admin-muted">
-                            Chưa có lịch sử cập nhật
+                            No update history yet
                           </td>
                         </tr>
                       ) : (
@@ -1195,7 +1195,7 @@ export function OrderManager({
                               {log.admin_user_id
                                 ? (emailByUserId.get(log.admin_user_id) ??
                                   log.admin_user_id.slice(0, 8))
-                                : "Hệ thống"}
+                                : "System"}
                             </td>
                             <td className="admin-text">{log.action}</td>
                             <td className="admin-muted">
@@ -1214,7 +1214,7 @@ export function OrderManager({
             <div className="space-y-4">
               <div className="rounded-xl border border-[var(--admin-border)] p-4">
                 <h3 className="mb-3 text-sm font-semibold admin-text">
-                  THÔNG TIN KHÁCH HÀNG
+                  CUSTOMER INFO
                 </h3>
                 <p className="admin-muted text-xs">
                   Email:{" "}
@@ -1238,11 +1238,11 @@ export function OrderManager({
 
               <div className="rounded-xl border border-[var(--admin-border)] p-4">
                 <h3 className="mb-3 text-sm font-semibold admin-text">
-                  THÔNG TIN BỔ SUNG
+                  ADDITIONAL INFO
                 </h3>
                 <div className="space-y-3">
                   <label className="block text-sm admin-text">
-                    Trạng thái
+                    Status
                     <select
                       value={form.status}
                       onChange={(e) =>
@@ -1258,7 +1258,7 @@ export function OrderManager({
                     </select>
                   </label>
                   <label className="block text-sm admin-text">
-                    Người xử lý
+                    Handler
                     <input
                       className="admin-input mt-1.5"
                       value={form.handler_name}
@@ -1268,7 +1268,7 @@ export function OrderManager({
                     />
                   </label>
                   <label className="block text-sm admin-text">
-                    Ngày thanh toán
+                    Payment Date
                     <input
                       type="date"
                       className="admin-input mt-1.5"
@@ -1328,7 +1328,7 @@ export function OrderManager({
         customers={customers}
         onImported={(imported) => {
           setOrders((current) => [...imported, ...current]);
-          setMessage(`Đã thêm ${imported.length} đơn từ file.`);
+          setMessage(`${imported.length} orders imported from file.`);
           setError(null);
         }}
       />
@@ -1340,7 +1340,7 @@ export function OrderManager({
             onClick={handleDelete}
             className="rounded-lg border border-red-500/40 px-5 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-500/10 disabled:opacity-60"
           >
-            Xóa đơn
+            Delete Order
           </button>
         </div>
       ) : null}

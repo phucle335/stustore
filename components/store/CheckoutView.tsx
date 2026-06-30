@@ -112,7 +112,6 @@ export function CheckoutView() {
     if (qrCode.startsWith("data:image") || qrCode.startsWith("http")) {
       return qrCode;
     }
-    // PayOS can return raw VietQR payload text; convert it to a scannable image.
     return `https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=${encodeURIComponent(
       qrCode,
     )}`;
@@ -252,15 +251,15 @@ export function CheckoutView() {
 
   const paymentHint = useMemo(() => {
     if (isMixedFulfillment) {
-      return "Giỏ hàng đang trộn sản phẩm pre-order và hàng có sẵn. Vui lòng tách thành 2 đơn để thanh toán.";
+      return "Your cart contains a mix of pre-order and in-stock items. Please split into 2 orders to checkout.";
     }
     if (isPreorderOrder) {
-      return `Số tiền cọc 50%: ${formatPriceVnd(depositVnd)}. Hệ thống xác nhận đơn sau khi nhận cọc.`;
+      return `50% deposit amount: ${formatPriceVnd(depositVnd)}. Your order will be confirmed after we receive the deposit.`;
     }
     if (selectedPaymentMethod === "cod_deposit") {
-      return "Đơn hàng có sẵn: cọc trước 100.000đ, phần còn lại thanh toán COD khi nhận hàng.";
+      return "In-stock items: 100,000đ deposit required, balance paid COD upon delivery.";
     }
-    return "Chuyển khoản toàn bộ đơn hàng. Hệ thống xác nhận sau khi nhận tiền.";
+    return "Transfer the full order amount. Your order will be confirmed after we receive payment.";
   }, [depositVnd, isMixedFulfillment, isPreorderOrder, selectedPaymentMethod]);
 
   async function cancelExpiredOrder() {
@@ -275,7 +274,7 @@ export function CheckoutView() {
       });
       const body = (await res.json()) as { error?: string };
       if (!res.ok) {
-        throw new Error(body.error ?? "Không thể hủy đơn quá hạn.");
+        throw new Error(body.error ?? "Unable to cancel expired order.");
       }
       setQrModalOpen(false);
       const productId = returnProductId ?? items[0]?.productId ?? null;
@@ -286,7 +285,7 @@ export function CheckoutView() {
       }
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Không thể hủy đơn quá hạn.",
+        err instanceof Error ? err.message : "Unable to cancel expired order.",
       );
     } finally {
       setCancelling(false);
@@ -317,7 +316,7 @@ export function CheckoutView() {
 
     if (!res.ok) {
       setAppliedCoupon(null);
-      setError(body.error ?? "Mã không hợp lệ.");
+      setError(body.error ?? "Invalid code.");
       return;
     }
 
@@ -328,21 +327,21 @@ export function CheckoutView() {
     if (items.length === 0) return;
 
     if (needsName && !fullName.trim()) {
-      setError("Vui lòng nhập họ tên người nhận.");
+      setError("Please enter recipient name.");
       return;
     }
     if (needsAddress && !address.trim()) {
-      setError("Vui lòng nhập địa chỉ giao hàng chi tiết.");
+      setError("Please enter detailed shipping address.");
       return;
     }
     if (!phone.trim()) {
-      setError("Vui lòng nhập số di động.");
+      setError("Please enter mobile number.");
       return;
     }
 
     if (isMixedFulfillment) {
       setError(
-        "Giỏ hàng có cả pre-order và hàng có sẵn. Vui lòng tách giỏ hàng thành 2 đơn.",
+        "Your cart contains both pre-order and in-stock items. Please split into 2 orders.",
       );
       return;
     }
@@ -383,7 +382,7 @@ export function CheckoutView() {
         );
         return;
       }
-      setError(body.error ?? "Không tạo được đơn hàng.");
+      setError(body.error ?? "Unable to create order.");
       return;
     }
 
@@ -420,7 +419,7 @@ export function CheckoutView() {
       if (!paymentRes.ok || !paymentBody.checkoutUrl) {
         const detail = paymentBody.detail ? ` (${paymentBody.detail})` : "";
         setError(
-          `${paymentBody.error ?? "Không thể tạo link thanh toán PayOS."}${detail}`,
+          `${paymentBody.error ?? "Unable to create PayOS payment link."}${detail}`,
         );
         return;
       }
@@ -464,10 +463,10 @@ export function CheckoutView() {
         <div className={styles.checkoutEyebrow}>
           <StusportLogo variant="mark" href="/" className="stusport-logo--compact" />
         </div>
-        <h1>Thanh toán</h1>
-        <p className={styles.checkoutMuted}>Giỏ hàng đang trống.</p>
+        <h1>Checkout</h1>
+        <p className={styles.checkoutMuted}>Your cart is empty.</p>
         <Link href="/" className={styles.checkoutPrimaryBtn}>
-          Về trang chủ
+          Back to Home
         </Link>
       </div>
       </div>
@@ -488,15 +487,15 @@ export function CheckoutView() {
       <div className={styles.checkoutEyebrow}>
         <StusportLogo variant="mark" href="/" className="stusport-logo--compact" />
       </div>
-      <h1>Thanh toán</h1>
+      <h1>Checkout</h1>
       <p className={styles.checkoutMuted}>
-        Kiểm tra giỏ hàng, bấm <strong>Thanh toán</strong> để nhập thông tin
-        giao hàng và chọn phương thức thanh toán.
+        Review your cart, click <strong>Checkout</strong> to enter shipping
+        information and select payment method.
       </p>
       {paymentSuccess ? (
         <p className={styles.checkoutPaymentNote}>
-          Thanh toán thành công! Đơn hàng đã được ghi nhận. Vui lòng kiểm tra
-          Zalo/Email để nhận hướng dẫn tiếp theo.
+          Payment successful! Your order has been recorded. Please check
+          Zalo/Email for next steps.
         </p>
       ) : null}
 
@@ -518,7 +517,7 @@ export function CheckoutView() {
                 {item.name}
                 {item.size ? ` — Size ${item.size}` : ""}
               </p>
-              <p className={styles.checkoutItemQty}>Số lượng: {item.quantity}</p>
+              <p className={styles.checkoutItemQty}>Quantity: {item.quantity}</p>
             </div>
             <div className={styles.checkoutItemPrice}>
               {formatPriceVnd(parsePriceVnd(item.price) * item.quantity)}
@@ -528,12 +527,12 @@ export function CheckoutView() {
       </ul>
 
       <div className={styles.checkoutCoupon}>
-        <label className={styles.checkoutCouponLabel}>Phiếu giảm giá</label>
+        <label className={styles.checkoutCouponLabel}>Coupon</label>
         <div className={styles.checkoutCouponRow}>
           <input
             value={couponCode}
             onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-            placeholder="Nhập mã"
+            placeholder="Enter code"
             className={styles.checkoutCouponInput}
           />
           <button
@@ -542,29 +541,29 @@ export function CheckoutView() {
             disabled={couponLoading}
             onClick={() => void applyCoupon()}
           >
-            {couponLoading ? "…" : "Áp dụng"}
+            {couponLoading ? "…" : "Apply"}
           </button>
         </div>
         {appliedCoupon ? (
           <p className={styles.checkoutCouponApplied}>
-            Đã áp dụng {appliedCoupon.code} — giảm{" "}
+            Applied {appliedCoupon.code} — discount{" "}
             {formatPriceVnd(appliedCoupon.discount_amount)}
           </p>
         ) : null}
       </div>
 
       <div className={styles.checkoutTotal}>
-        <span>Tạm tính</span>
+        <span>Subtotal</span>
         <span>{totalLabel}</span>
       </div>
       {appliedCoupon ? (
         <div className={`${styles.checkoutTotal} ${styles.checkoutTotalDiscount}`}>
-          <span>Giảm giá</span>
+          <span>Discount</span>
           <span>-{formatPriceVnd(appliedCoupon.discount_amount)}</span>
         </div>
       ) : null}
       <div className={`${styles.checkoutTotal} ${styles.checkoutTotalFinal}`}>
-        <span>Tổng thanh toán</span>
+        <span>Total</span>
         <strong>{formatPriceVnd(finalVnd)}</strong>
       </div>
 
@@ -578,23 +577,23 @@ export function CheckoutView() {
             setShowPayment(true);
           }}
         >
-          {profileLoading ? "Đang tải…" : "Thanh toán"}
+          {profileLoading ? "Loading…" : "Checkout"}
         </button>
       ) : (
         <div className={styles.checkoutPaymentPanel}>
-          <h2 className={styles.checkoutPaymentTitle}>Thông tin &amp; thanh toán</h2>
+          <h2 className={styles.checkoutPaymentTitle}>Information &amp; Payment</h2>
 
           {!profileLoading && profile ? (
             <div className={styles.checkoutProfileSummary}>
               {profile.full_name?.trim() ? (
                 <p>
-                  <span>Người nhận</span>
+                  <span>Recipient</span>
                   <strong>{profile.full_name}</strong>
                 </p>
               ) : null}
               {profile.address?.trim() ? (
                 <p>
-                  <span>Địa chỉ</span>
+                  <span>Address</span>
                   <strong>{profile.address}</strong>
                 </p>
               ) : null}
@@ -604,7 +603,7 @@ export function CheckoutView() {
           <div className={styles.checkoutForm}>
             {needsName ? (
               <label className={styles.checkoutField}>
-                <span>Họ tên người nhận *</span>
+                <span>Recipient Name *</span>
                 <input
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
@@ -616,7 +615,7 @@ export function CheckoutView() {
 
             {needsAddress ? (
               <label className={styles.checkoutField}>
-                <span>Địa chỉ giao hàng chi tiết *</span>
+                <span>Detailed Shipping Address *</span>
                 <textarea
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
@@ -628,7 +627,7 @@ export function CheckoutView() {
             ) : null}
 
             <label className={styles.checkoutField}>
-              <span>Số di động *</span>
+              <span>Mobile Number *</span>
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -640,11 +639,11 @@ export function CheckoutView() {
             </label>
 
             <fieldset className={styles.checkoutPaymentMethods}>
-              <legend>Phương thức thanh toán</legend>
+              <legend>Payment Method</legend>
               {isMixedFulfillment ? (
                 <p className={styles.checkoutError}>
-                  Giỏ hàng đang trộn 2 loại sản phẩm. Vui lòng tách đơn trước khi
-                  thanh toán.
+                  Your cart contains 2 types of products. Please split orders before
+                  checkout.
                 </p>
               ) : isPreorderOrder ? (
                 <label className={styles.checkoutPaymentOption}>
@@ -655,7 +654,7 @@ export function CheckoutView() {
                     onChange={() => setPaymentMethod("preorder_deposit")}
                   />
                   <span>
-                    Đơn pre-order cọc 50% chuyển khoản ({formatPriceVnd(depositVnd)})
+                    Pre-order 50% deposit by transfer ({formatPriceVnd(depositVnd)})
                   </span>
                 </label>
               ) : (
@@ -667,7 +666,7 @@ export function CheckoutView() {
                       checked={selectedPaymentMethod === "cod_deposit"}
                       onChange={() => setPaymentMethod("cod_deposit")}
                     />
-                    <span>COD cọc 100.000đ</span>
+                    <span>COD — 100,000 VND deposit</span>
                   </label>
                   <label className={styles.checkoutPaymentOption}>
                     <input
@@ -676,7 +675,7 @@ export function CheckoutView() {
                       checked={selectedPaymentMethod === "bank_transfer_full"}
                       onChange={() => setPaymentMethod("bank_transfer_full")}
                     />
-                    <span>Chuyển khoản toàn bộ đơn hàng</span>
+                    <span>Transfer full order amount</span>
                   </label>
                 </>
               )}
@@ -694,7 +693,7 @@ export function CheckoutView() {
               disabled={loading}
               onClick={() => setShowPayment(false)}
             >
-              Quay lại
+              Back
             </button>
             <button
               type="button"
@@ -702,7 +701,7 @@ export function CheckoutView() {
               disabled={loading || isMixedFulfillment}
               onClick={() => void handleConfirmOrder()}
             >
-              {loading ? "Đang xử lý…" : "Xác nhận đặt hàng"}
+              {loading ? "Processing…" : "Place Order"}
             </button>
           </div>
         </div>
@@ -722,7 +721,7 @@ export function CheckoutView() {
           <div className={styles.qrDialog}>
             <div className={styles.qrHeader}>
               <h3 id="checkout-qr-title" className={styles.qrTitle}>
-                Quét mã QR để thanh toán
+                Scan QR code to pay
               </h3>
               <span className={styles.qrCountdown}>{countdownLabel}</span>
             </div>
@@ -730,7 +729,7 @@ export function CheckoutView() {
             <div className={styles.qrGrid}>
               <section className={styles.qrPanel}>
                 <p className={styles.qrPanelText}>
-                  Quét mã bằng app ngân hàng hoặc ví điện tử
+                  Scan with banking app or e-wallet
                 </p>
                 {qrImageSrc ? (
                   <img
@@ -740,7 +739,7 @@ export function CheckoutView() {
                   />
                 ) : (
                   <p className={styles.qrFallback}>
-                    Chưa tạo được ảnh QR. Bạn có thể mở cổng PayOS để thanh toán.
+                    Unable to generate QR image. You can open PayOS portal to pay.
                   </p>
                 )}
                 {checkoutUrl ? (
@@ -750,7 +749,7 @@ export function CheckoutView() {
                     rel="noreferrer"
                     className={styles.qrPayosLink}
                   >
-                    Mở cổng thanh toán PayOS
+                    Open PayOS payment portal
                   </a>
                 ) : null}
               </section>
@@ -758,23 +757,23 @@ export function CheckoutView() {
               <div className={styles.qrAside}>
                 <section className={styles.qrPanel}>
                   <p className={styles.qrMetaLine}>
-                    Mã đơn hàng: <strong>#{payingOrderId}</strong>
+                    Order ID: <strong>#{payingOrderId}</strong>
                   </p>
                   <p className={styles.qrMetaLine}>
-                    Trạng thái: <strong>Chờ thanh toán</strong>
+                    Status: <strong>Pending Payment</strong>
                   </p>
                   <p className={styles.qrMetaLine}>
-                    Cần thanh toán:{" "}
+                    Amount to pay:{" "}
                     <strong>{formatPriceVnd(payingAmount || payingTotal)}</strong>
                   </p>
                 </section>
 
                 {bankTransfer ? (
                   <section className={styles.qrPanel}>
-                    <p className={styles.qrPanelTitle}>Thông tin chuyển khoản</p>
+                    <p className={styles.qrPanelTitle}>Transfer Information</p>
                     <div className={styles.qrBankList}>
                       <div className={styles.qrBankRow}>
-                        <span className={styles.qrBankLabel}>Ngân hàng</span>
+                        <span className={styles.qrBankLabel}>Bank</span>
                         <div className={styles.qrBankValueWrap}>
                           <span className={styles.qrBankValue}>
                             {bankTransfer.bankName ?? "—"}
@@ -791,7 +790,7 @@ export function CheckoutView() {
                         </div>
                       </div>
                       <div className={styles.qrBankRow}>
-                        <span className={styles.qrBankLabel}>Số tài khoản</span>
+                        <span className={styles.qrBankLabel}>Account Number</span>
                         <div className={styles.qrBankValueWrap}>
                           <span className={styles.qrBankValue}>
                             {bankTransfer.accountNumber ?? "—"}
@@ -810,7 +809,7 @@ export function CheckoutView() {
                         </div>
                       </div>
                       <div className={styles.qrBankRow}>
-                        <span className={styles.qrBankLabel}>Chủ tài khoản</span>
+                        <span className={styles.qrBankLabel}>Account Name</span>
                         <div className={styles.qrBankValueWrap}>
                           <span className={styles.qrBankValue}>
                             {bankTransfer.accountName ?? "—"}
@@ -829,7 +828,7 @@ export function CheckoutView() {
                         </div>
                       </div>
                       <div className={styles.qrBankRow}>
-                        <span className={styles.qrBankLabel}>Số tiền</span>
+                        <span className={styles.qrBankLabel}>Amount</span>
                         <div className={styles.qrBankValueWrap}>
                           <span className={styles.qrBankValue}>
                             {Number.isFinite(Number(bankTransfer.amount))
@@ -852,7 +851,7 @@ export function CheckoutView() {
                         </div>
                       </div>
                       <div className={styles.qrBankRow}>
-                        <span className={styles.qrBankLabel}>Nội dung</span>
+                        <span className={styles.qrBankLabel}>Transfer Note</span>
                         <div className={styles.qrBankValueWrap}>
                           <span
                             className={`${styles.qrBankValue} ${styles.qrBankValueNarrow}`}
@@ -878,8 +877,7 @@ export function CheckoutView() {
 
                 <section className={styles.qrPanel}>
                   <p className={styles.qrNotice}>
-                    Nếu quá 05:00 mà chưa thanh toán, hệ thống sẽ tự đóng mã và hủy
-                    đơn.
+                    If payment is not made within 05:00, the code will automatically close and the order will be cancelled.
                   </p>
                   {qrCode && !qrImageSrc ? (
                     <p className={styles.qrRawPayload}>{qrCode}</p>
@@ -896,7 +894,7 @@ export function CheckoutView() {
                 className={styles.checkoutSecondaryBtn}
                 onClick={() => setQrModalOpen(false)}
               >
-                Đóng
+                Close
               </button>
               <button
                 type="button"
@@ -904,7 +902,7 @@ export function CheckoutView() {
                 disabled={cancelling}
                 onClick={() => void cancelExpiredOrder()}
               >
-                {cancelling ? "Đang hủy…" : "Hủy đơn"}
+                {cancelling ? "Cancelling…" : "Cancel Order"}
               </button>
             </div>
           </div>

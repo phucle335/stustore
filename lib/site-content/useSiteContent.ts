@@ -1,6 +1,6 @@
-/*
- * Client hook: lấy site content từ `/api/site-content`.
- * Có cache nội bộ để nhiều component không fetch nhiều lần.
+/**
+ * Client hook: fetch site content from `/api/site-content`.
+ * Has internal cache so multiple components don't fetch repeatedly.
  */
 
 // Note: file intentionally does not use hooks on module scope.
@@ -15,7 +15,7 @@ let inflight: Promise<SiteContent> | null = null;
 
 async function fetchSiteContent(): Promise<SiteContent> {
   const res = await fetch("/api/site-content", { method: "GET" });
-  if (!res.ok) throw new Error("Không tải được site content");
+  if (!res.ok) throw new Error("Could not load site content");
   const json = (await res.json()) as { data?: SiteContent; error?: string };
   return json.data ?? getDefaultSiteContent();
 }

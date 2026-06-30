@@ -7,7 +7,7 @@ import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Quên mật khẩu Admin | Stusport",
+  title: "Admin Forgot Password | Stusport",
 };
 
 export default function AdminForgotPasswordPage() {

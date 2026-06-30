@@ -36,12 +36,12 @@ export async function POST(request: Request) {
   try {
     body = (await request.json()) as Body;
   } catch {
-    return NextResponse.json({ error: "Dữ liệu không hợp lệ." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid data." }, { status: 400 });
   }
 
   const productId = body.product_id?.trim();
   if (!productId) {
-    return NextResponse.json({ error: "Thiếu product_id." }, { status: 400 });
+    return NextResponse.json({ error: "Missing product_id." }, { status: 400 });
   }
 
   const supabase = await createAuthServerClient();
@@ -66,7 +66,7 @@ export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
   const productId = searchParams.get("product_id")?.trim();
   if (!productId) {
-    return NextResponse.json({ error: "Thiếu product_id." }, { status: 400 });
+    return NextResponse.json({ error: "Missing product_id." }, { status: 400 });
   }
 
   const supabase = await createAuthServerClient();

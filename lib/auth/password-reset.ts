@@ -25,7 +25,7 @@ export function getLoginPath(audience: PasswordResetAudience): string {
   return LOGIN_PATH[audience];
 }
 
-/** URL Supabase gọi về sau khi user bấm link trong email. */
+/** URL Supabase redirects to after user clicks link in email. */
 export function buildPasswordResetRedirectTo(
   audience: PasswordResetAudience,
 ): string {
@@ -36,19 +36,19 @@ export function buildPasswordResetRedirectTo(
 export function mapAuthErrorMessage(message: string): string {
   const lower = message.toLowerCase();
   if (lower.includes("rate limit") || lower.includes("too many")) {
-    return "Gửi email quá nhiều lần. Vui lòng thử lại sau vài phút.";
+    return "Too many attempts. Please try again in a few minutes.";
   }
   if (lower.includes("invalid") && lower.includes("email")) {
-    return "Email không hợp lệ.";
+    return "Invalid email address.";
   }
   if (lower.includes("same") && lower.includes("password")) {
-    return "Mật khẩu mới phải khác mật khẩu cũ.";
+    return "New password must be different from current password.";
   }
   if (lower.includes("weak") || lower.includes("password")) {
-    return "Mật khẩu không đủ mạnh. Dùng ít nhất 6 ký tự.";
+    return "Password not strong enough. Use at least 6 characters.";
   }
   if (lower.includes("session") || lower.includes("expired")) {
-    return "Link đặt lại mật khẩu đã hết hạn. Yêu cầu gửi lại email.";
+    return "Password reset link expired. Please request a new one.";
   }
   return message;
 }

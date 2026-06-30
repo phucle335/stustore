@@ -16,10 +16,10 @@ import type {
 type TabId = "products" | "orders" | "customers" | "coupons";
 
 const tabs: { id: TabId; label: string }[] = [
-  { id: "products", label: "Sản phẩm" },
-  { id: "orders", label: "Đơn hàng" },
-  { id: "customers", label: "Khách hàng" },
-  { id: "coupons", label: "Phiếu giảm giá" },
+  { id: "products", label: "Products" },
+  { id: "orders", label: "Orders" },
+  { id: "customers", label: "Customers" },
+  { id: "coupons", label: "Coupons" },
 ];
 
 type AdminTabsProps = {

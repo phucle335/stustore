@@ -18,11 +18,11 @@ export function TopProductsTable({ products }: TopProductsTableProps) {
 
   return (
     <AnalyticsCard
-      title="Lượt xem & click theo sản phẩm"
-      subtitle="14 ngày gần nhất — trang chi tiết + click từ danh mục"
+      title="Product views & clicks"
+      subtitle="Last 14 days — detail pages + category clicks"
     >
       {products.length === 0 ? (
-        <p className="text-sm admin-muted">Chưa có lượt xem sản phẩm nào.</p>
+        <p className="text-sm admin-muted">No product views recorded yet.</p>
       ) : (
         <>
           <div className="admin-table-wrap">
@@ -30,9 +30,9 @@ export function TopProductsTable({ products }: TopProductsTableProps) {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Sản phẩm</th>
-                  <th style={{ textAlign: "right" }}>Lượt xem</th>
-                  <th style={{ textAlign: "right" }}>Click</th>
+                  <th>Product</th>
+                  <th style={{ textAlign: "right" }}>Views</th>
+                  <th style={{ textAlign: "right" }}>Clicks</th>
                 </tr>
               </thead>
               <tbody>

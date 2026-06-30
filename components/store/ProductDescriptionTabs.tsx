@@ -8,8 +8,8 @@ import styles from "@/styles/components/store/ProductDetail.module.css";
 type TabId = "description" | "reviews";
 
 const TABS: { id: TabId; label: string }[] = [
-  { id: "description", label: "Mô tả sản phẩm" },
-  { id: "reviews", label: "Đánh giá (0)" },
+  { id: "description", label: "Product Description" },
+  { id: "reviews", label: "Reviews (0)" },
 ];
 
 type ProductDescriptionTabsProps = {
@@ -20,7 +20,7 @@ export function ProductDescriptionTabs({ product }: ProductDescriptionTabsProps)
   const [activeTab, setActiveTab] = useState<TabId>("description");
   const brandLabel = formatBrandDisplay(product.brand);
 
-  // Tách description thành các đoạn (hỗ trợ \n hoặc \n\n từ DB)
+  // Split description into paragraphs (supports \n or \n\n from DB)
   const descriptionParagraphs = product.description
     ? product.description
         .split(/\n\n|\n/)
@@ -32,7 +32,7 @@ export function ProductDescriptionTabs({ product }: ProductDescriptionTabsProps)
     <section
       className={styles.productDetailPanel}
       id="product-description"
-      aria-label="Thông tin sản phẩm"
+      aria-label="Product information"
     >
       <div className={styles.productDetailTabs} role="tablist">
         {TABS.map((tab) => (
@@ -68,11 +68,11 @@ export function ProductDescriptionTabs({ product }: ProductDescriptionTabsProps)
                 <p key={i}>{para}</p>
               ))
             ) : (
-              <p className={styles.productDetailSku}>Chưa có mô tả sản phẩm.</p>
+              <p className={styles.productDetailSku}>No product description yet.</p>
             )}
 
             <p className={styles.productDetailMeta}>
-              Thương hiệu: <strong>{brandLabel}</strong>
+              Brand: <strong>{brandLabel}</strong>
             </p>
           </div>
         ) : null}
@@ -84,7 +84,7 @@ export function ProductDescriptionTabs({ product }: ProductDescriptionTabsProps)
             aria-labelledby="tab-reviews"
             className={styles.productDetailTabPanelProse}
           >
-            <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+            <p>No reviews yet for this product.</p>
           </div>
         ) : null}
       </div>

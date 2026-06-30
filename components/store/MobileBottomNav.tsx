@@ -72,7 +72,7 @@ export function MobileBottomNav({
       : `${styles.bottomNav} ${styles.bottomNavStore}`;
 
   return (
-    <nav className={navClass} aria-label="Điều hướng chính">
+    <nav className={navClass} aria-label="Main navigation">
       <ul className={styles.list}>
         {items.map((item) => (
           <li key={item.id} className={styles.item}>

@@ -1,7 +1,7 @@
 import type { ProductCategory } from "@/lib/store/types";
 import type { ProductSizeStock, StoreProductCategory } from "@/lib/supabase/types";
 
-/** Danh mục không có thuộc tính size (chỉ quản lý số lượng tổng) */
+/** Categories without size attributes (manage by total quantity only) */
 export const CATEGORIES_WITHOUT_SIZES: StoreProductCategory[] = [
   "watches",
   "sunglasses",
@@ -24,7 +24,7 @@ export function totalQuantityFromSizeRows(
   );
 }
 
-/** Đọc từ DB → state form admin */
+/** Read from DB → admin form state */
 export function sizesToFormState(
   category: StoreProductCategory | undefined,
   raw: unknown,
@@ -44,7 +44,7 @@ export function sizesToFormState(
   return withSize.length > 0 ? withSize : [{ size: "40", quantity: 0 }];
 }
 
-/** Form admin → jsonb gửi Supabase */
+/** Admin form → Supabase jsonb */
 export function sizesToDbPayload(
   category: StoreProductCategory,
   rows: ProductSizeStock[],
@@ -90,7 +90,7 @@ function normalizeSizeRows(raw: unknown): { size: string; quantity: number }[] {
   });
 }
 
-/** Chuẩn hóa hiển thị storefront */
+/** Normalize for storefront display */
 export function mapSizesForStorefront(
   category: ProductCategory,
   raw: unknown,

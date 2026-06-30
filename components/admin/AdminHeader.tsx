@@ -23,17 +23,17 @@ export function AdminHeader() {
           <span className="admin-header-brand__suffix">Admin</span>
         </div>
         <h1>Admin Dashboard</h1>
-        <p>Quản lý sản phẩm giày, đơn hàng và tồn kho theo size</p>
+        <p>Manage sneakers, orders, and size-based stock</p>
       </div>
 
       <div className="admin-toolbar">
         <Link href="/" className="admin-btn">
           <Store className="h-4 w-4" />
-          Cửa hàng
+          Storefront
         </Link>
         <button type="button" onClick={handleSignOut} className="admin-btn admin-btn--primary">
           <LogOut className="h-4 w-4" />
-          Đăng xuất
+          Sign out
         </button>
       </div>
     </header>

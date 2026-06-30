@@ -9,7 +9,7 @@ export async function GET() {
     return NextResponse.json(stock);
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : "Không tải được tồn kho";
+      error instanceof Error ? error.message : "Could not load stock";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -13,7 +13,7 @@ export function RealtimeVisitorsCard({
   configured,
 }: RealtimeVisitorsCardProps) {
   return (
-    <AnalyticsCard title="Khách truy cập theo thời gian thực">
+    <AnalyticsCard title="Real-time visitors">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-3">
@@ -26,14 +26,14 @@ export function RealtimeVisitorsCard({
               />
             </span>
             <span className="text-xs font-semibold uppercase tracking-widest text-emerald-600">
-              {configured ? "Live" : "Chờ dữ liệu"}
+              {configured ? "Live" : "Waiting for data"}
             </span>
           </div>
           <p className="mt-3 text-5xl font-bold tabular-nums tracking-tight admin-text sm:text-6xl">
             {count}
           </p>
           <p className="mt-2 text-sm admin-muted">
-            đang online · làm mới mỗi 5 giây
+            online · refreshing every 5 seconds
           </p>
         </div>
         <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-500">
@@ -42,8 +42,8 @@ export function RealtimeVisitorsCard({
       </div>
       <p className="mt-5 border-t border-[var(--admin-border)] pt-4 text-sm leading-relaxed admin-muted">
         {configured
-          ? "Xem chi tiết thiết bị, quốc gia và trang đang xem bên dưới."
-          : "Chạy supabase/analytics.sql + analytics-v2.sql rồi mở cửa hàng."}
+          ? "See device, country, and active page details below."
+          : "Run supabase/analytics.sql + analytics-v2.sql then open the store."}
       </p>
     </AnalyticsCard>
   );

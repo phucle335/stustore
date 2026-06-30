@@ -19,7 +19,7 @@ export function SupportFaq() {
   return (
     <div className={styles.supportLayout}>
       <aside>
-        <p className={styles.supportSidebarHeading}>Hỗ trợ</p>
+        <p className={styles.supportSidebarHeading}>Support</p>
         <ul className={styles.supportSidebarList}>
           {SUPPORT_CATEGORIES.map((item) => (
             <li key={item.id}>

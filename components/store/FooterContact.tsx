@@ -51,18 +51,18 @@ export function FooterContact({
 
       const body = (await res.json()) as { error?: string; ok?: boolean };
       if (!res.ok) {
-        showToast(body.error ?? "Gửi yêu cầu thất bại.", "error");
+        showToast(body.error ?? "Request failed.", "error");
         return;
       }
 
       setSubmitted(true);
-      showToast("Đã gửi yêu cầu hỗ trợ. Cảm ơn bạn!", "success");
+      showToast("Support request sent. Thank you!", "success");
       setName("");
       setPhone("");
       setFormEmail("");
       setMessage("");
     } catch {
-      showToast("Không thể gửi yêu cầu hỗ trợ.", "error");
+      showToast("Unable to send support request.", "error");
     } finally {
       setSubmitting(false);
     }
@@ -113,7 +113,7 @@ export function FooterContact({
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Họ tên"
+            placeholder="Full Name"
             required
             style={{
               width: "100%",
@@ -128,7 +128,7 @@ export function FooterContact({
           <input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="SĐT (Zalo)"
+            placeholder="Phone (Zalo)"
             required
             style={{
               width: "100%",
@@ -160,7 +160,7 @@ export function FooterContact({
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Nội dung cần hỗ trợ"
+            placeholder="How can we help?"
             required
             rows={3}
             style={{
@@ -193,17 +193,16 @@ export function FooterContact({
               opacity: submitting ? 0.75 : 1,
             }}
           >
-            {submitting ? "Đang gửi…" : "Gửi yêu cầu"}
+            {submitting ? "Sending…" : "Send Request"}
           </button>
         </div>
 
         {submitted ? (
           <p style={{ marginTop: 10, color: "#ccc", fontSize: 13 }}>
-            Đã nhận được yêu cầu. STUSPORT sẽ liên hệ sớm nhất.
+            Request received. STUSPORT will contact you soon.
           </p>
         ) : null}
       </form>
     </div>
   );
 }
-

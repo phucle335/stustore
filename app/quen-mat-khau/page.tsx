@@ -8,7 +8,7 @@ import { StoreShell } from "@/components/store/StoreShell";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Quên mật khẩu | Stusport",
+  title: "Forgot Password | Stusport",
 };
 
 export default function ForgotPasswordPage() {

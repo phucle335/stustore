@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   const post = await getBlogPostByIdMerged(id);
 
   if (!post) {
-    return { title: "Không tìm thấy — Stusport" };
+    return { title: "Not Found — Stusport" };
   }
 
   return { title: `${post.title} — Stusport` };
@@ -41,7 +41,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <article className={styles.blogPost}>
           <Link href="/blog" className={styles.blogPostBack}>
             <i className="fas fa-arrow-left" aria-hidden="true" />
-            Quay lại Blog
+            Back to Blog
           </Link>
           <time className={styles.blogPostDate}>{post.date}</time>
           <h1 className={styles.blogPostTitle}>{post.title}</h1>

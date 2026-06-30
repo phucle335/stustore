@@ -24,7 +24,7 @@ export function HomeBlog() {
             <h3 className={styles.homeBlogTitle}>{post.title}</h3>
             <p className={styles.homeBlogExcerpt}>{post.excerpt}</p>
             <Link href={post.href} className={styles.homeBlogLink}>
-              Đọc thêm
+              Read more
             </Link>
           </article>
         ))}

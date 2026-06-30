@@ -20,8 +20,8 @@ export function SessionsLineChart({ data }: SessionsLineChartProps) {
 
   return (
     <AnalyticsCard
-      title="Phiên theo thời gian"
-      subtitle="Số phiên duy nhất — 14 ngày gần nhất"
+      title="Sessions over time"
+      subtitle="Unique sessions — last 14 days"
     >
       <div className="h-64 w-full sm:h-72">
         <ResponsiveContainer width="100%" height="100%">

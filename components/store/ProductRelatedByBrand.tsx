@@ -24,14 +24,14 @@ export function ProductRelatedByBrand({
   return (
     <section
       className={`${styles.productDetailPanel} ${styles.productRelated}`}
-      aria-label="Sản phẩm cùng thương hiệu"
+      aria-label="More from this brand"
     >
       <h2 className={styles.productRelatedTitle}>
-        Bạn có thể thích — {brandLabel}
+        You may also like — {brandLabel}
       </h2>
       <ProductGrid products={products} pageSize={4} lightSurface />
       <p className={styles.productRelatedMore}>
-        <Link href={categoryHref}>Xem thêm sản phẩm</Link>
+        <Link href={categoryHref}>View more products</Link>
       </p>
     </section>
   );

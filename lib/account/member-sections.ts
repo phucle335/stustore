@@ -12,12 +12,12 @@ export type MemberAccountSection = {
 };
 
 export const MEMBER_ACCOUNT_SECTIONS: readonly MemberAccountSection[] = [
-  { id: "orders", label: "Lịch sử mua hàng" },
-  { id: "coupons", label: "Phiếu giảm giá" },
-  { id: "favorites", label: "Yêu thích" },
-  { id: "profile", label: "Chỉnh sửa hồ sơ" },
-  { id: "password", label: "Đổi mật khẩu" },
-  { id: "preferences", label: "Cài đặt tuỳ chọn" },
+  { id: "orders", label: "Order History" },
+  { id: "coupons", label: "Coupons" },
+  { id: "favorites", label: "Favorites" },
+  { id: "profile", label: "Edit Profile" },
+  { id: "password", label: "Change Password" },
+  { id: "preferences", label: "Preferences" },
 ] as const;
 
 const MEMBER_SECTION_IDS = new Set<string>(

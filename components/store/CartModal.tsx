@@ -31,7 +31,7 @@ export function CartModal() {
         type="button"
         className={styles.cartSidebarBackdrop}
         onClick={closeCart}
-        aria-label="Đóng giỏ hàng"
+        aria-label="Close cart"
         tabIndex={isOpen ? 0 : -1}
       />
 
@@ -44,12 +44,12 @@ export function CartModal() {
         <div className={styles.cartLogoWrap}>
           <MobileOverlayLogoHeader
             onClose={closeCart}
-            closeLabel="Đóng giỏ hàng"
+            closeLabel="Close cart"
           />
         </div>
         <div className={styles.cartSidebarHeader}>
           <h2 id="cart-sidebar-title">
-            Giỏ hàng
+            Cart
             {itemCount > 0 ? (
               <span className={styles.cartSidebarCount}> ({itemCount})</span>
             ) : null}
@@ -60,13 +60,13 @@ export function CartModal() {
           {items.length === 0 ? (
             <div className={styles.cartEmpty}>
               <i className="fas fa-shopping-bag" aria-hidden="true" />
-              <p>Giỏ hàng của bạn đang trống</p>
+              <p>Your cart is empty</p>
               <button
                 type="button"
                 className={styles.cartContinueBtn}
                 onClick={closeCart}
               >
-                Tiếp tục mua sắm
+                Continue Shopping
               </button>
             </div>
           ) : (
@@ -106,7 +106,7 @@ export function CartModal() {
                       <div className={styles.cartQty}>
                         <button
                           type="button"
-                          aria-label="Giảm số lượng"
+                          aria-label="Decrease quantity"
                           onClick={() =>
                             updateQuantity(item.lineId, item.quantity - 1)
                           }
@@ -116,7 +116,7 @@ export function CartModal() {
                         <span>{item.quantity}</span>
                         <button
                           type="button"
-                          aria-label="Tăng số lượng"
+                          aria-label="Increase quantity"
                           disabled={atMaxStock || stock <= 0}
                           onClick={() =>
                             updateQuantity(item.lineId, item.quantity + 1)
@@ -130,7 +130,7 @@ export function CartModal() {
                         className={styles.cartItemRemove}
                         onClick={() => removeItem(item.lineId)}
                       >
-                        Xóa
+                        Remove
                       </button>
                     </div>
                   </div>
@@ -144,7 +144,7 @@ export function CartModal() {
         {items.length > 0 ? (
           <div className={styles.cartFooter}>
             <div className={styles.cartTotalRow}>
-              <span>Tổng cộng</span>
+              <span>Total</span>
               <strong>{totalLabel}</strong>
             </div>
             <button
@@ -155,14 +155,14 @@ export function CartModal() {
                 router.push("/checkout");
               }}
             >
-              Thanh toán
+              Checkout
             </button>
             <button
               type="button"
               className={styles.cartClearBtn}
               onClick={clearCart}
             >
-              Xóa toàn bộ giỏ hàng
+              Clear Cart
             </button>
           </div>
         ) : null}

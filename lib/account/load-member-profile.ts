@@ -14,7 +14,7 @@ const FULL_COLUMNS =
 
 const LEGACY_COLUMNS = "email, full_name, phone, address";
 
-/** Đọc hồ sơ thành viên; tự sync user + fallback khi thiếu cột SQL. */
+/** Read member profile; auto-syncs user + fallback when SQL columns are missing. */
 export async function loadMemberProfile(
   userId: string,
   email: string,
@@ -46,7 +46,7 @@ export async function loadMemberProfile(
       );
       if (columns !== FULL_COLUMNS) {
         warning =
-          "Chạy supabase/member-features.sql trong Supabase để bật đủ trường hồ sơ và cài đặt.";
+          "Run supabase/member-features.sql in Supabase to enable full profile fields and preferences.";
       }
       return { ok: true, data: profile, warning };
     }
@@ -62,6 +62,6 @@ export async function loadMemberProfile(
     data: emptyMemberProfile(email, metaFullName ?? ensured.full_name),
     warning:
       lastError ??
-      "Chạy supabase/member-features.sql trong Supabase SQL Editor.",
+      "Run supabase/member-features.sql in the Supabase SQL Editor.",
   };
 }

@@ -18,12 +18,12 @@ export function TrafficSourcesChart({ data }: TrafficSourcesChartProps) {
   const chartData =
     data.length > 0
       ? data
-      : [{ name: "Chưa có dữ liệu", value: 100, fill: "#94a3b8" }];
+      : [{ name: "No data yet", value: 100, fill: "#94a3b8" }];
 
   return (
     <AnalyticsCard
-      title="Nguồn lưu lượng hàng đầu"
-      subtitle="Theo referrer — 14 ngày gần nhất"
+      title="Top traffic sources"
+      subtitle="By referrer — last 14 days"
     >
       <div className="h-64 w-full sm:h-72">
         <ResponsiveContainer width="100%" height="100%">
@@ -43,7 +43,7 @@ export function TrafficSourcesChart({ data }: TrafficSourcesChartProps) {
               ))}
             </Pie>
             <Tooltip
-              formatter={(value) => [`${value}%`, "Tỷ lệ"]}
+              formatter={(value) => [`${value}%`, "Share"]}
               contentStyle={{
                 background: "#fff",
                 border: "1px solid #e2e8f0",

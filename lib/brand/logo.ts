@@ -16,7 +16,7 @@ export const STUSPORT_LOGO_SIZE_HEIGHT = {
 } as const;
 
 export const STUSPORT_ICON_SRC = "/brand/stusport-icon.png";
-/** Trim sát nội dung — 250×156 */
+/** Trim content tightly — 250×156 */
 export const STUSPORT_ICON_WIDTH = 250;
 export const STUSPORT_ICON_HEIGHT = 156;
 

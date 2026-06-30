@@ -89,7 +89,7 @@ export async function getCouponByCode(
     .maybeSingle();
 
   if (error) return failure(error.message);
-  if (!data) return failure("Mã phiếu không tồn tại.");
+  if (!data) return failure("Coupon code does not exist.");
   return success(mapCoupon(data as DbCoupon));
 }
 

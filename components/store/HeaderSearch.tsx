@@ -17,7 +17,7 @@ export function HeaderSearch() {
   return (
     <form className={styles.headerSearch} onSubmit={handleSubmit} role="search">
       <label htmlFor="header-search-input" className={styles.srOnly}>
-        Tìm kiếm sản phẩm
+        Search products
       </label>
       <input
         id="header-search-input"
@@ -25,10 +25,10 @@ export function HeaderSearch() {
         name="q"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="Tìm kiếm sản phẩm..."
+        placeholder="Search products..."
         autoComplete="off"
       />
-      <button type="submit" aria-label="Tìm kiếm">
+      <button type="submit" aria-label="Search">
         <i className="fas fa-search" aria-hidden="true" />
       </button>
     </form>

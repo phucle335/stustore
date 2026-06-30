@@ -1,4 +1,4 @@
-/** Email tự gán admin (khớp trigger SQL). Thêm email khác nếu cần. */
+/** Admin self-assigned email (matches SQL trigger). Add more if needed. */
 export const ADMIN_EMAILS = ["workspaceplace22@gmail.com"] as const;
 
 export function isAdminEmail(email: string | null | undefined): boolean {

@@ -13,14 +13,14 @@ export type BlogCategory = {
 };
 
 export const BLOG_CATEGORIES: BlogCategory[] = [
-  { id: "tips", label: "Tips hay" },
-  { id: "sneakers", label: "Giày Sneaker" },
-  { id: "clothing", label: "Quần áo" },
-  { id: "accessories", label: "Phụ kiện" },
-  { id: "watches", label: "Đồng hồ" },
+  { id: "tips", label: "Tips & Tricks" },
+  { id: "sneakers", label: "Sneakers" },
+  { id: "clothing", label: "Clothing" },
+  { id: "accessories", label: "Accessories" },
+  { id: "watches", label: "Watches" },
 ];
 
-/** Số bài tối đa trên trang blog chính mỗi phân mục */
+/** Max posts per section on the main blog page */
 export const BLOG_SECTION_PREVIEW_MAX = 4;
 
 export function getBlogCategoryHref(categoryId: BlogCategoryId): string {

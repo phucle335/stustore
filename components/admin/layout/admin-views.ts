@@ -10,11 +10,11 @@ export type AdminView =
 
 export const ADMIN_VIEW_LABELS: Record<AdminView, string> = {
   overview: "Dashboard",
-  analytics: "Tổng quan nổi bật",
-  products: "Sản phẩm",
-  orders: "Đơn hàng",
-  customers: "Khách hàng",
-  coupons: "Phiếu giảm giá",
+  analytics: "Featured Highlights",
+  products: "Products",
+  orders: "Orders",
+  customers: "Customers",
+  coupons: "Coupons",
   site_content: "Site Content",
-  blog_cms: "CMS Blog",
+  blog_cms: "Blog CMS",
 };

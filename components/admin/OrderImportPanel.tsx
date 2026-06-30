@@ -57,7 +57,7 @@ export function OrderImportPanel({
 
     const lower = file.name.toLowerCase();
     if (!lower.endsWith(".csv")) {
-      setPreviewError("Chỉ hỗ trợ file .csv (xuất từ Excel: Save As CSV).");
+      setPreviewError("Only .csv files are supported (export from Excel: Save As CSV).");
       setCsvText(null);
       setFileName(null);
       return;
@@ -70,7 +70,7 @@ export function OrderImportPanel({
       setFileName(file.name);
     };
     reader.onerror = () => {
-      setPreviewError("Không đọc được file.");
+      setPreviewError("Could not read the file.");
       setCsvText(null);
       setFileName(null);
     };
@@ -79,7 +79,7 @@ export function OrderImportPanel({
 
   function handleImport() {
     if (!csvText) {
-      setImportError("Chọn file CSV trước.");
+      setImportError("Please select a CSV file first.");
       return;
     }
     if (preview && !preview.ok) {
@@ -98,7 +98,7 @@ export function OrderImportPanel({
       }
 
       onImported(result.data.orders);
-      setImportMessage(`Đã import ${result.data.count} đơn hàng.`);
+      setImportMessage(`Imported ${result.data.count} orders.`);
       setCsvText(null);
       setFileName(null);
       if (inputRef.current) inputRef.current.value = "";
@@ -109,10 +109,10 @@ export function OrderImportPanel({
     <section className="admin-card mb-6 border-dashed">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 className="text-sm font-semibold admin-text">Import đơn hàng từ CSV</h3>
+          <h3 className="text-sm font-semibold admin-text">Import Orders from CSV</h3>
           <p className="mt-1 max-w-xl text-xs admin-muted">
-            Cột: email, total_price, subtotal, discount_amount, coupon_code, status.
-            Email trống = khách lẻ. Email phải có trong bảng users.
+            Columns: email, total_price, subtotal, discount_amount, coupon_code, status.
+            Empty email = guest. Email must exist in the users table.
           </p>
         </div>
         <a
@@ -121,14 +121,14 @@ export function OrderImportPanel({
           className="admin-btn inline-flex items-center gap-1.5 text-xs"
         >
           <Download className="h-3.5 w-3.5" aria-hidden />
-          Tải mẫu CSV
+          Download CSV Template
         </a>
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <label className="admin-btn admin-btn--primary inline-flex cursor-pointer items-center gap-2">
           <FileUp className="h-4 w-4" aria-hidden />
-          Chọn file CSV
+          Select CSV File
           <input
             ref={inputRef}
             type="file"
@@ -146,7 +146,7 @@ export function OrderImportPanel({
           onClick={handleImport}
           className="admin-btn admin-btn--primary disabled:opacity-50"
         >
-          {isPending ? "Đang import…" : "Import vào Supabase"}
+          {isPending ? "Importing…" : "Import to Supabase"}
         </button>
       </div>
 
@@ -169,10 +169,10 @@ export function OrderImportPanel({
               <tr>
                 <th className="px-3 py-2">#</th>
                 <th className="px-3 py-2">Email</th>
-                <th className="px-3 py-2">Tổng</th>
-                <th className="px-3 py-2">Giảm</th>
-                <th className="px-3 py-2">Mã</th>
-                <th className="px-3 py-2">Trạng thái</th>
+                <th className="px-3 py-2">Total</th>
+                <th className="px-3 py-2">Discount</th>
+                <th className="px-3 py-2">Code</th>
+                <th className="px-3 py-2">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -193,7 +193,7 @@ export function OrderImportPanel({
             </tbody>
           </table>
           <p className="border-t border-[var(--admin-border)] px-3 py-2 text-[11px] admin-muted">
-            Xem trước {preview.rows.length} dòng — bấm Import để ghi vào database.
+            Preview {preview.rows.length} rows — click Import to write to the database.
           </p>
         </div>
       ) : null}

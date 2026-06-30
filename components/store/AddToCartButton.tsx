@@ -58,7 +58,7 @@ export function AddToCartButton({
 
   const trackLabel =
     label ??
-    (isOutOfStock ? "Hết hàng" : size === undefined && disabled ? "Chọn size" : "Thêm vào giỏ");
+    (isOutOfStock ? "Out of stock" : size === undefined && disabled ? "Select size" : "Add to cart");
 
   return (
     <button
@@ -72,11 +72,11 @@ export function AddToCartButton({
       {label ??
         (isOutOfStock
         ? size
-          ? `Size ${size} hết hàng`
-          : "Hết hàng"
+          ? `Size ${size} out of stock`
+          : "Out of stock"
         : disabled && size === undefined
-          ? "Chọn size"
-          : "MUA NGAY")}
+          ? "Select size"
+          : "BUY NOW")}
     </button>
   );
 }

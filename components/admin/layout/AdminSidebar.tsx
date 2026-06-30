@@ -37,40 +37,40 @@ const navItems: {
   { id: "overview", label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
   {
     id: "analytics",
-    label: "Tổng quan nổi bật",
+    label: "Featured Highlights",
     icon: BarChart3,
     href: "/admin/analytics",
   },
   {
     id: "products",
-    label: "Sản phẩm",
+    label: "Products",
     icon: Package,
     countKey: "products",
     href: "/admin/products",
   },
   {
     id: "orders",
-    label: "Đơn hàng",
+    label: "Orders",
     icon: ShoppingBag,
     countKey: "orders",
     href: "/admin/orders",
   },
   {
     id: "customers",
-    label: "Khách hàng",
+    label: "Customers",
     icon: Users,
     countKey: "customers",
     href: "/admin/customers",
   },
   {
     id: "coupons",
-    label: "Phiếu giảm giá",
+    label: "Coupons",
     icon: Tag,
     countKey: "coupons",
     href: "/admin/coupons",
   },
-  { id: "site_content", label: "Nội dung site", icon: Globe, href: "/admin/site_content" },
-  { id: "blog_cms", label: "CMS Blog", icon: FileText, href: "/admin/blog_cms" },
+  { id: "site_content", label: "Site Content", icon: Globe, href: "/admin/site_content" },
+  { id: "blog_cms", label: "Blog CMS", icon: FileText, href: "/admin/blog_cms" },
 ];
 
 export function AdminSidebar({

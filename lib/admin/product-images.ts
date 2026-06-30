@@ -11,11 +11,11 @@ export const PRODUCT_IMAGE_SLOTS = [
 export type ProductImageSlot = (typeof PRODUCT_IMAGE_SLOTS)[number];
 
 export const PRODUCT_IMAGE_LABELS = [
-  "Ảnh 1 (chính)",
-  "Ảnh 2",
-  "Ảnh 3",
-  "Ảnh 4",
-  "Ảnh 5",
+  "Image 1 (main)",
+  "Image 2",
+  "Image 3",
+  "Image 4",
+  "Image 5",
 ] as const;
 
 export type ProductImageFormState = {
@@ -36,7 +36,7 @@ function cleanUrl(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
-/** Đọc từ row DB (image_url_1…5 hoặc cột images[] cũ) */
+/** Read from DB row (image_url_1…5 or legacy images[] column) */
 export function readImageFieldsFromRow(
   row: Record<string, unknown>,
 ): ProductImageFormState {
@@ -62,7 +62,7 @@ export function imageFieldsToArray(
   );
 }
 
-/** Payload ghi Supabase — null nếu ô trống */
+/** Supabase write payload — null if field is empty */
 export function imageFieldsToDbPayload(
   fields: Partial<ProductImageFields> | ProductImageFormState,
 ): ProductImageFields {

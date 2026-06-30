@@ -28,31 +28,31 @@ export const HERO_SLIDES: HeroSlide[] = [
   {
     id: "slide-1",
     image: "/images/hero/slide-1.jpg",
-    alt: "Sneaker thể thao đường phố",
+    alt: "Street sports sneakers",
     caption: "A VISION OF STYLE",
   },
   {
     id: "slide-2",
     image: "/images/hero/slide-2.jpg",
-    alt: "Chạy bộ và training",
+    alt: "Running and training",
     caption: "PUSH YOUR LIMITS",
   },
   {
     id: "slide-3",
     image: "/images/hero/slide-3.jpg",
-    alt: "Phòng gym và sức mạnh",
+    alt: "Gym and strength training",
     caption: "BUILT FOR PERFORMANCE",
   },
   {
     id: "slide-4",
     image: "/images/hero/slide-4.jpg",
-    alt: "Lifestyle thể thao",
+    alt: "Sports lifestyle",
     caption: "MOVE WITH CONFIDENCE",
   },
   {
     id: "slide-5",
     image: "/images/hero/slide-5.jpg",
-    alt: "Đội nhóm và thể thao",
+    alt: "Team sports and athletics",
     caption: "GAME ON",
   },
 ];

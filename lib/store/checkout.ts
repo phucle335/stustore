@@ -39,15 +39,15 @@ export function preorderDepositAmount(totalVnd: number): number {
 export function paymentMethodLabel(method: CheckoutPaymentMethod): string {
   switch (method) {
     case "cod":
-      return "Thanh toán khi nhận hàng (COD)";
+      return "Cash on Delivery (COD)";
     case "bank_transfer":
-      return "Chuyển khoản ngân hàng";
+      return "Bank Transfer";
     case "preorder_deposit":
-      return "Cọc 50% — Chuyển khoản (pre-order)";
+      return "50% Deposit — Bank Transfer (pre-order)";
     case "cod_deposit":
-      return "COD cọc 100.000đ";
+      return "COD — 100,000 VND deposit";
     case "bank_transfer_full":
-      return "Chuyển khoản toàn bộ";
+      return "Full Bank Transfer";
     default:
       return method;
   }

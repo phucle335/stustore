@@ -32,21 +32,21 @@ export function validateCouponForOrder(
   subtotal: number,
 ): CouponValidationResult {
   if (!coupon.is_active) {
-    return { ok: false, error: "Mã phiếu không còn hiệu lực." };
+    return { ok: false, error: "This coupon code is no longer active." };
   }
 
   if (coupon.expires_at && new Date(coupon.expires_at) < new Date()) {
-    return { ok: false, error: "Mã phiếu đã hết hạn." };
+    return { ok: false, error: "This coupon code has expired." };
   }
 
   if (coupon.max_uses != null && coupon.used_count >= coupon.max_uses) {
-    return { ok: false, error: "Mã phiếu đã được sử dụng hết lượt." };
+    return { ok: false, error: "This coupon code has reached its usage limit." };
   }
 
   if (subtotal < Number(coupon.min_order_amount)) {
     return {
       ok: false,
-      error: `Đơn tối thiểu ${Number(coupon.min_order_amount).toLocaleString("vi-VN")}đ để dùng mã này.`,
+      error: `Minimum order ${Number(coupon.min_order_amount).toLocaleString("vi-VN")}đ to use this code.`,
     };
   }
 

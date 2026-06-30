@@ -30,6 +30,6 @@ export type Product = {
 export type ProductDetail = Product & {
   category: ProductCategory;
   description: string;
-  /** Mã tự đặt — tra cứu /products/[code] */
+  /** Admin product code — for lookup, URL /products/[code] */
   productCode?: string | null;
 };
