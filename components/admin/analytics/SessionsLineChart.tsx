@@ -24,11 +24,11 @@ export function SessionsLineChart({ data }: SessionsLineChartProps) {
       title="Sessions over time"
       subtitle="Unique sessions — last 14 days"
     >
-      <div className="h-64 w-full sm:h-72">
-        <ResponsiveContainer width="100%" height="100%" minHeight={200} aspect={2.5}>
+      <div className="h-64 w-full overflow-hidden sm:h-72">
+        <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={chartData}
-            margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+            margin={{ top: 8, right: 8, left: -10, bottom: 0 }}
           >
             <CartesianGrid stroke="#e2e8f0" strokeDasharray="4 4" vertical={false} />
             <XAxis
