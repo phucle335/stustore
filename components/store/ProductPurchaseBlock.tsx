@@ -135,7 +135,13 @@ export function ProductPurchaseBlock({ product }: ProductPurchaseBlockProps) {
       />
       </div>
       <ProductPurchasePolicies
-        hasSizeGuide={hasSizes && product.category === "clothing"}
+        hasSizeGuide={
+          hasSizes &&
+          (product.category === "clothing" || product.category === "sneakers")
+        }
+        sizeGuideType={
+          product.category === "sneakers" ? "shoe" : "clothing"
+        }
       />
     </>
   );

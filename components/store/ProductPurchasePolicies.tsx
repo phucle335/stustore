@@ -14,6 +14,7 @@ type PolicyItem = {
 
 type ProductPurchasePoliciesProps = {
   hasSizeGuide?: boolean;
+  sizeGuideType?: "shoe" | "clothing";
 };
 
 const BASE_POLICIES: PolicyItem[] = [
@@ -40,6 +41,7 @@ const BASE_POLICIES: PolicyItem[] = [
 
 export function ProductPurchasePolicies({
   hasSizeGuide = false,
+  sizeGuideType = "clothing",
 }: ProductPurchasePoliciesProps) {
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
 
@@ -61,7 +63,7 @@ export function ProductPurchasePolicies({
       },
       {
         icon: "fa-ruler",
-        text: "How to Choose Your Clothing Size",
+        text: "How to Choose Your Size",
         detailHref: "#size-guide",
       },
       {
@@ -111,7 +113,7 @@ export function ProductPurchasePolicies({
         <SizeGuideModal
           open={sizeGuideOpen}
           onClose={() => setSizeGuideOpen(false)}
-          sizeGuideType="clothing"
+          sizeGuideType={sizeGuideType}
         />
       ) : null}
     </>
