@@ -45,7 +45,7 @@ export function AnalyticsOverviewClient() {
       ) : null}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs admin-muted">
+        <p className="text-xs admin-muted suppress-hydration">
           Updated:{" "}
           {new Date(data.lastUpdated).toLocaleTimeString("vi-VN")}
           {data.configured ? " · realtime ~5s" : ""}

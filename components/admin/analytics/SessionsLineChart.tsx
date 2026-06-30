@@ -16,7 +16,8 @@ type SessionsLineChartProps = {
 };
 
 export function SessionsLineChart({ data }: SessionsLineChartProps) {
-  const chartData = data.length > 0 ? data : [{ label: "—", sessions: 0 }];
+  const chartData =
+    data && data.length > 0 ? data : [{ label: "—", sessions: 0 }];
 
   return (
     <AnalyticsCard
@@ -24,7 +25,7 @@ export function SessionsLineChart({ data }: SessionsLineChartProps) {
       subtitle="Unique sessions — last 14 days"
     >
       <div className="h-64 w-full sm:h-72">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" minHeight={200} aspect={2.5}>
           <LineChart
             data={chartData}
             margin={{ top: 8, right: 8, left: 0, bottom: 0 }}

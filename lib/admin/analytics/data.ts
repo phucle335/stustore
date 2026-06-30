@@ -428,7 +428,7 @@ export async function fetchAnalyticsDashboard(): Promise<AnalyticsDashboard> {
         totalRevenue += sellingPrice * quantity;
         totalItems += quantity;
         orderProfitRows.push({
-          orderId: order.id,
+          orderId: String(order.id),
           productId,
           productName: name,
           sellingPrice,
