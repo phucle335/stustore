@@ -52,7 +52,7 @@ export const MOTTO_CASE_STUDIES = [
     title: "Sneaker",
     subtitle: "Sports shoes & streetwear",
     image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200&q=80",
+      "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHNuZWFrZXJ8ZW58MHx8MHx8fDA%3D",
     href: "/sneakers",
   },
   {

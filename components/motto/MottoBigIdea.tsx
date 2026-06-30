@@ -9,7 +9,9 @@ export function MottoBigIdea() {
       <div className={styles.container}>
         <div className={styles.bigIdeaGrid}>
           <div>
-            <p className={styles.eyebrow}>(About Us)</p>
+            <Link href="/gioi-thieu" className={styles.eyebrow}>
+              (About Us)
+            </Link>
             <MottoReveal as="h2" className={styles.bigIdeaTitle}>
               <MottoLine>The Authentic Culture</MottoLine>
               <MottoLine>

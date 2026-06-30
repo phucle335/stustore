@@ -134,7 +134,9 @@ export function ProductPurchaseBlock({ product }: ProductPurchaseBlockProps) {
         className={`${styles.productDetailAddBtn} ${styles.productDetailAddBtnSecondary}`}
       />
       </div>
-      <ProductPurchasePolicies />
+      <ProductPurchasePolicies
+        hasSizeGuide={hasSizes && product.category === "clothing"}
+      />
     </>
   );
 }

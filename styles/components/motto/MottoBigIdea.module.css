@@ -74,6 +74,7 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin: 0 0 1.5rem;
+  text-decoration: none;
 }
 .body {
   font-size: max(1.05rem, 17px);
