@@ -14,6 +14,7 @@ const CATEGORY_OCCASION: Record<ProductCategory, string> = {
   clothing: "Casual, Training",
   bags: "School, Work, Travel",
   watches: "Office, Fashion",
+  stuclub: "Membership, Rewards",
 };
 
 const CATEGORY_SPORT: Record<ProductCategory, string> = {
@@ -22,6 +23,7 @@ const CATEGORY_SPORT: Record<ProductCategory, string> = {
   clothing: "Training, Lifestyle",
   bags: "Lifestyle",
   watches: "—",
+  stuclub: "—",
 };
 
 function materialForCategory(category: ProductCategory): string {
@@ -36,6 +38,8 @@ function materialForCategory(category: ProductCategory): string {
       return "Polyester / PU Leather";
     case "watches":
       return "Stainless steel / Silicone";
+    case "stuclub":
+      return "Digital membership";
     default:
       return "Premium material";
   }

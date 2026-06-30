@@ -11,6 +11,16 @@ import type {
 } from "@/lib/supabase/types";
 import { getTierFromPoints, calculatePointsFromOrder } from "./points";
 
+export type MemberRow = {
+  id: string;
+  email: string | null;
+  full_name: string | null;
+  membership_tier: MemberTier;
+  stu_points: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export type MemberPointsHistoryRow = DbMemberPointsHistory & {
   coupon_code?: string | null;
 };
@@ -86,7 +96,7 @@ export async function getMyPointsHistoryAction(): Promise<
 export async function getMembersAction(params?: {
   search?: string;
   tier?: MemberTier | "all";
-}): Promise<PointsActionResult<MemberPointsHistoryRow[]>> {
+}): Promise<PointsActionResult<MemberRow[]>> {
   const auth = await requireAuthUser();
   if (!auth.ok) {
     return { ok: false, error: auth.error };
@@ -119,7 +129,7 @@ export async function getMembersAction(params?: {
 
   return {
     ok: true,
-    data: (data ?? []) as MemberPointsHistoryRow[],
+    data: (data ?? []) as MemberRow[],
   };
 }
 

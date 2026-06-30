@@ -9,10 +9,11 @@ export const ORDER_STATUSES: OrderStatus[] = [
   "processing",
   "shipped",
   "delivered",
+  "completed",
   "cancelled",
 ];
 
-export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
+export const ORDER_STATUS_LABELS: Record<string, string> = {
   pending: "Pending",
   pending_payment: "Awaiting Deposit",
   deposit_paid: "Deposit Paid",
@@ -21,6 +22,7 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   processing: "Processing",
   shipped: "Shipped",
   delivered: "Delivered",
+  completed: "Completed",
   cancelled: "Cancelled",
 };
 
@@ -33,6 +35,7 @@ export const ORDER_STATUS_STYLES: Record<OrderStatus, string> = {
   processing: "admin-status-chip admin-status-chip--orange",
   shipped: "admin-status-chip admin-status-chip--orange",
   delivered: "admin-status-chip admin-status-chip--emerald",
+  completed: "admin-status-chip admin-status-chip--emerald",
   cancelled: "admin-status-chip admin-status-chip--red",
 };
 

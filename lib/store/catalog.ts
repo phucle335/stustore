@@ -21,6 +21,7 @@ const CATEGORY_BACK: Record<ProductCategory, { href: string; label: string }> =
     clothing: { href: "/clothing", label: "Clothing" },
     bags: { href: "/bags", label: "Bags" },
     watches: { href: "/watches", label: "Watches" },
+    stuclub: { href: "/stuclub", label: "STUClub" },
   };
 
 export function getCategoryBackLink(category: ProductCategory): {

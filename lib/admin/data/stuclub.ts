@@ -193,9 +193,22 @@ export async function adjustPoints(
 
   if (historyError) return failure(historyError.message);
 
+  const { data: existing, error: existingError } = await supabase
+    .from("users")
+    .select("stu_points")
+    .eq("id", userId)
+    .single();
+
+  if (existingError || !existing) {
+    return failure(existingError?.message ?? "Could not read current points.");
+  }
+
+  const currentPoints = Number(existing.stu_points ?? 0);
+  const nextPoints = Math.max(0, currentPoints + points);
+
   const { data, error } = await supabase
     .from("users")
-    .update({ stu_points: supabase.raw(`stu_points + ${points}`) })
+    .update({ stu_points: nextPoints })
     .eq("id", userId)
     .select("id")
     .single();

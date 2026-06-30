@@ -24,13 +24,14 @@ export async function issueWelcomeCouponForNewUser(
 
   const { error: insertError } = await supabase
     .from("user_coupons")
-    .insert({
-      user_id: userId,
-      coupon_id: couponRow.id,
-      status: "available",
-    })
-    .onConflict("user_id,coupon_id")
-    .doNothing();
+    .upsert(
+      {
+        user_id: userId,
+        coupon_id: couponRow.id,
+        status: "available",
+      },
+      { onConflict: "user_id,coupon_id" },
+    );
 
   if (insertError) {
     return { ok: false, error: insertError.message };
@@ -68,13 +69,14 @@ export async function checkAndIssueRewardCoupon(
 
   const { error: insertError } = await supabase
     .from("user_coupons")
-    .insert({
-      user_id: userId,
-      coupon_id: couponRow.id,
-      status: "available",
-    })
-    .onConflict("user_id,coupon_id")
-    .doNothing();
+    .upsert(
+      {
+        user_id: userId,
+        coupon_id: couponRow.id,
+        status: "available",
+      },
+      { onConflict: "user_id,coupon_id" },
+    );
 
   if (insertError) {
     return { ok: false, error: insertError.message };

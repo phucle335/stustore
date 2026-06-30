@@ -61,7 +61,8 @@ export type StoreProductCategory =
   | "sunglasses"
   | "clothing"
   | "bags"
-  | "watches";
+  | "watches"
+  | "stuclub";
 
 export type ProductImageFields = {
   image_url_1: string | null;
@@ -255,4 +256,23 @@ export type UpdateOrderInput = {
 export type UpdateUserInput = {
   email?: string;
   role?: UserRole;
+};
+
+export type DbMemberPointsHistory = {
+  id: string;
+  user_id: string;
+  order_id?: string | null;
+  points: number;
+  type: PointsHistoryType;
+  description: string | null;
+  created_at: string;
+};
+
+export type DbUserCoupon = {
+  id: string;
+  user_id: string;
+  coupon_id: string;
+  status: UserCouponStatus;
+  issued_at: string;
+  used_at?: string | null;
 };

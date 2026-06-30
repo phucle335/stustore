@@ -9,6 +9,7 @@ const CATEGORY_ALIASES: Record<ProductCategory, readonly string[]> = {
   sunglasses: ["sunglasses", "sunglass", "eyewear", "glasses", "spectacles"],
   watches: ["watch", "watches", "wristwatch", "timepiece"],
   bags: ["bag", "bags", "handbag", "backpack", "purse"],
+  stuclub: ["stuclub", "club", "loyalty", "membership"],
 };
 
 const CATEGORY_BACK_LABELS: Record<ProductCategory, string> = {
@@ -17,6 +18,7 @@ const CATEGORY_BACK_LABELS: Record<ProductCategory, string> = {
   sunglasses: "Sunglasses",
   bags: "Bags",
   watches: "Watches",
+  stuclub: "STUClub",
 };
 
 function getNavLabelForCategory(category: ProductCategory): string | undefined {
