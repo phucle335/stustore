@@ -165,8 +165,7 @@ export function AboutUsPage() {
               <div className={styles.infoCardAccent}>
                 <p className={styles.cardLabel}>Vision</p>
                 <p className={styles.infoCardText}>
-                  <span className={styles.yearHighlight}>2027</span> Become top
-                  authentic sports gear distribution platform in Vietnam.
+                  <span className={styles.yearHighlight}>2027</span> Become one of the leading digital platforms for sports fashion in Vietnam..
                 </p>
               </div>
             </Reveal>
