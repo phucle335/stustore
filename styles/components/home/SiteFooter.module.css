@@ -77,9 +77,8 @@
 
 .bottom {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
   max-width: 1200px;
   margin: 0 auto;
@@ -153,6 +152,17 @@
 
 .social a:hover {
   color: #f24e35;
+}
+
+.certifications {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.certifications img {
+  height: 28px;
+  width: auto;
 }
 
 @media (max-width: 1024px) {

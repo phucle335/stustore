@@ -105,6 +105,10 @@ export function SiteFooter({ className = "", hideMembershipCta = false }: SiteFo
             <i className="fab fa-tiktok" />
           </a>
         </div>
+        <div className={styles.certifications}>
+          <img src="/certifications/cert-1.png" alt="Chứng nhận website" />
+          <img src="/certifications/cert-2.png" alt="Chứng nhận website" />
+        </div>
         <p>© {new Date().getFullYear()} {STORE_NAME}. All rights reserved.</p>
       </div>
     </footer>
