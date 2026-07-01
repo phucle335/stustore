@@ -444,9 +444,31 @@
   gap: 1.5rem;
 }
 
+@media (min-width: 768px) {
+  .valuesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .valueCard:nth-child(4) {
+    grid-column: 2;
+  }
+
+  .valueCard:nth-child(5) {
+    grid-column: 3;
+  }
+}
+
 @media (min-width: 1024px) {
   .valuesGrid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .valueCard:nth-child(4) {
+    grid-column: 2;
+  }
+
+  .valueCard:nth-child(5) {
+    grid-column: 3;
   }
 }
 

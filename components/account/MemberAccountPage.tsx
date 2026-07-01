@@ -33,7 +33,14 @@ const statusLabel: Record<string, string> = {
   delivered: "Delivered",
   cancelled: "Cancelled",
 };
-
+const statusColor: Record<string, string> = {
+  pending: "#fff",      // Màu vàng
+  confirmed: "#3b82f6",    // Màu xanh dương
+  processing: "#f97316",   // Màu cam
+  shipped: "#8b5cf6",      // Màu tím
+  delivered: "#22c55e",    // Màu xanh lá
+  cancelled: "#ef4444",    // Màu đỏ
+};
 type MemberAccountPageProps = {
   productsById?: Record<string, ProductDetail>;
 };
@@ -350,9 +357,12 @@ export function MemberAccountPage({
                     >
                       <div>
                         <strong>#{shortOrderId}</strong>
-                        <span className={styles.memberOrderStatus}>
-                          {statusLabel[order.status] ?? order.status}
-                        </span>
+                        <span 
+  className={styles.memberOrderStatus}
+  style={{ color: statusColor[order.status] || '#f24e35' }}
+>
+  {statusLabel[order.status] ?? order.status}
+</span>
                       </div>
                       <p className={styles.memberMuted}>
                         {new Date(order.created_at).toLocaleString("vi-VN")}

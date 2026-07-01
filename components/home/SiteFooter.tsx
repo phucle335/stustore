@@ -92,7 +92,7 @@ export function SiteFooter({ className = "", hideMembershipCta = false }: SiteFo
 
       <div className={styles.bottom}>
         <div className={styles.social}>
-          <a href="#" aria-label="Facebook">
+          <a href="https://www.facebook.com/stusport26/" aria-label="Facebook">
             <i className="fab fa-facebook-f" />
           </a>
           <a href="#" aria-label="Instagram">

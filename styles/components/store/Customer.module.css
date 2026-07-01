@@ -530,7 +530,7 @@
 .memberHeader h1 {
   font-size: 28px;
   font-weight: 700;
-  color: #111;
+  color: #fff;
 }
 
 .memberHeader p {
@@ -592,7 +592,7 @@
 .memberPanel h2 {
   font-size: 20px;
   font-weight: 700;
-  color: #111;
+  color: #fff;
   margin-bottom: 12px;
 }
 

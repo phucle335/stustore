@@ -6,6 +6,7 @@ import {
   BadgePercent,
   ShieldCheck,
   ScanSearch,
+  TrendingUp,
   Users,
   Zap,
   Package,
@@ -164,7 +165,7 @@ export function AboutUsPage() {
               <div className={styles.infoCardAccent}>
                 <p className={styles.cardLabel}>Vision</p>
                 <p className={styles.infoCardText}>
-                  <span className={styles.yearHighlight}>2028</span> Become a Top 5
+                  <span className={styles.yearHighlight}>2027</span> Become top
                   authentic sports gear distribution platform in Vietnam.
                 </p>
               </div>
@@ -230,7 +231,36 @@ export function AboutUsPage() {
                 </p>
               </div>
             </Reveal>
+
+            <Reveal delay={0.14}>
+              <div className={styles.valueCard}>
+                <div className={styles.valueCardHeader}>
+                  <TrendingUp className={styles.iconMd} aria-hidden />
+                  <p className={styles.valueCardTitle}>Continuous Improvement</p>
+                </div>
+                <p className={styles.valueCardDesc}>
+                  We evolve every day to deliver a better experience.
+                </p>
+              </div>
+            </Reveal>
           </div>
+        </div>
+      </section>
+
+      <section className={styles.sectionSpaced}>
+        <div className={styles.container}>
+          <Reveal>
+            <SectionTitle eyebrow="Philosophy" title="Business Philosophy" />
+          </Reveal>
+          <Reveal delay={0.06}>
+            <div className={styles.infoCard}>
+              <p className={styles.infoCardText}>
+                Build a community for people who are interested in sportswear and
+                sneaker culture, and deliver sportswear online at fair prices for
+                young people.
+              </p>
+            </div>
+          </Reveal>
         </div>
       </section>
 
